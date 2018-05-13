@@ -8,7 +8,7 @@
                }
        */
         var editor = new $.fn.dataTable.Editor( {
-            ajax: 'php/table.shipments.php',
+            ajax: 'Ajax/Shipments',
             table: '#shipments',
             fields:
                 [   {
@@ -162,7 +162,7 @@
         } );
 
         var table = $('#shipments').DataTable( {
-            ajax: 'php/table.shipments.php',
+            ajax: 'Ajax/Shipments',
             //responsive: 'true',
             columnDefs: [{
                 "defaultContent": " ",
