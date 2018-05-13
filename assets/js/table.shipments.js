@@ -128,26 +128,6 @@
                         separator: '',
                         unselectedValue: 0
                     },
-                    /*    {
-                            label: "Latest Event:",
-                            name: "shipments.latest_event"
-                        },
-                        {
-                            label: "Latest Event Time and Date:",
-                            name: "shipments.latest_event_time_and_date",
-                            type: "datetime",
-                            format: "YYYY-MM-DD HH:mm:ss"
-                        },*/
-                    {
-                        label: "Is Active?:",
-                        name: "shipments.is_active",
-                        type: "checkbox",
-                        options: [
-                            { label: "", value: 1 }
-                        ],
-                        separator: '',
-                        unselectedValue: 0
-                    },
                     {
                         label: "Requires Payment?:",
                         name: "shipments.requires_payment",
@@ -254,17 +234,7 @@
                     },
                     /*{data: "shipments.latest_event"},
                     {data: "shipments.latest_event_time_and_date"},*/
-                    {
-                        data: "shipments.is_active",
-                        render: function ( data, type, row ) {
-                            if ( type === 'display' ) {
-                                return '<input type="checkbox" id="editor-is_active" class="rowCB">';
-                            }
-                            return data;
-                        },
-                        className: "dt-body-center"
-                    },
-                    {
+	                    {
                         data: "shipments.requires_payment",
                         render: function ( data, type, row ) {
                             if ( type === 'display' ) {
