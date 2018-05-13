@@ -41,23 +41,25 @@
                     },
                     {
                         label: "Discharge Port:",
-                        name: "shipments.discharge_port"
+                        name: "shipments.discharge_port",
+                        type: "readonly"
                     },
                     {
                         label: "Final Destination:",
-                        name: "shipments.final_destination"
+                        name: "shipments.final_destination",
+                        type: "readonly"
                     },
                     {
                         label: "ETA:",
                         name: "shipments.eta",
                         type: "datetime",
-                        format: "YYYY-MM-DD HH:mm:ss"
+                        format: "MM-DD-YYYY HH:mm:ss"
                     },
                     {
                         label: "LFD:",
                         name: "shipments.lfd",
-                        type: "datetime",
-                        format: "DD-MM-YY"
+                        type: "date",
+                        format: "MM-DD-YY"
                     },
                     {
                         label: "Pickup Number:",
@@ -67,7 +69,7 @@
                         label: "Truck Date:",
                         name: "shipments.truck_date",
                         type: "datetime",
-                        format: "ddd, D MMM YY"
+                        format: "MM-DD-YYYY HH:mm:ss"
                     },
                     {
                         label: "Trucker Name:",
@@ -76,7 +78,8 @@
                     },
                     {
                         label: "BL Status:",
-                        name: "shipments.bl_status"
+                        name: "shipments.bl_status",
+                        type: "readonly"
                     },
                     {
                         label: "Freight:",
@@ -89,7 +92,7 @@
                         unselectedValue: 0
                     },
                     {
-                        label: "ISF Required?:",
+                        label: "ISF:",
                         name: "shipments.isf_required",
                         type: "checkbox",
                         options: [
@@ -137,6 +140,11 @@
                         ],
                         separator: '',
                         unselectedValue: 0
+                    },
+                    {
+                        label: "Container Size:",
+                        name: "shipments.container_size",
+                        type: "readonly"
                     }
                 ]
         } );
@@ -157,13 +165,13 @@
                         defaultContent: '',
                         className: 'control',
                         orderable: false
-                    },*/
+                    },
                     {   // Checkbox select column
                         data: null,
                         defaultContent: '',
                         className: 'select-checkbox',
                         orderable: false
-                    },
+                    },*/
                     {data: "shipments.status"},
                     {data: "shipments.po"},
                     {data: "products.product_name", editField: "shipments.product_id"},
@@ -234,7 +242,7 @@
                     },
                     /*{data: "shipments.latest_event"},
                     {data: "shipments.latest_event_time_and_date"},*/
-	                    {
+                    {
                         data: "shipments.requires_payment",
                         render: function ( data, type, row ) {
                             if ( type === 'display' ) {
@@ -243,7 +251,8 @@
                             return data;
                         },
                         className: "dt-body-center"
-                    }
+                    },
+                    {data: "shipments.container_size"}
                 ],
             rowCallback: function ( row, data ) {
                 // Set the checked state of the checkbox in the table
@@ -255,6 +264,15 @@
                 $('#editor-qb_ws', row).prop( 'checked', data.shipments.qb_ws == 1 );
                 $('#editor-is_active', row).prop( 'checked', data.shipments.is_active == 1 );
                 $('#editor-requires_payment', row).prop( 'checked', data.shipments.requires_payment == 1 );
+                
+                    if(data[14]== 1){
+                        $(row).find('td:eq(14)').addClass("status_green");
+                        $(row).find('td:eq(14)').removeClass("status_yellow");
+                        $(row).find('td:eq(14)').removeClass("status_red");
+                    }
+                if(data[15]== 1){
+                    $(row).find('td:eq(2)').css('color', 'blue');
+                }
             }
         } );
         $('#shipments')
@@ -267,7 +285,7 @@
                 } )
                     .set( 'shipments.freight', $(this).prop( 'checked' ) ? 1 : 0 )
                     .submit();
-                alert(this.className.toString());
+               // alert(this.className.toString());
             })
             .on( 'change', '#editor-isfrequired', function () {
                 /*editor.edit( $(this).closest('tr'), false )
@@ -333,14 +351,14 @@
         // or a DataTables Responsive data cell
         $('#shipments').on( 'click', 'tbody td:not(:first-child)', function (e) {
             var colIdx = table.cell(this).index().column;
-            if ( colIdx <15 ) {
+            if ( colIdx <14 ) {
                 editor.inline(this, {
                     onBlur: 'submit'
                 });
             }
         } );
 
-        $('#shipments tbody')
+        /* $('#shipments tbody')
             .on('mouseenter','tr', function(){
                 if ( !$(this).hasClass('highlight') ) {
                     $(this).addClass('highlight');
@@ -352,7 +370,7 @@
                 }
             });
 
-        /*        $('#shipments tbody')
+               $('#shipments tbody')
                     .on( 'click', 'td', function () {
                         var colIdx = table.cell(this).index().column;
                         if ( colIdx <15  ) {

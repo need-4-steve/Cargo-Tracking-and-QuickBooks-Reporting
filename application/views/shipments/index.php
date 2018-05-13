@@ -2,7 +2,6 @@
 <table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered hover" id="shipments" width="100%">
     <thead>
     <tr>
-        <th></th>
         <th>Status</th>
         <th>PO</th>
         <th>Product Name</th>
@@ -26,7 +25,6 @@
          <th>Latest Event Time and Date</th>-->
         <th>Requires Payment?</th>
         <th>Container Size</th>
-        <th>Is Active?</th>
     </tr>
     </thead>
 </table>
