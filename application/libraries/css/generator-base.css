@@ -1,0 +1,62 @@
+@import url(https://fonts.googleapis.com/css?family=Raleway:100);
+
+.container{
+    margin-left: 0px;
+}
+body.dataTables,
+body.jqueryui {
+    font: 90%/1.45em "Helvetica Neue", HelveticaNeue, Arial, Helvetica, sans-serif;
+    margin: 0;
+    padding: 0;
+    color: #333;
+    background-color: #fff;
+}
+body.dataTables div.container,
+body.jqueryui div.container {
+    max-width: 980px;
+    margin: 0 auto;
+}
+body.dataTables h1,
+body.jqueryui h1 {
+    font-family: 'HelveticaNeue-UltraLight', 'Helvetica Neue UltraLight', 'Raleway', 'Helvetica Neue', Arial, Helvetica, sans-serif;
+    font-weight: 100;
+    letter-spacing: 1px;
+    font-size: 3em;
+    line-height: 1em;
+}
+h1 span {
+    font-size: 0.5em;
+    line-height: 1em;
+}
+.highlight {
+    background-color: whitesmoke !important;
+}
+
+.highlight-lighter {
+    background-color: #fafafa !important;
+}
+
+table.dataTable.display tbody>tr.odd>.selected, table.dataTable.order-column.stripe tbody>tr.odd>.selected {
+    background-color: #a6b4cd;
+}
+table.dataTable tbody tr.selected, table.dataTable tbody th.selected, table.dataTable tbody td.selected {
+    color: black;
+}
+
+table.table-bordered.dataTable tbody th, table.table-bordered.dataTable tbody td {
+    vertical-align: middle;
+    position: relative;
+    bottom: 1px;
+}
+
+table.dataTable thead th.select-checkbox.sorting_asc:before, table.dataTable thead th.sorting_desc:before, table.dataTable thead th.select-checkbox.sorting_asc_disabled:before, table.dataTable thead th.select-checkbox.sorting_desc_disabled:before {
+    content: '';
+}
+table.dataTable thead th.select-checkbox.sorting_asc:after, table.dataTable thead th.sorting_desc:after, table.dataTable thead th.select-checkbox.sorting_asc_disabled:after, table.dataTable thead th.select-checkbox.sorting_desc_disabled:after {
+    content: '';
+}
+
+input[type=checkbox] {
+    display: inline-block;
+    margin-left:40%;
+}
