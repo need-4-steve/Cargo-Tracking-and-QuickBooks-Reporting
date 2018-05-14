@@ -292,9 +292,9 @@ class Shipments extends CI_Controller
                 $this->ShipmentsModel->add_record($updateData);
             }
         }
-        //$this->get_lfd_and_pickup_number_from_bol();
-        //$lfd = $this->get_lfd_from_bol();
-     /*   $curlData=array();
+        $this->get_lfd_and_pickup_number_from_bol();
+        $lfd = $this->get_lfd_from_bol();
+        $curlData=array();
         $uniqueBoLs = $this->ShipmentsModel->get_unique_records_by_BoL(1);
         for ($i=0; $i<count($uniqueBoLs);$i++){
             $bol = $uniqueBoLs[$i]["bill_of_lading"];
@@ -303,7 +303,7 @@ class Shipments extends CI_Controller
                                                                     array( 'lfd' => (empty($curlData['lfd']) ? NULL : date("Y-m-d", strtotime($curlData['lfd'])) ),
                                                                            'pickup_number' => (empty($curlData['pickup_number']) ? NULL : $curlData['pickup_number']) ) );
         }
- */       $data['title'] = "Active Shipments";
+        $data['title'] = "Active Shipments";
         echo "<p>Start time: $starttime</p>";
         $this->ShipmentsModel->archiveInactiveRecords();
         $endtime = microtime(true);
