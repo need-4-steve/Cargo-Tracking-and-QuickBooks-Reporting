@@ -48,33 +48,52 @@ table.table-bordered.dataTable tbody th, table.table-bordered.dataTable tbody td
     position: relative;
     bottom: 1px;
 }
-
-table.dataTable thead th.select-checkbox.sorting_asc:before, table.dataTable thead th.sorting_desc:before, table.dataTable thead th.select-checkbox.sorting_asc_disabled:before, table.dataTable thead th.select-checkbox.sorting_desc_disabled:before {
-    content: '';
+table.dataTable thead th.select-checkbox.sorting_asc:before, 
+table.dataTable thead th.sorting_desc:before, 
+table.dataTable thead th.select-checkbox.sorting_asc_disabled:before, 
+table.dataTable thead th.select-checkbox.sorting_desc_disabled:before 
+{
+    content: "\2191";
 }
-table.dataTable thead th.select-checkbox.sorting_asc:after, table.dataTable thead th.sorting_desc:after, table.dataTable thead th.select-checkbox.sorting_asc_disabled:after, table.dataTable thead th.select-checkbox.sorting_desc_disabled:after {
-    content: '';
+table.dataTable thead th.select-checkbox.sorting_asc:after, 
+table.dataTable thead th.sorting_desc:after, 
+table.dataTable thead th.select-checkbox.sorting_asc_disabled:after, 
+table.dataTable thead th.select-checkbox.sorting_desc_disabled:after 
+{
+    content: "\2193";
 }
 
 input[type=checkbox] {
     display: inline-block;
-    margin-left:40%;
-    width: 30px;
-    height: 30px;
+    /*margin-left:40%;*/
+    width: 50px;
+    height: 50px;
 }
 
 .status_red {
     color: firebrick !important;
     background-color: #f7d6df !important;
     border: 1px solid #D14 !important;
+    /*    color: #D14;
+    background-color: #fcf6f8;
+    border: 1px solid #f7d6df;*/
 }
 
 .status_yellow {
+    /*color: #c29f00;
+    background-color: #fff9d7;
+    border: 1px solid #ffe700;
+    white-space: nowrap;*/
     color: #c29f00 !important;
     background-color: #fff9d7 !important;
     border: 1px solid #ffe700 !important;
 }
-
+/* PINK
+    color: #d119cf;
+    background-color: #faebfa;
+    border: 1px solid #f3aef2;
+    white-space: nowrap;
+    */
 .status_green {
     background-color: #d0e9c6 !important;
     border-color: forestgreen !important;
@@ -82,7 +101,46 @@ input[type=checkbox] {
 }
 
 .status_blue {
+    /*    color: #0c199c;
+    background-color: #f4f5fc;
+    border: 1px solid #c6cbe9;
+    white-space: nowrap;*/
     color: #0c199c !important;
     background-color: #c6cbe9 !important;
     border: 1px solid #0c199c !important;
 }
+
+input[type=checkbox].rowCB:after{
+    /*color: #464e50;
+    background-color: #f2f7f9;
+    border: 1px solid #b8c3c5;*/
+    white-space: nowrap;
+    content: '\2714';
+    display: block;
+    background: #f2f7f9;
+    /*background-image: url('https://cdn0.iconfinder.com/data/icons/slim-square-icons-basics/100/basics-21-32.png');*/
+    pointer-events: none;
+    font-size: 50px;
+    position: absolute;
+    /*top: 0;
+    left: 0;*/
+    height: 50px;
+    width: 50px;
+    color: #464e50; /*transparent*/
+    transition: .25s all ease-in-out;
+    border-radius: 3px;
+    line-height: 50px;
+   /* background-position: 0 50px;
+    background-repeat: no-repeat;
+    background-size: 50px 50px;*/
+    border-width: 2px;
+    border-style: solid;
+    border-color: #b8c3c5;
+  }
+  input[type=checkbox].rowCB:checked:after {
+    background-color: #c3f3b1;
+    background-position: 0 0;
+  }
+  input[type=checkbox].rowCB:hover:after{
+    border-color: #bfff6c;
+  }

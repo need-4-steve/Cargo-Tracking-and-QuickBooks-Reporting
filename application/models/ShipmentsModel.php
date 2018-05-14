@@ -68,20 +68,20 @@ class ShipmentsModel extends CI_Model
                 Field::inst( 'shipments.final_destination' )
                     ->setFormatter( Format::ifEmpty( null ) ),
                 Field::inst( 'shipments.eta' )
-                    ->validator( Validate::dateFormat( 'Y-m-d H:i:s' ) )
-                    ->getFormatter( Format::datetime( 'Y-m-d H:i:s', 'Y-m-d H:i:s' ) )
-                    ->setFormatter( Format::datetime( 'Y-m-d H:i:s', 'Y-m-d H:i:s' ) ),
+                    ->validator( Validate::dateFormat('m-d-Y g:i A', ValidateOptions::inst()->allowEmpty( false )))
+                    ->getFormatter( Format::datetime('Y-m-d H:i:s','m-d-Y g:i A'))
+                    ->setFormatter( Format::datetime('m-d-Y g:i A','Y-m-d H:i:s')),
                 Field::inst( 'shipments.lfd' )
-                    ->validator( Validate::dateFormat( 'd-m-y' ) )
-                    ->getFormatter( Format::dateSqlToFormat( 'd-m-y' ) )
-                    ->setFormatter( Format::dateFormatToSql( 'd-m-y' ) ),
+                    ->validator( Validate::dateFormat( 'm-d-y' ) )
+                    ->getFormatter( Format::dateSqlToFormat( 'm-d-y' ) )
+                    ->setFormatter( Format::dateFormatToSql( 'm-d-y' ) ),
                 Field::inst( 'shipments.pickup_number' )
                     ->validator( Validate::numeric() )
                     ->setFormatter( Format::ifEmpty( null ) ),
                 Field::inst( 'shipments.truck_date' )
-                    ->validator( Validate::dateFormat( 'Y-m-d H:i:s' ) )
-                    ->getFormatter( Format::datetime( 'Y-m-d H:i:s', 'Y-m-d H:i:s' ) )
-                    ->setFormatter( Format::datetime( 'Y-m-d H:i:s', 'Y-m-d H:i:s' ) ),
+                    ->validator( Validate::dateFormat('m-d-Y g:i A', ValidateOptions::inst()->allowEmpty( false )))
+                    ->getFormatter( Format::datetime('Y-m-d H:i:s','m-d-Y g:i A'))
+                    ->setFormatter( Format::datetime('m-d-Y g:i A','Y-m-d H:i:s')),
                 Field::inst( 'shipments.trucker_id' )
                     ->options( Options::inst()
                         ->table( 'truckers' )
