@@ -2,11 +2,11 @@
 <table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered hover" id="shipments" width="100%">
     <thead>
     <tr>
-        <th colspan="14"></th>
+        <th colspan="16"></th>
         <th colspan="6">Reminders</th>
-        <th colspan="1">    </th>
     </tr>
     <tr>
+        <th>Select</th>
         <th>Status</th>
         <th>PO</th>
         <th>Product Name</th>

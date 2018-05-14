@@ -159,7 +159,7 @@
                 "targets": "_all"
             }],
             select: {
-                style: 'api'
+                style: 'true'
             },
             columns:
                 [   /*{   // Responsive control column
@@ -167,13 +167,13 @@
                         defaultContent: '',
                         className: 'control',
                         orderable: false
-                    },
+                    },*/
                     {   // Checkbox select column
                         data: null,
                         defaultContent: '',
                         className: 'select-checkbox',
                         orderable: false
-                    },*/
+                    },
                     {data: "shipments.status"},
                     {data: "shipments.po"},
                     {data: "products.product_name", editField: "shipments.product_id"},
@@ -278,7 +278,7 @@
                         className: "dt-body-center"
                     }
                 ],
-            order: [[ 8, 'asc' ], [ 7, 'asc' ]],
+            order: [[ 9, 'asc' ], [ 8, 'asc' ]],
             /*createdRow:
                 function( row, data, index ) {
                     if (data.
@@ -294,71 +294,73 @@
                     $('#editor-qb_ws', row).prop( 'checked', data.shipments.qb_ws == 1 );
                     $('#editor-requires_payment', row).prop( 'checked', data.shipments.requires_payment == 1 );
                     if (data.shipments.freight == 1){
-                        $("td:nth-child(16)", row).addClass("status_green");
-                        $("td:nth-child(16)", row).removeClass("status_red");
-                    } else {
-                        $("td:nth-child(16)", row).removeClass("status_green");
-                        $("td:nth-child(16)", row).addClass("status_red");
-                    }
-                    if (data.shipments.isf_required == 1){
-                        $("td:nth-child(17)", row).addClass("status_green");
+                        $("td:nth-child(17)", row).addClass("status_blue");
                         $("td:nth-child(17)", row).removeClass("status_red");
                     } else {
-                        $("td:nth-child(17)", row).removeClass("status_green");
+                        $("td:nth-child(17)", row).removeClass("status_blue");
                         $("td:nth-child(17)", row).addClass("status_red");
                     }
-                    if (data.shipments.customs == 1){
-                        $("td:nth-child(18)", row).addClass("status_green");
+                    if (data.shipments.isf_required == 1){
+                        $("td:nth-child(18)", row).addClass("status_blue");
                         $("td:nth-child(18)", row).removeClass("status_red");
                     } else {
-                        $("td:nth-child(18)", row).removeClass("status_green");
+                        $("td:nth-child(18)", row).removeClass("status_blue");
                         $("td:nth-child(18)", row).addClass("status_red");
                     }
-                    if (data.shipments.qb_rt == 1){
-                        $("td:nth-child(19)", row).addClass("status_green");
+                    if (data.shipments.customs == 1){
+                        $("td:nth-child(19)", row).addClass("status_blue");
                         $("td:nth-child(19)", row).removeClass("status_red");
                     } else {
-                        $("td:nth-child(19)", row).removeClass("status_green");
+                        $("td:nth-child(19)", row).removeClass("status_blue");
                         $("td:nth-child(19)", row).addClass("status_red");
                     }
-                    if (data.shipments.qb_ws == 1){
-                        $("td:nth-child(20)", row).addClass("status_green");
+                    if (data.shipments.qb_rt == 1){
+                        $("td:nth-child(20)", row).addClass("status_blue");
                         $("td:nth-child(20)", row).removeClass("status_red");
                     } else {
-                        $("td:nth-child(20)", row).removeClass("status_green");
+                        $("td:nth-child(20)", row).removeClass("status_blue");
                         $("td:nth-child(20)", row).addClass("status_red");
                     }
-                    if (data.shipments.requires_payment == 1){
-                        $("td:nth-child(21)", row).addClass("status_green");
+                    if (data.shipments.qb_ws == 1){
+                        $("td:nth-child(21)", row).addClass("status_blue");
                         $("td:nth-child(21)", row).removeClass("status_red");
                     } else {
-                        $("td:nth-child(21)", row).removeClass("status_green");
+                        $("td:nth-child(21)", row).removeClass("status_blue");
                         $("td:nth-child(21)", row).addClass("status_red");
+                    }
+                    if (data.shipments.requires_payment == 1){
+                        $("td:nth-child(22)", row).addClass("status_blue");
+                        $("td:nth-child(22)", row).removeClass("status_red");
+                    } else {
+                        $("td:nth-child(22)", row).removeClass("status_blue");
+                        $("td:nth-child(22)", row).addClass("status_red");
                     }
                    /* var columnIndex;
                     var colCount = data.length;
                     for (columnIndex = 14; columnIndex < colCount; i++) { 
                         if ( data[columnIndex] == 1 ) {
-                            $('td', row).eq(columnIndex).addClass('status_green');
+                            $('td', row).eq(columnIndex).addClass('status_blue');
                             $('td', row).eq(columnIndex).removeClass('status_yellow');
                             $('td', row).eq(columnIndex).removeClass('status_red');
                         } else {
                             $('td', row).eq(columnIndex).addClass('status_red');
                             $('td', row).eq(columnIndex).removeClass('status_yellow');
-                            $('td', row).eq(columnIndex).removeClass('status_green');
+                            $('td', row).eq(columnIndex).removeClass('status_blue');
                         }
                     }*/
                 }
             });
 
-        $('#shipments')
+        
+        
+            $('#shipments')
             .on( 'change', '#editor-freight', 
                 function () {
                     editor.edit( $(this).closest('tr'), false, {submit: 'changed'} )
                         .set( 'shipments.freight', $(this).prop( 'checked' ) ? 1 : 0 )
                         .submit();
-                        $(this).closest('td').removeClass($(this).prop( 'checked' ) ? 'status_red' : "status_green" );
-                        $(this).closest('td').addClass( ($(this).prop( 'checked' )) ? 'status_green' : "status_red" );
+                        $(this).closest('td').removeClass($(this).prop( 'checked' ) ? 'status_red' : "status_blue" );
+                        $(this).closest('td').addClass( ($(this).prop( 'checked' )) ? 'status_blue' : "status_red" );
                 }
             )
             .on( 'change', '#editor-isfrequired', 
@@ -366,8 +368,8 @@
                     editor.edit( $(this).closest('tr'), false, {submit: 'changed'} )
                         .set( 'shipments.isf_required', $(this).prop( 'checked' ) ? 1 : 0 )
                         .submit();
-                        $(this).closest('td').removeClass($(this).prop( 'checked' ) ? 'status_red' : "status_green" );
-                        $(this).closest('td').addClass( ($(this).prop( 'checked' )) ? 'status_green' : "status_red" );
+                        $(this).closest('td').removeClass($(this).prop( 'checked' ) ? 'status_red' : "status_blue" );
+                        $(this).closest('td').addClass( ($(this).prop( 'checked' )) ? 'status_blue' : "status_red" );
                 }
             )
             .on( 'change', '#editor-customs', 
@@ -375,8 +377,8 @@
                     editor.edit( $(this).closest('tr'), false, {submit: 'changed'} )
                         .set( 'shipments.customs', $(this).prop( 'checked' ) ? 1 : 0 )
                         .submit();
-                        $(this).closest('td').removeClass($(this).prop( 'checked' ) ? 'status_red' : "status_green" );
-                        $(this).closest('td').addClass( ($(this).prop( 'checked' )) ? 'status_green' : "status_red" );
+                        $(this).closest('td').removeClass($(this).prop( 'checked' ) ? 'status_red' : "status_blue" );
+                        $(this).closest('td').addClass( ($(this).prop( 'checked' )) ? 'status_blue' : "status_red" );
                 }
             )
             .on( 'change', '#editor-qb_rt', 
@@ -384,8 +386,8 @@
                     editor.edit( $(this).closest('tr'), false, {submit: 'changed'} )
                         .set( 'shipments.qb_rt', $(this).prop( 'checked' ) ? 1 : 0 )
                         .submit();
-                        $(this).closest('td').removeClass($(this).prop( 'checked' ) ? 'status_red' : "status_green" );
-                        $(this).closest('td').addClass( ($(this).prop( 'checked' )) ? 'status_green' : "status_red" );
+                        $(this).closest('td').removeClass($(this).prop( 'checked' ) ? 'status_red' : "status_blue" );
+                        $(this).closest('td').addClass( ($(this).prop( 'checked' )) ? 'status_blue' : "status_red" );
                 }
             )
             .on( 'change', '#editor-qb_ws',
@@ -393,8 +395,8 @@
                     editor.edit( $(this).closest('tr'), false, {submit: 'changed'} )
                         .set( 'shipments.qb_ws', $(this).prop( 'checked' ) ? 1 : 0 )
                         .submit();
-                        $(this).closest('td').removeClass($(this).prop( 'checked' ) ? 'status_red' : "status_green" );
-                        $(this).closest('td').addClass( ($(this).prop( 'checked' )) ? 'status_green' : "status_red" );
+                        $(this).closest('td').removeClass($(this).prop( 'checked' ) ? 'status_red' : "status_blue" );
+                        $(this).closest('td').addClass( ($(this).prop( 'checked' )) ? 'status_blue' : "status_red" );
                 }
             )
             .on( 'change', '#editor-requires_payment', 
@@ -402,21 +404,25 @@
                     editor.edit( $(this).closest('tr'), false, {submit: 'changed'} )
                         .set( 'shipments.requires_payment', $(this).prop( 'checked' ) ? 1 : 0 )
                         .submit();
-                        $(this).closest('td').removeClass($(this).prop( 'checked' ) ? 'status_red' : "status_green" );
-                        $(this).closest('td').addClass( ($(this).prop( 'checked' )) ? 'status_green' : "status_red" );
+                        $(this).closest('td').removeClass($(this).prop( 'checked' ) ? 'status_red' : "status_blue" );
+                        $(this).closest('td').addClass( ($(this).prop( 'checked' )) ? 'status_blue' : "status_red" );
                 }
             )
         ;
+        
+        
         // Activate an inline edit on click of a table cell
-        // or a DataTables Responsive data cell
+        // or a DataTables Responsive data cell 
         $('#shipments').on( 'click', 'tbody td:not(:first-child)', function (e) {
-            var colIdx = table.cell(this).index().column;
-            if ( colIdx <14 ) {
-                editor.inline(this, {
-                    onBlur: 'submit'
-                });
-            }
-        } );
+                var colIdx = table.cell(this).index().column;
+                if ( colIdx <15 ) {
+                    editor.inline(this, {
+                        onBlur: 'submit'
+                    });
+                }
+                /*  $("#shipments tbody tr").removeClass('selected');		
+                     $(this).addClass('selected');*/
+        });
 
         /* $('#shipments tbody')
             .on('mouseenter','tr', function(){
@@ -444,7 +450,7 @@
             } );*/
 
 
-      /*  new $.fn.dataTable.Buttons(
+        new $.fn.dataTable.Buttons(
             table,
             [
                 { extend: "create", editor: editor },
@@ -454,7 +460,7 @@
         );
 
         table.buttons().container()
-            .appendTo( $('.col-md-6:eq(0)', table.table().container() ) );*/
+            .appendTo( $('.col-md-6:eq(0)', table.table().container() ) );
     } );
 
     }(jQuery));
