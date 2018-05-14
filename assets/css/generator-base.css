@@ -114,8 +114,8 @@ input[type=checkbox].rowCB{
     -ms-transition: all 0.30s ease-in-out;
     -o-transition: all 0.30s ease-in-out;
     outline: none;
-    width: 40px;
-    height: 40px;
+    width: 30px;
+    height: 30px;
 }
 
 input[type=checkbox].rowCB:after{
@@ -124,12 +124,12 @@ input[type=checkbox].rowCB:after{
     content: '\0020';
     display: block;
     pointer-events: none;
-    font-size: 40px;
-    height: 40px;
-    width: 40px;
+    font-size: 30px;
+    height: 30px;
+    width: 30px;
     transition: .25s all ease-in-out;
     border-radius: 3px;
-    line-height: 40px;
+    line-height: 30px;
     border-width: 2px;
     border-style: solid;
     border: 1px solid #ae3411;
@@ -153,34 +153,40 @@ input[type=checkbox].rowCB:after{
 
   .circle_red {
     transition: .25s all ease-in-out;
-	width: 100px;
-	height: 100px;
+	width: 30px;
+	height: 30px;
     background: #ff410c;
-    border-color: rgba(255, 0, 0, 1);
-	-moz-border-radius: 50px;
-	-webkit-border-radius: 50px;
-    border-radius: 50px;
-    box-shadow: 0 0 5px rgba(81, 203, 238, 1);
+    border: 1px solid #ae3411;
+	-moz-border-radius: 15px;
+	-webkit-border-radius: 15px;
+    border-radius: 15px;
+    box-shadow: 0 0 2px rgba(81, 203, 238, 1);
+    margin: auto;
+   /* margin-top: -16px;*/
   }  
   .circle_yellow {
     transition: .25s all ease-in-out;
-	width: 100px;
-	height: 100px;
-    background: #ffe700;
-    border-color: #c29f00;
-	-moz-border-radius: 50px;
-	-webkit-border-radius: 50px;
-	border-radius: 50px;
-    box-shadow: 0 0 5px rgba(255, 255, 0, 1);
+	width: 30px;
+	height: 30px;
+    background: #fffc20;
+    border: 1px solid #ffe055;
+	-moz-border-radius: 15px;
+	-webkit-border-radius: 15px;
+	border-radius: 15px;
+    box-shadow: 0 0 2px rgba(255, 255, 0, 1);
+    margin: auto;
+   /* margin-top: -16px;*/
   }  
   .circle_green {
     transition: .25s all ease-in-out;
-	width: 100px;
-	height: 100px;
-    background: #c5ffad;
-    border-color: #5bba34;
-	-moz-border-radius: 50px;
-	-webkit-border-radius: 50px;
-	border-radius: 50px;
-    box-shadow: 0 0 5px rgba(127, 255, 77, 1);
+	width: 30px;
+	height: 30px;
+    background: #93ff65;
+    border: 1px solid #5bba34;
+	-moz-border-radius: 30px;
+	-webkit-border-radius: 30px;
+	border-radius: 30px;
+    box-shadow: 0 0 2px rgba(127, 255, 77, 1);
+    margin: auto;
+   /* margin-top: -16px;*/
 }  

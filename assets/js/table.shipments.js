@@ -12,9 +12,10 @@
             table: '#shipments',
             fields:
                 [   {
-                    label: "Status:",
-                    name: "shipments.status"
-                },
+                        label: "Status:",
+                        name: "shipments.status",
+                        type: "readonly"
+                    },
                     {
                         label: "PO:",
                         name: "shipments.po"
@@ -54,15 +55,14 @@
                     {
                         label: "ETA:",
                         name: "shipments.eta",
-                        type: "datetime",
-                        format:    'MM-DD-YYYY h:mm A'
+                        type: "date",
+                        format:    'YYYY-MM-DD'
                     },
                     {
                         label: "LFD:",
                         name: "shipments.lfd",
                         type: "date",
-                        format:    'MM-DD-YYYY',
-                        fieldInfo: 'US style m-d-y date'
+                        format:    'YYYY-MM-DD'
                     },
                     {
                         label: "Pickup Number:",
@@ -71,7 +71,8 @@
                     {
                         label: "Truck Date:",
                         name: "shipments.truck_date",
-                        format:    'MM-DD-YYYY h:mm A'
+                        type: "datetime",
+                        format:    'YYYY-MM-DD h:mm A'
                     },
                     {
                         label: "Truck Co.:",
@@ -174,7 +175,9 @@
                         className: 'select-checkbox',
                         orderable: false
                     },
-                    {data: "shipments.status"},
+                    {
+                        data: "shipments.status"
+                    },
                     {data: "shipments.po"},
                     {data: "products.product_name", editField: "shipments.product_id"},
                     {data: "shipments.container_number"},
@@ -184,15 +187,6 @@
                     {data: "shipments.final_destination"},
                     {
                         data: "shipments.eta"
-                       /* render: 
-                            function ( data, type, row ) {
-                                if(Boolean(data)){
-                                    var date = new Date(data);  
-                                    return (date.getMonth()+1)+'/'+(date.getDate())+'/'+(date.getYear())+' '+(date.getHours())+':'+(date.getMinutes())+':'+(date.getSeconds());
-                                }else{
-                                    return '';
-                                }
-                            }*/
                     },
                     {data: "shipments.lfd"},
                     {data: "shipments.pickup_number"},
@@ -278,7 +272,7 @@
                         className: "dt-body-center"
                     }
                 ],
-            order: [[ 9, 'asc' ], [ 8, 'asc' ]],
+            order: [[ 9, 'asc' ], [ 6, 'asc' ], [2, 'asc']],
             /*createdRow:
                 function( row, data, index ) {
                     if (data.
@@ -453,7 +447,7 @@
         new $.fn.dataTable.Buttons(
             table,
             [
-                { extend: "create", editor: editor },
+               /* { extend: "create", editor: editor },*/
                 { extend: "edit",   editor: editor },
                 { extend: "remove", editor: editor }
             ]

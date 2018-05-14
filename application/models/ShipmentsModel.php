@@ -68,20 +68,20 @@ class ShipmentsModel extends CI_Model
                 Field::inst( 'shipments.final_destination' )
                     ->setFormatter( Format::ifEmpty( null ) ),
                 Field::inst( 'shipments.eta' )
-                    ->validator( Validate::dateFormat('m-d-Y g:i A', ValidateOptions::inst()->allowEmpty( false )))
-                    ->getFormatter( Format::datetime('Y-m-d H:i:s','m-d-Y g:i A'))
-                    ->setFormatter( Format::datetime('m-d-Y g:i A','Y-m-d H:i:s')),
+                    ->validator( Validate::dateFormat( 'Y-m-d' ) )
+                    ->getFormatter( Format::dateSqlToFormat( 'Y-m-d' ) )
+                    ->setFormatter( Format::dateFormatToSql('Y-m-d' ) ),
                 Field::inst( 'shipments.lfd' )
-                    ->validator( Validate::dateFormat( 'm-d-y' ) )
-                    ->getFormatter( Format::dateSqlToFormat( 'm-d-y' ) )
-                    ->setFormatter( Format::dateFormatToSql( 'm-d-y' ) ),
+                    ->validator( Validate::dateFormat( 'Y-m-d' ) )
+                    ->getFormatter( Format::dateSqlToFormat( 'Y-m-d' ) )
+                    ->setFormatter( Format::dateFormatToSql('Y-m-d' ) ),
                 Field::inst( 'shipments.pickup_number' )
                     ->validator( Validate::numeric() )
                     ->setFormatter( Format::ifEmpty( null ) ),
                 Field::inst( 'shipments.truck_date' )
-                    ->validator( Validate::dateFormat('m-d-Y g:i A', ValidateOptions::inst()->allowEmpty( false )))
-                    ->getFormatter( Format::datetime('Y-m-d H:i:s','m-d-Y g:i A'))
-                    ->setFormatter( Format::datetime('m-d-Y g:i A','Y-m-d H:i:s')),
+                    ->validator( Validate::dateFormat( 'Y-m-d' ) )
+                    ->getFormatter( Format::dateSqlToFormat( 'Y-m-d' ) )
+                    ->setFormatter( Format::dateFormatToSql('Y-m-d' ) ),
                 Field::inst( 'shipments.trucker_id' )
                     ->options( Options::inst()
                         ->table( 'truckers' )

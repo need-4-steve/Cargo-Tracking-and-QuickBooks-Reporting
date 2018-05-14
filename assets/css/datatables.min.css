@@ -9994,7 +9994,7 @@ table.dataTable tbody>tr.selected,table.dataTable tbody>tr>.selected
 table.dataTable.stripe tbody>tr.odd.selected,table.dataTable.stripe tbody>tr.odd>.selected,table.dataTable.display tbody>tr.odd.selected,table.dataTable.display tbody>tr.odd>.selected
 {background-color:#0272d3}
 table.dataTable.hover tbody>tr.selected:hover,table.dataTable.hover tbody>tr>.selected:hover,table.dataTable.display tbody>tr.selected:hover,table.dataTable.display tbody>tr>.selected:hover
-{background-color:#0271d0}
+{background-color:rgba(2, 117, 216, 0.38);}
 table.dataTable.order-column tbody>tr.selected>.sorting_1,table.dataTable.order-column tbody>tr.selected>.sorting_2,table.dataTable.order-column tbody>tr.selected>.sorting_3,
 table.dataTable.order-column tbody>tr>.selected,table.dataTable.display tbody>tr.selected>.sorting_1,table.dataTable.display tbody>tr.selected>.sorting_2,table.dataTable.display tbody>tr.selected>.sorting_3,
 table.dataTable.display tbody>tr>.selected
@@ -10045,9 +10045,9 @@ table.dataTable tbody th.select-checkbox:after
       top: 15%;
       left: 8%;*/
       pointer-events: none;
-      font-size: 40px;
-      height: 40px;
-      width: 40px;
+      font-size: 30px;
+      height: 30px;
+      width: 30px;
       box-sizing:border-box;
   }
 table.dataTable tbody td.select-checkbox:before,
@@ -10055,17 +10055,18 @@ table.dataTable tbody th.select-checkbox:before
   {   content:' ';
       /* margin-top:-6px;
       margin-left:-6px;*/
+      margin-left: 15%;
       transition: .25s all ease-in-out;
       border-radius: 3px;
-      line-height: 40px;
+      line-height: 30px;
       border:2px solid black;
   }
 table.dataTable tr.selected td.select-checkbox:after,
 table.dataTable tr.selected th.select-checkbox:after
   {   content:'\2714';
       position: absolute;
-      margin-top:-50px;
-      margin-left:-4px;
+      margin-top:-36px;
+      margin-left:4px;
       text-align:center;
       text-shadow:1px 1px #B0BED9, -1px -1px #B0BED9, 1px -1px #B0BED9, -1px 1px #B0BED9;
   }

@@ -198,9 +198,28 @@ class Shipments extends CI_Controller
                         }
                     }
                 }
-                $testDate    = date("01/01/2018");
+                //$testDate    = date("m/d/Y");
+//                $timestampDate=date("Y-m-d H:i:s");
+                
                 if (!is_null($data['newContainers'][$c - 1]['eta']) && (strtotime($data['newContainers'][$c - 1]['eta']) < strtotime('2017-01-01 12:00'))){
                     $data['newContainers'][$c - 1]['eta'] = NULL;
+                    $data['newContainers'][$c - 1]['status'] = NULL;
+                } else {
+                    $start  = strtotime($data['newContainers'][$c - 1]['eta']);
+                    $end    = time(); //now
+                    $diff   = $end - $start;
+                    $daysDifference= floor($diff / (60 * 60 * 24));    
+                   // echo '<hr/>cn:{'.$data['newContainers'][$c - 1]['container_number'].'}->daysDifferent: ' . $daysDifference . '<br/>';
+                    $statusHTML ="<div class='[TYPE]'><p></p></div>";
+                    $statusValue='';
+                    if (abs($daysDifference) > 0 && abs($daysDifference)< 3) {
+                        $statusValue="circle_red";
+                    } else if (abs($daysDifference) >= 3 && abs($daysDifference)<=7) {
+                        $statusValue="circle_yellow";
+                    } else if (abs($daysDifference) > 7) {
+                        $statusValue="circle_green";
+                    }
+                    $data['newContainers'][$c - 1]['status'] = str_replace("[TYPE]", $statusValue, $statusHTML);
                 }
                 $data['newContainers'][$c - 1]['final_destination'] = $data['newContainers'][$c - 1]['destination_city'] . ', ' . $data['newContainers'][$c - 1]['destination_state'];
                 $data['newContainers'][$c - 1]['vendor_id'] = $this->ShipmentsModel->get_vendor_id_by_name($data['newContainers'][$c - 1]['vendor_name']);
@@ -215,6 +234,7 @@ class Shipments extends CI_Controller
         $numObjects = count($data['newContainers']);
         for ($a = 0; $a < $numObjects; $a++) {
             $updateData = array(
+                'status' => $data['newContainers'][$a]['status'],
                 'bill_of_lading' => $data['newContainers'][$a]['bill_of_lading'],
                 'vendor_id' => $data['newContainers'][$a]['vendor_id'],
                 'discharge_port' => $data['newContainers'][$a]['discharge_port'],
@@ -238,13 +258,34 @@ class Shipments extends CI_Controller
                         $updateData['isf_required'] = $data['newContainers'][$a]['isf_required'];
                     }
                 }
-               /* if (array_key_exists('requires_payment', $tmpObj)){
+                if (array_key_exists('customs', $tmpObj)){
+                    if ($tmpObj['customs'] !== $data['newContainers'][$a]['customs']) {
+                        $updateData['customs'] = $tmpObj['customs'];
+                    } else {
+                        $updateData['customs'] = $data['newContainers'][$a]['customs'];
+                    }
+                }
+                if (array_key_exists('qb_rt', $tmpObj)){
+                    if ($tmpObj['qb_rt'] !== $data['newContainers'][$a]['qb_rt']) {
+                        $updateData['qb_rt'] = $tmpObj['qb_rt'];
+                    } else {
+                        $updateData['qb_rt'] = $data['newContainers'][$a]['qb_rt'];
+                    }
+                }
+                if (array_key_exists('qb_ws', $tmpObj)){
+                    if ($tmpObj['qb_ws'] !== $data['newContainers'][$a]['qb_ws']) {
+                        $updateData['qb_ws'] = $tmpObj['qb_ws'];
+                    } else {
+                        $updateData['qb_ws'] = $data['newContainers'][$a]['qb_ws'];
+                    }
+                }
+                if (array_key_exists('requires_payment', $tmpObj)){
                     if ($tmpObj['requires_payment'] !== $data['newContainers'][$a]['requires_payment']) {
                         $updateData['requires_payment'] = $tmpObj['requires_payment'];
                     } else {
                         $updateData['requires_payment'] = $data['newContainers'][$a]['requires_payment'];
                     }
-                }*/
+                }
                 $this->ShipmentsModel->update_record(array('container_number' => $data['newContainers'][$a]['container_number']), $updateData);
             } else {
                 $updateData['container_number'] = $data['newContainers'][$a]['container_number'];
