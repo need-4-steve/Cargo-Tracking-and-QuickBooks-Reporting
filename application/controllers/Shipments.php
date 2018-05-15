@@ -292,8 +292,8 @@ class Shipments extends CI_Controller
                 $this->ShipmentsModel->add_record($updateData);
             }
         }
-        $this->get_lfd_and_pickup_number_from_bol();
-        $lfd = $this->get_lfd_from_bol();
+      /*  $this->get_lfd_and_pickup_number_from_bol();
+        $lfd = $this->get_lfd_from_bol();*/
         $curlData=array();
         $uniqueBoLs = $this->ShipmentsModel->get_unique_records_by_BoL(1);
         for ($i=0; $i<count($uniqueBoLs);$i++){
