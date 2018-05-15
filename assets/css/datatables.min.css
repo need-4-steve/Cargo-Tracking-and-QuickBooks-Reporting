@@ -1742,12 +1742,13 @@
    border: 0;
  }
  .table-striped tbody tr:nth-of-type(even) {
-  /* background-color:#cbd6e3;*/
-  background-color: #D0E4F5;
+ /*background-color:#cbd6e3;*/
+  background-color:rgb(245, 245, 245);
+  /*background-color: #D0E4F5;*/
 
  }
  .table-striped tbody tr:nth-of-type(odd) {
-   background-color:rgba(225, 225, 225, .5);
+   background-color:white;
  }
  
  .table-hover tbody tr:hover {

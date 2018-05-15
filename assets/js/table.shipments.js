@@ -281,6 +281,9 @@
                 function ( row, data ) {
                     // Set the checked state of the checkbox in the table
                     //alert("data: "+data.toString());
+                    if (data[8]==='1970-01-01'){
+                        data[8]='';
+                    }
                     $('#editor-freight', row).prop( 'checked', data.shipments.freight == 1 );
                     $('#editor-isfrequired', row).prop( 'checked', data.shipments.isf_required == 1 );
                     $('#editor-customs', row).prop( 'checked', data.shipments.customs == 1 );
