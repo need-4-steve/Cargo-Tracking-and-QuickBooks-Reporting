@@ -9719,7 +9719,7 @@ table.dataTable tbody tr:last-child{
 table.dataTable tbody tr:last-child > td:nth-child(1) {
   border-radius: 0px 0px 0px 6px !important;
 }
-table.dataTable tbody tr:last-child > td:nth-child(21) {
+table.dataTable tbody tr:last-child > td:nth-child(22) {
   border-radius: 0px 0px 6px 0px !important;
 }
 table.dataTable thead {
