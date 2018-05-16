@@ -55,14 +55,14 @@
                     {
                         label: "ETA:",
                         name: "shipments.eta",
-                        type: "date",
-                        format:    'YYYY-MM-DD'
+                        type: "datetime",
+                        format:    'M/D/YYYY'
                     },
                     {
                         label: "LFD:",
                         name: "shipments.lfd",
-                        type: "date",
-                        format:    'YYYY-MM-DD'
+                        type: "datetime",
+                        format:    'M/D/YYYY'
                     },
                     {
                         label: "Pickup Number:",

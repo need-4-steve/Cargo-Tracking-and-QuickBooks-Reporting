@@ -69,19 +69,19 @@ class ShipmentsModel extends CI_Model
                     ->setFormatter( Format::ifEmpty( null ) ),
                 Field::inst( 'shipments.eta' )
                     ->validator( Validate::dateFormat( 'Y-m-d' ) )
-                    ->getFormatter( Format::dateSqlToFormat( 'Y-m-d' ) )
-                    ->setFormatter( Format::dateFormatToSql('Y-m-d' ) ),
+                    ->getFormatter( Format::datetime( 'Y-m-d', 'm-d-Y' ) )
+                    ->setFormatter( Format::datetime('m-d-Y', 'Y-m-d' ) ),
                 Field::inst( 'shipments.lfd' )
                     ->validator( Validate::dateFormat( 'Y-m-d' ) )
-                    ->getFormatter( Format::dateSqlToFormat( 'Y-m-d' ) )
-                    ->setFormatter( Format::dateFormatToSql('Y-m-d' ) ),
+                    ->getFormatter( Format::datetime( 'Y-m-d', 'm-d-Y' ) )
+                    ->setFormatter( Format::datetime('m-d-Y', 'Y-m-d' ) ),
                 Field::inst( 'shipments.pickup_number' )
                     ->validator( Validate::numeric() )
                     ->setFormatter( Format::ifEmpty( null ) ),
                 Field::inst( 'shipments.truck_date' )
-                    ->validator( Validate::dateFormat( 'Y-m-d' ) )
-                    ->getFormatter( Format::dateSqlToFormat( 'Y-m-d' ) )
-                    ->setFormatter( Format::dateFormatToSql('Y-m-d' ) ),
+                    ->validator( Validate::dateFormat('m-d-Y g:i A') )
+                    ->getFormatter( Format::datetime('Y-m-d H:i:s','m-d-Y g:i A') )
+                    ->setFormatter( Format::datetime('m-d-Y g:i A','Y-m-d H:i:s') ),
                 Field::inst( 'shipments.trucker_id' )
                     ->options( Options::inst()
                         ->table( 'truckers' )
