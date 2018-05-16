@@ -22,300 +22,306 @@ class Shipments extends CI_Controller
 
     public function getcurrent () {
         $starttime = microtime(true);
-
-        // Check login
-        if (!$this->session->userdata('logged_in')) {
-            redirect('users/login');
-        }
-        $dataRows = array();
-        /* connect to gmail */
-        set_time_limit(4000);
-        $hostname = '{imap.gmail.com:993/imap/ssl}INBOX';
-        $username = 'cargodata.libra';
-        $password = 'Libra123$$';
-        /* try to connect */
-        $inbox = imap_open($hostname, $username, $password) or die('Cannot connect to Gmail: ' . imap_last_error());
-        $subjpass = 'COSCO SHIPPING Lines report, Daily B/L Report';
-        /* if emails are returned, cycle through each... */
-        $failSafe = TRUE;
-        if ($inbox !== FALSE) {
-            $numMsg = imap_num_msg($inbox);
-            $emails = imap_search($inbox, 'ALL', SE_UID);
-            if (!$emails) {
-                echo "NO NEW DATA";
-                $failSafe = FALSE;
-            }
-            if ($failSafe) {
-                //var_dump($emails);
-                /* put the newest emails on top */
-                rsort($emails);
-                /* for every email... */
-                $reportEmailFound = FALSE;
-                foreach ($emails as $email_number) {
-                    if ($reportEmailFound) break;
-                    $msgno = imap_msgno($inbox, $email_number);
-                    $header = imap_headerinfo($inbox, $msgno);
-                    //var_dump($header);
-                    if ($header === false) {
-                        echo "email header parsing error. line 52 Shipments.php -sv";
-                    }
-                    $msgBody = imap_body($inbox, $msgno);
-                    /* get information specific to this email */
-                    //echo "<br/>email_number: $email_number <br/> msgNo: $msgno<br/>";
-                    $overview = imap_fetch_overview($inbox, $msgno, 0) or die("can't fetch overview: " . imap_last_error());
-                    if (!$overview) {
-                        echo "overview failed...container line 124<br/>";
-                        $failSafe = FALSE;
-                    }
-                    if ($failSafe) {
-                        $pos = strpos($overview[0]->subject, 'COSCO SHIPPING Lines report, Daily B/L Report');
-                        $pos2 = strpos($overview[0]->from, 'coscon@coscon.com');
-                        if ($pos !== false && $pos2 !== false) {
-                            $reportEmailFound = true;
-                            /* get mail structure */
-                            $structure = imap_fetchstructure($inbox, $msgno);
-                            $attachments = array();
-                            /* if any attachments found... */
-                            if (isset($structure->parts) && count($structure->parts)) {
-                                for ($i = 0; $i < count($structure->parts); $i++) {
-                                    $attachments[$i] = array('is_attachment' => false, 'filename' => '', 'name' => '', 'attachment' => '');
-                                    if ($structure->parts[$i]->ifdparameters) {
-                                        foreach ($structure->parts[$i]->dparameters as $object) {
-                                            if (strtolower($object->attribute) == 'filename') {
-                                                $attachments[$i]['is_attachment'] = true;
-                                                $attachments[$i]['filename'] = $object->value;
-                                                //echo "attachment found...".$attachments[$i]['filename']."<br/>";
-                                            }
-                                        }
-                                    }
-                                    if ($structure->parts[$i]->ifparameters) {
-                                        foreach ($structure->parts[$i]->parameters as $object) {
-                                            if (strtolower($object->attribute) == 'name') {
-                                                $attachments[$i]['is_attachment'] = true;
-                                                $attachments[$i]['name'] = $object->value;
-                                                //echo "attachment found...".$attachments[$i]['name']."<br/>";
-                                            }
-                                        }
-                                    }
-                                    if ($attachments[$i]['is_attachment']) {
-                                        $attachments[$i]['attachment'] = imap_fetchbody($inbox, $msgno, $i + 1);
-                                        if ($structure->parts[$i]->encoding == 3) {
-                                            //echo "BASE64 decoding file...<br/>";
-                                            /* 3 = BASE64 encoding */
-                                            $attachments[$i]['attachment'] = base64_decode($attachments[$i]['attachment']);
-                                        } elseif ($structure->parts[$i]->encoding == 4) {
-                                            //echo "QUOTED-PRINTABLE decoding file...<br/>";
-                                            /* 4 = QUOTED-PRINTABLE encoding */
-                                            $attachments[$i]['attachment'] = quoted_printable_decode($attachments[$i]['attachment']);
-                                        }
-                                    }
-                                }
-                            }
-                            /* iterate through each attachment and save it */
-                            foreach ($attachments as $attachment) {
-                                if ($attachment['is_attachment'] == 1) {
-                                    $filename = $attachment['name'];
-                                    if (empty($filename)) $filename = $attachment['filename'];
-                                    if (empty($filename)) $filename = time() . ".dat";
-                                    /*
-                                     * prefix the email number to the filename in case two emails
-                                     * have the attachment with the same file name.
-                                     */
-                                    //                echo "writing attachment to file: \n\t ./" . $msgno . "-" . $filename . "<br/>";
-                                    $fp = fopen("./" . $msgno . "-" . $filename, "w+");
-                                    //              echo "file created...writing data...!<br/>";
-                                    fwrite($fp, $attachment['attachment']);
-                                    //               echo "data written to file successfully!<br/>";
-                                    fclose($fp);
-
-                                    //               echo "\n\nFILE DATA:\n-----------------------------------<br/>";
-                                    $row = 1;
-                                    if (($handle = fopen("./" . $msgno . "-" . $filename, "r")) !== FALSE) {
-                                        while (($recordData = fgetcsv($handle, 1000, ",")) !== FALSE) {
-                                            $num = count($recordData);
-                                            //                          echo "<p> $num fields in line $row: <br /></p><br/>";
-                                            $dataRows[$row - 1] = array();
-                                            for ($c = 0; $c < $num; $c++) {
-                                                //                              echo $recordData[$c] . "<br />";
-                                                $dataRows[$row - 1][$c] = $recordData[$c];
-                                            }
-                                            $row++;
-                                        }
-                                        fclose($handle);
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    // Mark as Read
-                    $setflagSEENresult = imap_setflag_full($inbox, $email_number, "\\Seen", ST_UID);
-                    if ($setflagSEENresult === false) {
-                        echo "error occurred while setting UNSEEN flag to SEEN. line 148 Shipments.php -sv<br/>";
-                    }
-                }
-            }
-            imap_close($inbox);
-        }
-        //bill of lading	CN #	Vendor	Port of Discharge 	Destination City	Destination State	Destination Country	ETA Date/Time	ETA Time Zone	Customs Clearance Status Date/Time	Customs Clearance Status Time Zone	Customs Clearance Status	B/L Status	Latest Container Event 	Latest Container Event Date/Time	Latest Container Event Time Zone	Latest Container Event Location
-        $columnNames = array("bill_of_lading", "container_number", "vendor_name", "discharge_port", "destination_city", "destination_state", "destination_country", "eta", "eta-timezone", "customs-clearance-datetime", "customs-clearance-timezone", "customs_status", "bl_status", "latest_event", "latest_event_timestamp", "latest_event_timestamp-timezone", "latest_event_location", "container_size");
-        $data['newContainers'] = array();
-        $unassignedContainerCount=0;
-        if (count($dataRows) > 0) {
-            $this->ShipmentsModel->mark_everything_inactive();
-            $this->ShipmentsModel->archiveInactiveRecords();
-            //return;
-            $num = count($dataRows);
-            //echo "<br/>LINE 228: <br>num: $num<br>";
-            for ($c = 1; $c < $num; $c++) {
-                $valueCount = count($dataRows[$c]);
-                //echo "<br/>LINE 231: <br>c: $c<br> valueCount: $valueCount<br>";
-                //var_dump($dataRows[$c]);
-                //echo"<br/>";
-                for ($d = 0; $d < $valueCount - 1; $d++) {
-                    $key = $columnNames[$d];
-                    //echo "<br/>LINE 236: <br>c: $c<br> d: $d<br>key: $key<br>dataRows[$c][$d]:";
-                    //var_dump($dataRows[$c][$d]);
-                    //echo "<br>";
-                    $data['newContainers'][$c - 1][$key] = $dataRows[$c][$d];
-                    if ($key === 'bill_of_lading') {
-                        $data['newContainers'][$c - 1][$key] = trim(substr($data['newContainers'][$c - 1][$key], strpos($data['newContainers'][$c - 1][$key], '"') + 1, strlen($data['newContainers'][$c - 1][$key]) - (strpos($data['newContainers'][$c - 1][$key], '"') + 1) - 1));
-                    } else if ($key === 'eta' || $key === 'latest_event_timestamp') {
-                        //$data['newContainers'][$c-1][$key]= trim(substr($data['newContainers'][$c-1][$key],0,strlen($data['newContainers'][$c-1][$key])-strpos($data['newContainers'][$c-1][$key],'('))-1);
-                        //var_dump($data['newContainers'][$c-1][$key]);
-                        // "<br><hr>";
-                        if (strlen($data['newContainers'][$c - 1][$key]) >= 15) {
-                            $data['newContainers'][$c - 1][$key] = trim(substr($data['newContainers'][$c - 1][$key], 0, 16));
-                            $data['newContainers'][$c - 1][$key] = date('m/d/Y H:II', strtotime($data['newContainers'][$c - 1][$key]));
-                        } else {
-                            $data['newContainers'][$c - 1][$key] = NULL;
-                        }
-                        //$sqlFormat = 'Y-m-d H:i:s';
-                        //$data['newContainers'][$c-1][$key]=date($sqlFormat, strtotime($data['newContainers'][$c-1][$key]));
-                    }else if ($key==='container_number'){
-                        if ($data['newContainers'][$c - 1][$key]==='Unassigned'){
-                            $unassignedContainerCount++;
-                            $data['newContainers'][$c - 1][$key]=$data['newContainers'][$c - 1][$key]."[$unassignedContainerCount]";
-                        }
-                    }
-                }
-                //$testDate    = date("m/d/Y");
-//                $timestampDate=date("Y-m-d H:i:s");
-                
-                if (!is_null($data['newContainers'][$c - 1]['eta']) && (strtotime($data['newContainers'][$c - 1]['eta']) < strtotime('2017-01-01 12:00'))){
-                    $data['newContainers'][$c - 1]['eta'] = NULL;
-                    $data['newContainers'][$c - 1]['status'] = NULL;
-                } else {
-                    $start  = strtotime($data['newContainers'][$c - 1]['eta']);
-                    $end    = time(); //now
-                    $diff   = $end - $start;
-                    $daysDifference= floor($diff / (60 * 60 * 24));    
-                   // echo '<hr/>cn:{'.$data['newContainers'][$c - 1]['container_number'].'}->daysDifferent: ' . $daysDifference . '<br/>';
-                    $statusHTML ="<div class='[TYPE]'><p></p></div>";
-                    $statusValue='';
-                    if (abs($daysDifference) > 0 && abs($daysDifference)< 3) {
-                        $statusValue="circle_red";
-                    } else if (abs($daysDifference) >= 3 && abs($daysDifference)<=7) {
-                        $statusValue="circle_yellow";
-                    } else if (abs($daysDifference) > 7) {
-                        $statusValue="circle_green";
-                    }
-                    $data['newContainers'][$c - 1]['status'] = str_replace("[TYPE]", $statusValue, $statusHTML);
-                }
-                $data['newContainers'][$c - 1]['final_destination'] = $data['newContainers'][$c - 1]['destination_city'] . ', ' . $data['newContainers'][$c - 1]['destination_state'];
-                $data['newContainers'][$c - 1]['vendor_id'] = $this->ShipmentsModel->get_vendor_id_by_name($data['newContainers'][$c - 1]['vendor_name']);
-                //$data['newContainers'][$c - 1]['requires_payment'] = $this->ShipmentsModel->getISFreq($data['newContainers'][$c - 1]['discharge_port']);
-                //echo '<hr/>'.$data['newContainers'][$c - 1]['requires_payment'].'<hr/>';
-                $data['newContainers'][$c - 1]['isf_required'] = $this->ShipmentsModel->getISFreq($data['newContainers'][$c - 1]['discharge_port']);
-                $data['newContainers'][$c - 1]['latest_event_time_and_date'] = date("Y-m-d\TH:i:s", strtotime($data['newContainers'][$c - 1]['latest_event_timestamp']));
-            }
+        if (is_cli()){
+            echo "cli...";
         } else {
-            $data['newContainers'] = FALSE;
-        }
-        $numObjects = count($data['newContainers']);
-        for ($a = 0; $a < $numObjects; $a++) {
-            $updateData = array(
-                'status' => $data['newContainers'][$a]['status'],
-                'bill_of_lading' => $data['newContainers'][$a]['bill_of_lading'],
-                'vendor_id' => $data['newContainers'][$a]['vendor_id'],
-                'discharge_port' => $data['newContainers'][$a]['discharge_port'],
-                'final_destination' => $data['newContainers'][$a]['final_destination'],
-                'isf_required' => $data['newContainers'][$a]['isf_required'],
-                'eta' => date("Y-m-d\TH:i:s", strtotime($data['newContainers'][$a]['eta'])),//date("m/d/Y h:i A", strtotime($data['newContainers'][$a]['eta'])),
-                'bl_status' => $data['newContainers'][$a]['bl_status'],
-                'container_size' => $data['newContainers'][$a]['container_size'],
-                'latest_event' => $data['newContainers'][$a]['latest_event'],
-                'latest_event_time_and_date' => date("Y-m-d\TH:i:s", strtotime($data['newContainers'][$a]['latest_event_timestamp'])),//date("m/d/Y h:i A", strtotime($data['newContainers'][$a]['latest_event_timestamp'])),
-                'is_active' => TRUE
-            );
-            $tempObj = $this->ShipmentsModel->get_by_container_number($data['newContainers'][$a]['container_number']);
-            //      echo "<hr/>";var_dump($tempObj);echo "<hr/>";
-            $tmpObj = json_decode(json_encode($tempObj), True);
-            if ($tmpObj !== NULL) {
-                if (array_key_exists('isf_required', $tmpObj)){
-                    if ($tmpObj['isf_required'] !== $data['newContainers'][$a]['isf_required']) {
-                        $updateData['isf_required'] = $tmpObj['isf_required'];
-                    } else {
-                        $updateData['isf_required'] = $data['newContainers'][$a]['isf_required'];
-                    }
-                }
-                if (array_key_exists('customs', $tmpObj)){
-                    if ($tmpObj['customs'] !== $data['newContainers'][$a]['customs']) {
-                        $updateData['customs'] = $tmpObj['customs'];
-                    } else {
-                        $updateData['customs'] = $data['newContainers'][$a]['customs'];
-                    }
-                }
-                if (array_key_exists('qb_rt', $tmpObj)){
-                    if ($tmpObj['qb_rt'] !== $data['newContainers'][$a]['qb_rt']) {
-                        $updateData['qb_rt'] = $tmpObj['qb_rt'];
-                    } else {
-                        $updateData['qb_rt'] = $data['newContainers'][$a]['qb_rt'];
-                    }
-                }
-                if (array_key_exists('qb_ws', $tmpObj)){
-                    if ($tmpObj['qb_ws'] !== $data['newContainers'][$a]['qb_ws']) {
-                        $updateData['qb_ws'] = $tmpObj['qb_ws'];
-                    } else {
-                        $updateData['qb_ws'] = $data['newContainers'][$a]['qb_ws'];
-                    }
-                }
-                if (array_key_exists('requires_payment', $tmpObj)){
-                    if ($tmpObj['requires_payment'] !== $data['newContainers'][$a]['requires_payment']) {
-                        $updateData['requires_payment'] = $tmpObj['requires_payment'];
-                    } else {
-                        $updateData['requires_payment'] = $data['newContainers'][$a]['requires_payment'];
-                    }
-                }
-                $this->ShipmentsModel->update_record(array('container_number' => $data['newContainers'][$a]['container_number']), $updateData);
-            } else {
-                $updateData['container_number'] = $data['newContainers'][$a]['container_number'];
-                $this->ShipmentsModel->add_record($updateData);
+            // Check login
+            if (!$this->session->userdata('logged_in')) {
+                redirect('users/login');
             }
         }
-      /*  $this->get_lfd_and_pickup_number_from_bol();
-        $lfd = $this->get_lfd_from_bol();*/
-        $curlData=array();
-        $uniqueBoLs = $this->ShipmentsModel->get_unique_records_by_BoL(1);
-        for ($i=0; $i<count($uniqueBoLs);$i++){
-            $bol = $uniqueBoLs[$i]["bill_of_lading"];
-            $curlData = $this->get_lfd_and_pickup_number_from_bol($bol);
-            $this->ShipmentsModel->update_record( array( 'bill_of_lading' => $uniqueBoLs[$i]["bill_of_lading"] ),
-                                                                    array( 'lfd' => (empty($curlData['lfd']) ? NULL : date("Y-m-d", strtotime($curlData['lfd'])) ),
-                                                                           'pickup_number' => (empty($curlData['pickup_number']) ? NULL : $curlData['pickup_number']) ) );
-        }
-        $data['title'] = "Active Shipments";
-        echo "<p>Start time: $starttime</p>";
-        $this->ShipmentsModel->archiveInactiveRecords();
-        $endtime = microtime(true);
-        echo "<p>End time: $endtime</p>";
-        //execution time of the script
-        $execution_time = ($endtime - $starttime);//gets run time in secs
-        $execution_time = round($execution_time,2);//makes time two decimal places long
-        echo '<b>Total Execution Time:</b> '.$execution_time.' Secs';
+        if (is_cli()){
+            $dataRows = array();
+            /* connect to gmail */
+            set_time_limit(4000);
+            $hostname = '{imap.gmail.com:993/imap/ssl}INBOX';
+            $username = 'cargodata.libra';
+            $password = 'Libra123$$';
+            /* try to connect */
+            $inbox = imap_open($hostname, $username, $password) or die('Cannot connect to Gmail: ' . imap_last_error());
+            $subjpass = 'COSCO SHIPPING Lines report, Daily B/L Report';
+            /* if emails are returned, cycle through each... */
+            $failSafe = TRUE;
+            if ($inbox !== FALSE) {
+                $numMsg = imap_num_msg($inbox);
+                $emails = imap_search($inbox, 'ALL', SE_UID);
+                if (!$emails) {
+                    echo "NO NEW DATA";
+                    $failSafe = FALSE;
+                }
+                if ($failSafe) {
+                    //var_dump($emails);
+                    /* put the newest emails on top */
+                    rsort($emails);
+                    /* for every email... */
+                    $reportEmailFound = FALSE;
+                    foreach ($emails as $email_number) {
+                        if ($reportEmailFound) break;
+                        $msgno = imap_msgno($inbox, $email_number);
+                        $header = imap_headerinfo($inbox, $msgno);
+                        //var_dump($header);
+                        if ($header === false) {
+                            echo "email header parsing error. line 52 Shipments.php -sv";
+                        }
+                        $msgBody = imap_body($inbox, $msgno);
+                        /* get information specific to this email */
+                        //echo "<br/>email_number: $email_number <br/> msgNo: $msgno<br/>";
+                        $overview = imap_fetch_overview($inbox, $msgno, 0) or die("can't fetch overview: " . imap_last_error());
+                        if (!$overview) {
+                            echo "overview failed...container line 124<br/>";
+                            $failSafe = FALSE;
+                        }
+                        if ($failSafe) {
+                            $pos = strpos($overview[0]->subject, 'COSCO SHIPPING Lines report, Daily B/L Report');
+                            $pos2 = strpos($overview[0]->from, 'coscon@coscon.com');
+                            if ($pos !== false && $pos2 !== false) {
+                                $reportEmailFound = true;
+                                /* get mail structure */
+                                $structure = imap_fetchstructure($inbox, $msgno);
+                                $attachments = array();
+                                /* if any attachments found... */
+                                if (isset($structure->parts) && count($structure->parts)) {
+                                    for ($i = 0; $i < count($structure->parts); $i++) {
+                                        $attachments[$i] = array('is_attachment' => false, 'filename' => '', 'name' => '', 'attachment' => '');
+                                        if ($structure->parts[$i]->ifdparameters) {
+                                            foreach ($structure->parts[$i]->dparameters as $object) {
+                                                if (strtolower($object->attribute) == 'filename') {
+                                                    $attachments[$i]['is_attachment'] = true;
+                                                    $attachments[$i]['filename'] = $object->value;
+                                                    //echo "attachment found...".$attachments[$i]['filename']."<br/>";
+                                                }
+                                            }
+                                        }
+                                        if ($structure->parts[$i]->ifparameters) {
+                                            foreach ($structure->parts[$i]->parameters as $object) {
+                                                if (strtolower($object->attribute) == 'name') {
+                                                    $attachments[$i]['is_attachment'] = true;
+                                                    $attachments[$i]['name'] = $object->value;
+                                                    //echo "attachment found...".$attachments[$i]['name']."<br/>";
+                                                }
+                                            }
+                                        }
+                                        if ($attachments[$i]['is_attachment']) {
+                                            $attachments[$i]['attachment'] = imap_fetchbody($inbox, $msgno, $i + 1);
+                                            if ($structure->parts[$i]->encoding == 3) {
+                                                //echo "BASE64 decoding file...<br/>";
+                                                /* 3 = BASE64 encoding */
+                                                $attachments[$i]['attachment'] = base64_decode($attachments[$i]['attachment']);
+                                            } elseif ($structure->parts[$i]->encoding == 4) {
+                                                //echo "QUOTED-PRINTABLE decoding file...<br/>";
+                                                /* 4 = QUOTED-PRINTABLE encoding */
+                                                $attachments[$i]['attachment'] = quoted_printable_decode($attachments[$i]['attachment']);
+                                            }
+                                        }
+                                    }
+                                }
+                                /* iterate through each attachment and save it */
+                                foreach ($attachments as $attachment) {
+                                    if ($attachment['is_attachment'] == 1) {
+                                        $filename = $attachment['name'];
+                                        if (empty($filename)) $filename = $attachment['filename'];
+                                        if (empty($filename)) $filename = time() . ".dat";
+                                        /*
+                                        * prefix the email number to the filename in case two emails
+                                        * have the attachment with the same file name.
+                                        */
+                                        //                echo "writing attachment to file: \n\t ./" . $msgno . "-" . $filename . "<br/>";
+                                        $fp = fopen("./" . $msgno . "-" . $filename, "w+");
+                                        //              echo "file created...writing data...!<br/>";
+                                        fwrite($fp, $attachment['attachment']);
+                                        //               echo "data written to file successfully!<br/>";
+                                        fclose($fp);
 
-        $this->load->view('templates/header', $data);
-        $this->load->view('shipments/index', $data);
-        $this->load->view('templates/footer');
+                                        //               echo "\n\nFILE DATA:\n-----------------------------------<br/>";
+                                        $row = 1;
+                                        if (($handle = fopen("./" . $msgno . "-" . $filename, "r")) !== FALSE) {
+                                            while (($recordData = fgetcsv($handle, 1000, ",")) !== FALSE) {
+                                                $num = count($recordData);
+                                                //                          echo "<p> $num fields in line $row: <br /></p><br/>";
+                                                $dataRows[$row - 1] = array();
+                                                for ($c = 0; $c < $num; $c++) {
+                                                    //                              echo $recordData[$c] . "<br />";
+                                                    $dataRows[$row - 1][$c] = $recordData[$c];
+                                                }
+                                                $row++;
+                                            }
+                                            fclose($handle);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        // Mark as Read
+                        $setflagSEENresult = imap_setflag_full($inbox, $email_number, "\\Seen", ST_UID);
+                        if ($setflagSEENresult === false) {
+                            echo "error occurred while setting UNSEEN flag to SEEN. line 148 Shipments.php -sv<br/>";
+                        }
+                    }
+                }
+                imap_close($inbox);
+            }
+            //bill of lading	CN #	Vendor	Port of Discharge 	Destination City	Destination State	Destination Country	ETA Date/Time	ETA Time Zone	Customs Clearance Status Date/Time	Customs Clearance Status Time Zone	Customs Clearance Status	B/L Status	Latest Container Event 	Latest Container Event Date/Time	Latest Container Event Time Zone	Latest Container Event Location
+            $columnNames = array("bill_of_lading", "container_number", "vendor_name", "discharge_port", "destination_city", "destination_state", "destination_country", "eta", "eta-timezone", "customs-clearance-datetime", "customs-clearance-timezone", "customs_status", "bl_status", "latest_event", "latest_event_timestamp", "latest_event_timestamp-timezone", "latest_event_location", "container_size");
+            $data['newContainers'] = array();
+            $unassignedContainerCount=0;
+            if (count($dataRows) > 0) {
+                $this->ShipmentsModel->mark_everything_inactive();
+                $this->ShipmentsModel->archiveInactiveRecords();
+                //return;
+                $num = count($dataRows);
+                //echo "<br/>LINE 228: <br>num: $num<br>";
+                for ($c = 1; $c < $num; $c++) {
+                    $valueCount = count($dataRows[$c]);
+                    //echo "<br/>LINE 231: <br>c: $c<br> valueCount: $valueCount<br>";
+                    //var_dump($dataRows[$c]);
+                    //echo"<br/>";
+                    for ($d = 0; $d < $valueCount - 1; $d++) {
+                        $key = $columnNames[$d];
+                        //echo "<br/>LINE 236: <br>c: $c<br> d: $d<br>key: $key<br>dataRows[$c][$d]:";
+                        //var_dump($dataRows[$c][$d]);
+                        //echo "<br>";
+                        $data['newContainers'][$c - 1][$key] = $dataRows[$c][$d];
+                        if ($key === 'bill_of_lading') {
+                            $data['newContainers'][$c - 1][$key] = trim(substr($data['newContainers'][$c - 1][$key], strpos($data['newContainers'][$c - 1][$key], '"') + 1, strlen($data['newContainers'][$c - 1][$key]) - (strpos($data['newContainers'][$c - 1][$key], '"') + 1) - 1));
+                        } else if ($key === 'eta' || $key === 'latest_event_timestamp') {
+                            //$data['newContainers'][$c-1][$key]= trim(substr($data['newContainers'][$c-1][$key],0,strlen($data['newContainers'][$c-1][$key])-strpos($data['newContainers'][$c-1][$key],'('))-1);
+                            //var_dump($data['newContainers'][$c-1][$key]);
+                            // "<br><hr>";
+                            if (strlen($data['newContainers'][$c - 1][$key]) >= 15) {
+                                $data['newContainers'][$c - 1][$key] = trim(substr($data['newContainers'][$c - 1][$key], 0, 16));
+                                $data['newContainers'][$c - 1][$key] = date('m/d/Y H:II', strtotime($data['newContainers'][$c - 1][$key]));
+                            } else {
+                                $data['newContainers'][$c - 1][$key] = NULL;
+                            }
+                            //$sqlFormat = 'Y-m-d H:i:s';
+                            //$data['newContainers'][$c-1][$key]=date($sqlFormat, strtotime($data['newContainers'][$c-1][$key]));
+                        }else if ($key==='container_number'){
+                            if ($data['newContainers'][$c - 1][$key]==='Unassigned'){
+                                $unassignedContainerCount++;
+                                $data['newContainers'][$c - 1][$key]=$data['newContainers'][$c - 1][$key]."[$unassignedContainerCount]";
+                            }
+                        }
+                    }
+                    //$testDate    = date("m/d/Y");
+    //                $timestampDate=date("Y-m-d H:i:s");
+                    
+                    if (!is_null($data['newContainers'][$c - 1]['eta']) && (strtotime($data['newContainers'][$c - 1]['eta']) < strtotime('2017-01-01 12:00'))){
+                        $data['newContainers'][$c - 1]['eta'] = NULL;
+                        $data['newContainers'][$c - 1]['status'] = NULL;
+                    } else {
+                        $start  = strtotime($data['newContainers'][$c - 1]['eta']);
+                        $end    = time(); //now
+                        $diff   = $end - $start;
+                        $daysDifference= floor($diff / (60 * 60 * 24));    
+                    // echo '<hr/>cn:{'.$data['newContainers'][$c - 1]['container_number'].'}->daysDifferent: ' . $daysDifference . '<br/>';
+                        $statusHTML ="<div class='[TYPE]'><p></p></div>";
+                        $statusValue='';
+                        if (abs($daysDifference) > 0 && abs($daysDifference)< 3) {
+                            $statusValue="circle_red";
+                        } else if (abs($daysDifference) >= 3 && abs($daysDifference)<=7) {
+                            $statusValue="circle_yellow";
+                        } else if (abs($daysDifference) > 7) {
+                            $statusValue="circle_green";
+                        }
+                        $data['newContainers'][$c - 1]['status'] = str_replace("[TYPE]", $statusValue, $statusHTML);
+                    }
+                    $data['newContainers'][$c - 1]['final_destination'] = $data['newContainers'][$c - 1]['destination_city'] . ', ' . $data['newContainers'][$c - 1]['destination_state'];
+                    $data['newContainers'][$c - 1]['vendor_id'] = $this->ShipmentsModel->get_vendor_id_by_name($data['newContainers'][$c - 1]['vendor_name']);
+                    //$data['newContainers'][$c - 1]['requires_payment'] = $this->ShipmentsModel->getISFreq($data['newContainers'][$c - 1]['discharge_port']);
+                    //echo '<hr/>'.$data['newContainers'][$c - 1]['requires_payment'].'<hr/>';
+                    $data['newContainers'][$c - 1]['isf_required'] = $this->ShipmentsModel->getISFreq($data['newContainers'][$c - 1]['discharge_port']);
+                    $data['newContainers'][$c - 1]['latest_event_time_and_date'] = date("Y-m-d\TH:i:s", strtotime($data['newContainers'][$c - 1]['latest_event_timestamp']));
+                }
+            } else {
+                $data['newContainers'] = FALSE;
+            }
+            $numObjects = count($data['newContainers']);
+            for ($a = 0; $a < $numObjects; $a++) {
+                $updateData = array(
+                    'status' => $data['newContainers'][$a]['status'],
+                    'bill_of_lading' => $data['newContainers'][$a]['bill_of_lading'],
+                    'vendor_id' => $data['newContainers'][$a]['vendor_id'],
+                    'discharge_port' => $data['newContainers'][$a]['discharge_port'],
+                    'final_destination' => $data['newContainers'][$a]['final_destination'],
+                    'isf_required' => $data['newContainers'][$a]['isf_required'],
+                    'eta' => empty($data['newContainers'][$a]['eta']) ? NULL : date("Y-m-d\TH:i:s", strtotime($data['newContainers'][$a]['eta'])),//date("m/d/Y h:i A", strtotime($data['newContainers'][$a]['eta'])),
+                    'bl_status' => $data['newContainers'][$a]['bl_status'],
+                    'container_size' => $data['newContainers'][$a]['container_size'],
+                    'latest_event' => $data['newContainers'][$a]['latest_event'],
+                    'latest_event_time_and_date' => date("Y-m-d\TH:i:s", strtotime($data['newContainers'][$a]['latest_event_timestamp'])),//date("m/d/Y h:i A", strtotime($data['newContainers'][$a]['latest_event_timestamp'])),
+                    'is_active' => TRUE
+                );
+                $tempObj = $this->ShipmentsModel->get_by_container_number($data['newContainers'][$a]['container_number']);
+                //      echo "<hr/>";var_dump($tempObj);echo "<hr/>";
+                $tmpObj = json_decode(json_encode($tempObj), True);
+                if ($tmpObj !== NULL) {
+                    if (array_key_exists('isf_required', $tmpObj)){
+                        if ($tmpObj['isf_required'] !== $data['newContainers'][$a]['isf_required']) {
+                            $updateData['isf_required'] = $tmpObj['isf_required'];
+                        } else {
+                            $updateData['isf_required'] = $data['newContainers'][$a]['isf_required'];
+                        }
+                    }
+                    if (array_key_exists('customs', $tmpObj)){
+                        if ($tmpObj['customs'] !== $data['newContainers'][$a]['customs']) {
+                            $updateData['customs'] = $tmpObj['customs'];
+                        } else {
+                            $updateData['customs'] = $data['newContainers'][$a]['customs'];
+                        }
+                    }
+                    if (array_key_exists('qb_rt', $tmpObj)){
+                        if ($tmpObj['qb_rt'] !== $data['newContainers'][$a]['qb_rt']) {
+                            $updateData['qb_rt'] = $tmpObj['qb_rt'];
+                        } else {
+                            $updateData['qb_rt'] = $data['newContainers'][$a]['qb_rt'];
+                        }
+                    }
+                    if (array_key_exists('qb_ws', $tmpObj)){
+                        if ($tmpObj['qb_ws'] !== $data['newContainers'][$a]['qb_ws']) {
+                            $updateData['qb_ws'] = $tmpObj['qb_ws'];
+                        } else {
+                            $updateData['qb_ws'] = $data['newContainers'][$a]['qb_ws'];
+                        }
+                    }
+                    if (array_key_exists('requires_payment', $tmpObj)){
+                        if ($tmpObj['requires_payment'] !== $data['newContainers'][$a]['requires_payment']) {
+                            $updateData['requires_payment'] = $tmpObj['requires_payment'];
+                        } else {
+                            $updateData['requires_payment'] = $data['newContainers'][$a]['requires_payment'];
+                        }
+                    }
+                    $this->ShipmentsModel->update_record(array('container_number' => $data['newContainers'][$a]['container_number']), $updateData);
+                } else {
+                    $updateData['container_number'] = $data['newContainers'][$a]['container_number'];
+                    $this->ShipmentsModel->add_record($updateData);
+                }
+            }
+        /*  $this->get_lfd_and_pickup_number_from_bol();
+            $lfd = $this->get_lfd_from_bol();*/
+            $curlData=array();
+            $uniqueBoLs = $this->ShipmentsModel->get_unique_records_by_BoL(1);
+            for ($i=0; $i<count($uniqueBoLs);$i++){
+                $bol = $uniqueBoLs[$i]["bill_of_lading"];
+                $curlData = $this->get_lfd_and_pickup_number_from_bol($bol);
+                $this->ShipmentsModel->update_record( array( 'bill_of_lading' => $uniqueBoLs[$i]["bill_of_lading"] ),
+                                                                        array( 'lfd' => (empty($curlData['lfd']) ? NULL : date("Y-m-d", strtotime($curlData['lfd'])) ),
+                                                                            'pickup_number' => (empty($curlData['pickup_number']) ? NULL : $curlData['pickup_number']) ) );
+            }
+            $data['title'] = "Active Shipments";
+            echo "Start time: $starttime".PHP_EOL;
+            $this->ShipmentsModel->archiveInactiveRecords();
+            $endtime = microtime(true);
+            echo "End time: $endtime".PHP_EOL;
+            //execution time of the script
+            $execution_time = ($endtime - $starttime);//gets run time in secs
+            $execution_time = round($execution_time,2);//makes time two decimal places long
+            echo 'Total Execution Time: '.$execution_time.' Secs'.PHP_EOL;
+        } else {
+            $data['title'] = "Active Shipments";
+            $this->load->view('templates/header', $data);
+            $this->load->view('shipments/index', $data);
+            $this->load->view('templates/footer');
+        }
     }
 
 /*    public function get_lfd_from_bol($bol='6160585180'){
