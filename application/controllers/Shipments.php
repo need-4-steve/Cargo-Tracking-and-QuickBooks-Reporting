@@ -292,6 +292,8 @@ class Shipments extends CI_Controller
                     }
                     $this->ShipmentsModel->update_record(array('container_number' => $data['newContainers'][$a]['container_number']), $updateData);
                 } else {
+                    if (!isset($data['newContainers'][$a]['container_number']) || $data['newContainers'][$a]['container_number']==='' 
+                    || isset($data['newContainers'][$a]['bill_of_lading']) || $data['newContainers'][$a]['bill_of_lading']==='')
                     $updateData['container_number'] = $data['newContainers'][$a]['container_number'];
                     $this->ShipmentsModel->add_record($updateData);
                 }

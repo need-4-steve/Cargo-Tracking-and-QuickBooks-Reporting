@@ -72,7 +72,7 @@
                         label: "Truck Date:",
                         name: "shipments.truck_date",
                         type: "datetime",
-                        format:    'YYYY-MM-DD h:mm A'
+                        format:    'MM-DD-YYYY h:mm A'
                     },
                     {
                         label: "Truck Co.:",
@@ -186,20 +186,31 @@
                     {data: "shipments.discharge_port"},
                     {data: "shipments.final_destination"},
                     {
-                        data: "shipments.eta"
+                        data: "shipments.eta"/*,
+                        render: 
+                            function (data) {
+                                var date = new Date(data);
+                                var month = date.getMonth() + 1;
+                                return (month.length > 1 ? month : "0" + month) + "/" + date.getDate() + "/" + date.getFullYear();
+                            }*/
                     },
-                    {data: "shipments.lfd"},
+                    {
+                        data: "shipments.lfd",
+                       /* render: 
+                            function (data) {
+                                var date = new Date(data);
+                                var month = date.getMonth() + 1;
+                                return (month.length > 1 ? month : "0" + month) + "/" + date.getDate() + "/" + date.getFullYear();
+                            }*/
+                    },
                     {data: "shipments.pickup_number"},
                     {
-                        data: "shipments.truck_date"
-                        /*render: 
-                            function ( data, type, row ) {
-                                if(Boolean(data)){
-                                    var date = new Date(data);  
-                                    return date;
-                                }else{
-                                    return '';
-                                }
+                        data: "shipments.truck_date"/*,
+                        render: 
+                            function (data) {
+                                var date = new Date(data);
+                                var month = date.getMonth() + 1;
+                                return (month.length > 1 ? month : "0" + month) + "/" + date.getDate() + "/" + date.getFullYear();
                             }*/
                     },
                     {data: "truckers.trucker_name", editField: "shipments.trucker_id"},
@@ -283,7 +294,7 @@
                     //alert("data: "+data.toString());
                     if (data.shipments.eta==='1970-01-01'){
                         data.shipments.eta='';
-                        alert(data.shipments.eta);
+                       // alert(data.shipments.eta);
                     }
                     $('#editor-freight', row).prop( 'checked', data.shipments.freight == 1 );
                     $('#editor-isfrequired', row).prop( 'checked', data.shipments.isf_required == 1 );
