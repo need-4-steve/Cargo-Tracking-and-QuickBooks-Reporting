@@ -9748,7 +9748,7 @@ table.dataTable th
 }
 table.dataTable tbody td {
   font-size: 13px;
-  color: #666666 !important; /*  !important  */
+  color: #666666; /*  !important  */
 }
 table.dataTable td.dataTables_empty,table.dataTable th.dataTables_empty
 {text-align:center}

@@ -68,11 +68,11 @@ class ShipmentsModel extends CI_Model
                 Field::inst( 'shipments.final_destination' )
                     ->setFormatter( Format::ifEmpty( null ) ),
                 Field::inst( 'shipments.eta' )
-                    ->validator( Validate::dateFormat( 'Y-m-d' ) )
+                    ->validator( Validate::dateFormat( 'm-d-Y' ) )
                     ->getFormatter( Format::datetime( 'Y-m-d', 'm-d-Y' ) )
                     ->setFormatter( Format::datetime('m-d-Y', 'Y-m-d' ) ),
                 Field::inst( 'shipments.lfd' )
-                    ->validator( Validate::dateFormat( 'Y-m-d' ) )
+                    ->validator( Validate::dateFormat( 'm-d-Y' ) )
                     ->getFormatter( Format::datetime( 'Y-m-d', 'm-d-Y' ) )
                     ->setFormatter( Format::datetime('m-d-Y', 'Y-m-d' ) ),
                 Field::inst( 'shipments.pickup_number' )
@@ -186,14 +186,18 @@ class ShipmentsModel extends CI_Model
     }
 
     public function get_by_container_number($container_number){
-        $this->db->from('shipments');
-        $this->db->where('container_number',$container_number);
-        $query = $this->db->get();
-        $row= $query->row();
-        if (!isset($row)){
+        if (!strpos($container_number,'Unassigned')){
+            $this->db->from('shipments');
+            $this->db->where('container_number',$container_number);
+            $query = $this->db->get();
+            $row= $query->row();
+            if (!isset($row)){
+                return NULL;
+            }
+            return $row;
+        } else {
             return NULL;
         }
-        return $row;
     }
 
     public function update_record($where=array(),$data=array()){

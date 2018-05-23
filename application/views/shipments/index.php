@@ -8,23 +8,23 @@
     <tr>
         <th>Select</th>
         <th>Status</th>
-        <th>PO</th>
-        <th>Product Name</th>
+        <th>Purchase Order</th>
+        <th>Product</th>
         <th>Container Number</th>
         <th>Bill of Lading</th>
         <th>Vendor Name</th>
         <th>Discharge Port</th>
-        <th>Final Destination</th>
+        <th>FD</th>
         <th>ETA</th>
         <th>LFD</th>
-        <th>Pickup Number</th>
+        <th>Pickup#</th>
         <th>Truck Date</th>
         <th>Trucker Name</th>
-        <th>Container Size</th>
+        <th>Cntnr Size</th>
         <th>BL Status</th>
-        <th>Freight?</th>
-        <th>ISF?</th>
-        <th>Customs?</th>
+        <th>Freight</th>
+        <th>ISF</th>
+        <th>Cstms</th>
         <th>QB-RT?</th>
         <th>QB-WS?</th>
         <!-- <th>Latest Event</th>

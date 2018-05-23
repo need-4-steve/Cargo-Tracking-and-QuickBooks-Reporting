@@ -166,7 +166,7 @@ class Shipments extends CI_Controller
             $unassignedContainerCount=0;
             if (count($dataRows) > 0) {
                 $this->ShipmentsModel->mark_everything_inactive();
-                $this->ShipmentsModel->archiveInactiveRecords();
+                /*$this->ShipmentsModel->archiveInactiveRecords();*/
                 //return;
                 $num = count($dataRows);
                 //echo "<br/>LINE 228: <br>num: $num<br>";
@@ -202,33 +202,37 @@ class Shipments extends CI_Controller
                             }
                         }
                     }
-                    //$testDate    = date("m/d/Y");
-    //                $timestampDate=date("Y-m-d H:i:s");
-                    
                     if (!is_null($data['newContainers'][$c - 1]['eta']) && (strtotime($data['newContainers'][$c - 1]['eta']) < strtotime('2017-01-01 12:00'))){
                         $data['newContainers'][$c - 1]['eta'] = NULL;
                         $data['newContainers'][$c - 1]['status'] = NULL;
                     } else {
                         $start  = strtotime($data['newContainers'][$c - 1]['eta']);
                         $end    = time(); //now
-                        $diff   = $end - $start;
+                        $diff   = ($end - $start)*-1;
                         $daysDifference= floor($diff / (60 * 60 * 24));    
-                    // echo '<hr/>cn:{'.$data['newContainers'][$c - 1]['container_number'].'}->daysDifferent: ' . $daysDifference . '<br/>';
-                        $statusHTML ="<div class='[TYPE]'><p></p></div>";
-                        $statusValue='';
-                        if (abs($daysDifference) > 0 && abs($daysDifference)< 3) {
-                            $statusValue="circle_red";
-                        } else if (abs($daysDifference) >= 3 && abs($daysDifference)<=7) {
-                            $statusValue="circle_yellow";
-                        } else if (abs($daysDifference) > 7) {
-                            $statusValue="circle_green";
+                       /* $statusHTML ="<div class='[TYPE]'><p></p></div>";*/
+                       echo $data['newContainers'][$c - 1]['container_number']. "= $end - $start =  $diff \n";
+                        $statusValue=-1;
+                        if ($diff < 0){
+                            echo $data['newContainers'][$c - 1]['container_number']. "status: \n";
+                                                        /*$statusValue = "circle_red";*/
+                            $statusValue=0;
+                        } else {
+                            if ($daysDifference > 0 && $daysDifference< 3) {
+                                $statusValue=0;
+                                /* $statusValue="circle_red";*/
+                            } else if ($daysDifference >= 3 && $daysDifference<=7) {
+                                $statusValue=1;
+                                /*$statusValue="circle_yellow";*/
+                            } else if ($daysDifference > 7) {
+                                $statusValue=2;
+                                /*  $statusValue="circle_green";*/
+                            }
                         }
-                        $data['newContainers'][$c - 1]['status'] = str_replace("[TYPE]", $statusValue, $statusHTML);
+                        $data['newContainers'][$c - 1]['status'] = $statusValue;/*str_replace("[TYPE]", $statusValue, $statusHTML);*/
                     }
                     $data['newContainers'][$c - 1]['final_destination'] = $data['newContainers'][$c - 1]['destination_city'] . ', ' . $data['newContainers'][$c - 1]['destination_state'];
                     $data['newContainers'][$c - 1]['vendor_id'] = $this->ShipmentsModel->get_vendor_id_by_name($data['newContainers'][$c - 1]['vendor_name']);
-                    //$data['newContainers'][$c - 1]['requires_payment'] = $this->ShipmentsModel->getISFreq($data['newContainers'][$c - 1]['discharge_port']);
-                    //echo '<hr/>'.$data['newContainers'][$c - 1]['requires_payment'].'<hr/>';
                     $data['newContainers'][$c - 1]['isf_required'] = $this->ShipmentsModel->getISFreq($data['newContainers'][$c - 1]['discharge_port']);
                     $data['newContainers'][$c - 1]['latest_event_time_and_date'] = date("Y-m-d\TH:i:s", strtotime($data['newContainers'][$c - 1]['latest_event_timestamp']));
                 }
@@ -243,61 +247,73 @@ class Shipments extends CI_Controller
                     'vendor_id' => $data['newContainers'][$a]['vendor_id'],
                     'discharge_port' => $data['newContainers'][$a]['discharge_port'],
                     'final_destination' => $data['newContainers'][$a]['final_destination'],
-                    'isf_required' => $data['newContainers'][$a]['isf_required'],
+                    'isf_required' => isset($data['newContainers'][$a]['isf_required']) ? $data['newContainers'][$a]['isf_required'] : false,
                     'eta' => empty($data['newContainers'][$a]['eta']) ? NULL : date("Y-m-d\TH:i:s", strtotime($data['newContainers'][$a]['eta'])),//date("m/d/Y h:i A", strtotime($data['newContainers'][$a]['eta'])),
                     'bl_status' => $data['newContainers'][$a]['bl_status'],
                     'container_size' => $data['newContainers'][$a]['container_size'],
                     'latest_event' => $data['newContainers'][$a]['latest_event'],
                     'latest_event_time_and_date' => date("Y-m-d\TH:i:s", strtotime($data['newContainers'][$a]['latest_event_timestamp'])),//date("m/d/Y h:i A", strtotime($data['newContainers'][$a]['latest_event_timestamp'])),
-                    'is_active' => TRUE
+                    'is_active' => TRUE,
+                    'is_complete' => false
                 );
+               /* echo 'container_number: '.$data['newContainers'][$a]['container_number'].PHP_EOL;*/
                 $tempObj = $this->ShipmentsModel->get_by_container_number($data['newContainers'][$a]['container_number']);
-                //      echo "<hr/>";var_dump($tempObj);echo "<hr/>";
+                /*var_dump($tempObj);echo "\nTEMP OBJECT JSON ENCODED/DECODED\n";
+                $tmpObj = json_decode(json_encode($tempObj), True);
+                var_dump($tmpObj);echo "\n";*/
                 $tmpObj = json_decode(json_encode($tempObj), True);
                 if ($tmpObj !== NULL) {
-                    if (array_key_exists('isf_required', $tmpObj)){
-                        if ($tmpObj['isf_required'] !== $data['newContainers'][$a]['isf_required']) {
+                    if (array_key_exists('isf_required', $tmpObj) && isset($tmpObj['isf_required'])){
+                        if  (!isset($data['newContainers'][$a]['isf_required']) || $tmpObj['isf_required'] !== $data['newContainers'][$a]['isf_required']) {
                             $updateData['isf_required'] = $tmpObj['isf_required'];
                         } else {
-                            $updateData['isf_required'] = $data['newContainers'][$a]['isf_required'];
+                            $updateData['isf_required'] =false;
                         }
                     }
-                    if (array_key_exists('customs', $tmpObj)){
-                        if ($tmpObj['customs'] !== $data['newContainers'][$a]['customs']) {
+                    if (array_key_exists('customs', $tmpObj) && isset($tmpObj['customs'])){
+                        if  (!isset($data['newContainers'][$a]['customs']) || $tmpObj['customs'] !== $data['newContainers'][$a]['customs']) {
                             $updateData['customs'] = $tmpObj['customs'];
                         } else {
-                            $updateData['customs'] = $data['newContainers'][$a]['customs'];
+                            $updateData['customs'] =false;
                         }
                     }
-                    if (array_key_exists('qb_rt', $tmpObj)){
-                        if ($tmpObj['qb_rt'] !== $data['newContainers'][$a]['qb_rt']) {
+                    if (array_key_exists('qb_rt', $tmpObj) && isset($tmpObj['qb_rt'])){
+                        if  (!isset($data['newContainers'][$a]['qb_rt']) || $tmpObj['qb_rt'] !== $data['newContainers'][$a]['qb_rt']) {
                             $updateData['qb_rt'] = $tmpObj['qb_rt'];
                         } else {
-                            $updateData['qb_rt'] = $data['newContainers'][$a]['qb_rt'];
+                            $updateData['qb_rt'] =false;
                         }
                     }
-                    if (array_key_exists('qb_ws', $tmpObj)){
-                        if ($tmpObj['qb_ws'] !== $data['newContainers'][$a]['qb_ws']) {
+                    if (array_key_exists('qb_ws', $tmpObj) && isset($tmpObj['qb_ws'])){
+                        if  (!isset($data['newContainers'][$a]['qb_ws']) || $tmpObj['qb_ws'] !== $data['newContainers'][$a]['qb_ws']) {
                             $updateData['qb_ws'] = $tmpObj['qb_ws'];
                         } else {
-                            $updateData['qb_ws'] = $data['newContainers'][$a]['qb_ws'];
+                            $updateData['qb_ws'] =false;
                         }
                     }
-                    if (array_key_exists('requires_payment', $tmpObj)){
-                        if ($tmpObj['requires_payment'] !== $data['newContainers'][$a]['requires_payment']) {
+                    if (array_key_exists('requires_payment', $tmpObj) && isset($tmpObj['requires_payment'])){
+                        if  (!isset($data['newContainers'][$a]['requires_payment']) || $tmpObj['requires_payment'] !== $data['newContainers'][$a]['requires_payment']) {
                             $updateData['requires_payment'] = $tmpObj['requires_payment'];
                         } else {
-                            $updateData['requires_payment'] = $data['newContainers'][$a]['requires_payment'];
+                            $updateData['requires_payment'] =false;
+                        }
+                    }
+                    if (array_key_exists('is_complete', $tmpObj) && isset($tmpObj['is_complete'])){
+                        if  (!isset($data['newContainers'][$a]['is_complete']) || $tmpObj['is_complete'] !== $data['newContainers'][$a]['is_complete']) {
+                            $updateData['is_complete'] = $tmpObj['is_complete'];
+                        } else {
+                            $updateData['is_complete'] =false;
                         }
                     }
                     $this->ShipmentsModel->update_record(array('container_number' => $data['newContainers'][$a]['container_number']), $updateData);
                 } else {
-                    if (!isset($data['newContainers'][$a]['container_number']) || $data['newContainers'][$a]['container_number']==='' 
-                    || isset($data['newContainers'][$a]['bill_of_lading']) || $data['newContainers'][$a]['bill_of_lading']==='')
-                    $updateData['container_number'] = $data['newContainers'][$a]['container_number'];
-                    $this->ShipmentsModel->add_record($updateData);
+                    if (isset($data['newContainers'][$a]['bill_of_lading']) && $data['newContainers'][$a]['bill_of_lading']!==''){
+                        $updateData['container_number'] = $data['newContainers'][$a]['container_number'];
+                        $this->ShipmentsModel->add_record($updateData);
+                    }
                 }
             }
+            $this->ShipmentsModel->archiveInactiveRecords();
         /*  $this->get_lfd_and_pickup_number_from_bol();
             $lfd = $this->get_lfd_from_bol();*/
             $curlData=array();
@@ -326,103 +342,6 @@ class Shipments extends CI_Controller
         }
     }
 
-/*    public function get_lfd_from_bol($bol='6160585180'){
-        $ch = curl_init('http://elines.coscoshipping.com/NewEBWeb/');
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        // get headers too with this line
-        curl_setopt($ch, CURLOPT_HEADER, 1);
-        $result = curl_exec($ch);
-        // get cookie
-        // multi-cookie variant contributed by @Combuster in comments
-        preg_match_all('/^Set-Cookie:\s*([^;]*)/mi', $result, $matches);
-        $cookies = array();
-        foreach($matches[1] as $item) {
-            parse_str($item, $cookie);
-            $cookies = array_merge($cookies, $cookie);
-        }
-        //  echo "<hr/>";
-        //	var_dump($cookies);
-        curl_close($ch);
-        $ch = curl_init();
-// http://elines.coscoshipping.com/NewEBWeb/public/cargoTracking/cargoTracking.xhtml?language=en&page=null&token=eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MjU5MDEyNDgsInVzZXJfbmFtZSI6ImxpYnJhIiwic2NvcGUiOlsicmVhZCJdLCJhdXRob3JpdGllcyI6WyJST0xFX1NBUF9Vc2VyIl0sInN5cyI6ImViIiwiYXVkIjpbIm1vYmlsZS1yZXNvdXJjZSJdLCJqdGkiOiI5YmNmMGFjNS1hNDI5LTQ5MDAtYjg5NS1hZjZmZmRmMmZjZGEiLCJjbGllbnRTb3VyY2UiOiJwYyIsImNsaWVudF9pZCI6Im0xIn0.JcMTTo0T-qHKkOko0SU5j5Gios_bVxhqtjFZoP5-GGwuyioA-b2JaRhC8SMxGlT2bMszSIqauZKCHEuZbdKjOderxE6C1gCN8i1UP6G_QggOYybhep514oG9nTwDGuPMVO6WU_o_9ZrgjBzi4Hfsy98uJcAEEe1uiX4GdzJPRR_gpbCOodhyoYHRybsDNH8EfZVikKFnDBY8fLmGPyA8kBiCxEIHd-WWvdAyWdCLZoMRkUYd5lyeImNuNROZWHS12q67YszJgyhrGJ1UYLBITqfCuus1z0CFnZ9RyxxvxpuIrAIgab6TquL4Hau11WRXcHiVLhhKAog2Cyhib5a6gw&uid=libra
-
-        //$requestUrl = "http://elines.coscoshipping.com/NewEBWeb/public/cargoTracking/cargoTracking.xhtml?language=en&page=null&CARGO_TRACKING_NUMBER_TYPE=BOOKING&&CARGO_TRACKING_NUMBER=$bol&REDIRECT=1";
-        $requestUrl = "http://elines.coscoshipping.com/NewEBWeb/public/cargoTracking/cargoTracking.xhtml";
-        curl_setopt($ch,CURLOPT_URL, $requestUrl);
-        curl_setopt($ch,CURLOPT_RETURNTRANSFER,true);
-        curl_setopt($ch, CURLOPT_POST,           1 );
-        curl_setopt($ch,CURLOPT_ENCODING , "gzip");
-        //  $payloadArray= array(
-        //              'formId' => 'mainForm',
-        //              'async' => 'false',
-        //              'global' => 'true',
-        //              'source' => 'j_idt49',
-        //              'process' => '@all'
-        //  );
-          $payload=json_encode($payloadArray);
-          $cookieString ="number=$bol; numberType=BILLOFLADING; language=en_US; JSESSIONID=".$cookies['JSESSIONID']."; number=$bol; numberType=BILLOFLADING; ";//COSCON_ACCESS_TOKEN=eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MjU5MDEyNDgsInVzZXJfbmFtZSI6ImxpYnJhIiwic2NvcGUiOlsicmVhZCJdLCJhdXRob3JpdGllcyI6WyJST0xFX1NBUF9Vc2VyIl0sInN5cyI6ImViIiwiYXVkIjpbIm1vYmlsZS1yZXNvdXJjZSJdLCJqdGkiOiI5YmNmMGFjNS1hNDI5LTQ5MDAtYjg5NS1hZjZmZmRmMmZjZGEiLCJjbGllbnRTb3VyY2UiOiJwYyIsImNsaWVudF9pZCI6Im0xIn0.JcMTTo0T-qHKkOko0SU5j5Gios_bVxhqtjFZoP5-GGwuyioA-b2JaRhC8SMxGlT2bMszSIqauZKCHEuZbdKjOderxE6C1gCN8i1UP6G_QggOYybhep514oG9nTwDGuPMVO6WU_o_9ZrgjBzi4Hfsy98uJcAEEe1uiX4GdzJPRR_gpbCOodhyoYHRybsDNH8EfZVikKFnDBY8fLmGPyA8kBiCxEIHd-WWvdAyWdCLZoMRkUYd5lyeImNuNROZWHS12q67YszJgyhrGJ1UYLBITqfCuus1z0CFnZ9RyxxvxpuIrAIgab6TquL4Hau11WRXcHiVLhhKAog2Cyhib5a6gw; COSCON_ACCESS_I18N=en-US; token=eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MjU5MDEyNDgsInVzZXJfbmFtZSI6ImxpYnJhIiwic2NvcGUiOlsicmVhZCJdLCJhdXRob3JpdGllcyI6WyJST0xFX1NBUF9Vc2VyIl0sInN5cyI6ImViIiwiYXVkIjpbIm1vYmlsZS1yZXNvdXJjZSJdLCJqdGkiOiI5YmNmMGFjNS1hNDI5LTQ5MDAtYjg5NS1hZjZmZmRmMmZjZGEiLCJjbGllbnRTb3VyY2UiOiJwYyIsImNsaWVudF9pZCI6Im0xIn0.JcMTTo0T-qHKkOko0SU5j5Gios_bVxhqtjFZoP5-GGwuyioA-b2JaRhC8SMxGlT2bMszSIqauZKCHEuZbdKjOderxE6C1gCN8i1UP6G_QggOYybhep514oG9nTwDGuPMVO6WU_o_9ZrgjBzi4Hfsy98uJcAEEe1uiX4GdzJPRR_gpbCOodhyoYHRybsDNH8EfZVikKFnDBY8fLmGPyA8kBiCxEIHd-WWvdAyWdCLZoMRkUYd5lyeImNuNROZWHS12q67YszJgyhrGJ1UYLBITqfCuus1z0CFnZ9RyxxvxpuIrAIgab6TquL4Hau11WRXcHiVLhhKAog2Cyhib5a6gw";
-*/
-   //     curl_setopt($ch, CURLOPT_POSTFIELDS,     "mainForm=mainForm&cargoTrackSearchId=BILLOFLADING&cargoTrackingPara=$bol&billRemark=&num=0&a2time=&a3time=&a5time1=&a5time2=&a7time1=&a7time2=&a9time1=&a9time2=&a10time1=&a10time2=&a11time1=&a11time2=&a12time=&a13time=&j_idt211=&cntrOrderType=&onlyFirstAndLast=false&cntrRemark=&num1=0&j_idt714=&num2=0&j_idt743=&num3=0&j_idt772=&num4=0&j_idt801=&num5=0&j_idt830=&num6=0&bkRmark=&j_idt1325=&cntrOrderType2=&onlyFirstAndLast2=false&containerNumberAll=&containerNumberAllByBookingNumber=&validateCargoTracking=false&isbillOfLadingExist=false&isbookingNumberExist=false&userId=&cargoTrackingRedirect=false&numberType=&containerSize=&containerTransportationMode=&bookingNumbers=0&javax.faces.ViewState=H4sIAAAAAAAAAM1dzW8cR3ZvUSJHpGSKlGXZa9mO17a89ibi9MfMdLftYE3JUsQsJSum1okdbLjNmTbZ0nB63N1DkYtAyCLA5pBLkI0PRpyPQwLksLcgf0C%2BsEGADZANggA5BXtOcguc5JJUdVV%2FzHRX9ZvhUPN4aPaQ09W%2F9%2BrV%2B6pXVT%2F8D2W%2BHwbK6gPnwFkbRF537bYT7t1x%2BvO1f%2F3Lv778nX88rczdUpa6vtO55bQjP9hQFqO9wA33%2FG7nsP%2BNdxXyc1p5dFZRzpC7U19GSu3BttfRbGsQKE%2F%2F6mbccNfp7a69v%2FPAbUdv%2F84%2F%2FMofrYRvducU5bBPHpkbfKo8Jk0oykKf%2FKSfao8DZY0%2Bfbj2idN2w7W2v9%2F3e24vWvvWxo3k%2FrV7gd93g%2Bjom%2B5RqPCfi6TpQFnOXn2zN9jP%2F7MfKecDt9dxAze4f9R3I%2BVK%2Fk2EPH8QtN21rXbg9aPHFFItUpacKAq8nUHkhoRlT2csWw8C52jTC6PD7%2F3kxc9%2F5PzBaeXUhnIm9L7rxiTOP6K8mScPvV5O0FbkRO5twlE32HIO3OCjv%2F%2Fzn%2F%2FBFz%2B%2BM6fMbSqL7a4ThnedfQLzYszPOiWqvkXA9Hbf3lSWQvJMJ24jUi6zb3h%2BfcsNPKfrfdfZ6bpvH%2Fb7B5QMJaTXFcKAWtfbCZzgKP3DUj%2Fw9t0YWvq3Mz3y2vTT%2BbYfuHV6WXsQHpL%2BaY7XP%2FcC74CAzPcEbfpspFzKWHt%2Fz4nWA3fLjeL3LlP5ivl3muOI6VjmH%2Bj1%2Bdz95cNUmuOev%2B77Xdfp%2Ffjl4Df%2B%2BYv%2F%2Fc855dTHyvyB0x3QnqEPzBG6FqnERprWUFPpmx%2BSxXl6c16Ah14vpTx6ibBhLRz0OFPotUtIWVu%2Fd29z4%2BZ7%2FHsEZFPwRW%2B%2F3117j%2FTDoBvdYn98bb3f7x7d9x%2B6vf%2F6s5%2F76It3H7x7nkrxo2vKq%2FX%2BYKfrtettJ9j17wdO%2ByERivqB5z76xf7u2uFetN8lw7L99g8U6zDm9kspGXMxGXM5Ml7J3V%2Bjo4SPZTvlhHC00ptFejk3zKtE9ou8irsrd%2F9cSZdGygoRisjv1dkvKnfDRBT74hWhaNDr6%2FTSIA2%2FPMSxG34vcryeG2z0PvHpUBqEAllYJHL%2Fpkju33MiR6iSuKyfDfxHG0T3jEjqRi9yd93g4k%2F%2F%2BE%2B%2B%2FN5vWXNUhXBJDZSV7Ht3B%2Fs7bvD9H3724rnf%2B7ffjrXo%2F5GfWEndiginqTIAsD9SWlUceEt9q538lb32VtfZzUT4ZYE2S9XRG9%2F%2FyS%2F9y7nPPppT5j9Wnur6baf7IaWIDO6PlcVwsLPvRZHbYUPS62ySYZ38Lf7esMLjBmSTs4XCuE%2F166l%2BP6WpUUmThCL6aytu7xA64OORkn%2B%2B%2FshUrpUPyqFP171ud2h4vjrB8DwbE9OO9OPqrTwZ9KqOj%2BWNcs7fJmbRD46Mt5iOVTWRjj1NxlVDNK6I9cs3WjXEFojFjDbYKNigwMfA1xDhozcxuQFVjJzz02b8r43P%2BKdSid4iDkcK4QwFFNuj3BjYjqg30ODENnQNRKy8jeYU2rBBbbxZObjj9nShHZ%2BwuRaoua%2BBmtMtqQU9CJQzB77XUbKfwz5UmCLlqsCp2LhDvI8bG%2Fe3763fvbmZ11dXT40lcZ8zI0qGGCOmomMNY5qssyudj8%2FGGXef5%2B5%2F%2FzhcsImbknLhDnGfnV13moqBG5Z3FB1gWFLuDVmXaxNYF3nPmqCencgeZzqsxO8cfhuNEn9WZDXeH0T9gThE5MYi8yY%2BI419XdTYRg%2FYlteJBSp2yP4mGnF7YrnpM9W8mpgcM2aqpqro5LvGgZWA1bCC1UrA6ljB6pkTJwo44gH1C%2FTyTeryxaRZOfZzQw%2B1Zk2RsziJSjbwiewCwwWmAJ8cMwo0MAX4hJtRoIMpMJBSYIApaCCloDGGYrCmqRiaSBnSjJTXpJFgDN9EqhVMohVqXrjp73o9BKEnUBZaOJlptGCygFS%2FmnqFi96ARffATjRxcsEwYZ2I1MSYBgw%2BUvtiNqpkEJYd4jMwalOaakmd4OcLqdSUawi0opwh0011tWAJFhY12Ib05Sl7wS%2BH0XJuh3bQntPbdUXJ1SfZPS%2BUdA9L%2F2oNfF5LjQOT48ZnYTnulhw3PqPCcZtDYivSSljEVp5TniEbq%2FLDTZj6ktGOLynMaberaIdlUJ8L3K7rhO42bSLYdyLP721T0UQgk09THP4nm06H2Int%2B3G3iBK19IZZmEkBTjAp%2BeJQB1w%2Fut69O9hPOgDGf4nsNfFlv2ocmBw3vuiW49bgzocJ8yxlbMAX2HE26HLc%2BGIZjtuQ48YXxHDcJIp5sUSVJYpChWXGvjokue8HHTegoUlObyNQ2VfEoZMoXfAkq0hkCrsJy2fwGZLc1ASfIZG2DdMmq0kcxR6zG7DJFKhOs2AUXmAU2gyFiS9oYbmBZgXLYdHjCLH4Ih1GbCsRPDNXQcQFb4QEfEEPI8EskW9Y6csIgfjCEUagJVfzGkwHvF6drossC1ZGBmsLZn5kYw2YJhrt%2FpyDK3vs6TR7l1TRAce2FDLMPS9AhjH%2BKqAa0EaqWO0mED9SXWm3gPiRKkrbBOJHqgdtKxk2LYsrv5YFU%2FRJnt6G5elB6s2G%2BVArwzU9Nr68D2OuDSUbxvEXaJGx0930Y4tF1aSZ%2BE9Au1DUzkBrINPOJsxTXe747cG%2B24ukSyqeaMqqyA2YoZFyA%2BY58MhEXoGVDp6LmRRtuU7Q3tvojBPRmDATPKoIbJjJv1T25pNL%2FU3Q0XzKy5QOkpTZBTbA3IjCY7AhKRnUQG0oawGmWIoDATiml9q9KPjA3XeCh0V5LM2A3Dm6RdQAhtEvGzDW8bWiBVMlPFBsGKP8Wx3i3z0ncEa%2F8TOjb3%2B4m73eUGHC80xcpexE7o3860ZfJagL4VZM5%2F420JZU4IaJ7HycrUv%2FKaoJn38cKNdEZdwfeu6jD3y%2FspJ7IS7bdsNk7V280Hcz%2Ftvj%2F179zhfq%2F%2Fz7nHJmQzm754R7bb%2FjbtI1QQMyNI5oC6ubylm6aG3g7Lr8c%2B3ACTynF5eAr7JFe5Ey960tciHQFIUWjJ%2F%2BdnHx0j%2BN0RnHN2U2TAlImwBm5gsqLNFETWDCVQoCZv7kcilerDbUCKxzgOq1AhHMLgERwTqqAtGkJi%2FtbW1Sk5e1ANMfXym0wDhhIA3UDEuCGWn8Y9hVAqPDuns1cZZ5vATM0LNUZKulxo81kaYQmmYBKVIZbFolXTFO5j4lEKnANm2patFhJmBkWs336a8T8nsnmFaTEQizKEm4YCcPaiqwdkfyapjp4O5yrg6be6gi3Zhb%2F4tK1BqqBDO%2BmgyGWSvte5ijKSQWX%2BUFI1aXYMZXdcEwG2kHNRtpEgA4cyMkFl%2BpBiO2kWbR5A5%2BmtgRUoh0codW%2BgoxI53QoVW%2BQsxIPTBa4VsybGDGcNizaSE1Ny216LoB0zUlnIHZ6sL7YIbieUE6U7PwDdMaB0Z3XulFQZzlpJvIZd5JdYZqHMjHSnkyR0nMXnwahbO3JUONT6dw1KYMNb4Ij6O2ZKjxhW0ctT063zCa5gL5B5LwxIAlKl4tLdBnEeD2gRuEJ1D4OUEIWHTiNVhCUsYhWN7tbGIuQT2ynETP099I53isy1nD1mQ5LGAKWDgYbXyeBt8hUi3lEkw8xOTii4k5uZoMNb7glqPWSyQSllUVE4svKubEkrB4tYBaQOxsKhQkihW4g52shfHSeloyaFVgwvPsQbx%2FcihShLNZ71XUQeZ4Jaw5PozFwPwbJ%2Bb8WPVc%2BTfCHrzkhdwtYVut3TwkftJoTrVsyWJSIW0YMNKeLYhl3AA%2BvRgXFOhCwPh0WwzYEALGl7WLATeEgPFF9zHgphAwvng5BtwSAsYXKseATSFgfFFyDJjEyJd5tBkHm7e8Xud6vCe5SCU%2BDpR1P9hdy7bVzxUikbt9p9fhu5rfYJ9Ye1WVSYuPvM6uG33oBCQAZvfb5cjEqhhfUB8z2U5jRXkxXhorFo0oMGhPdojk1Y%2F5CS0sHOE7RJolYPGNEQ6WjJLz3Me4F3i9zLuYeiZ0bOewrNPxDQPORzIQzsWVsyeTA5kgWBnlXa40DhfvNDVRIrpW2CRVvjKjyUnDmnbQNCgF%2BFxtToEOpQCf780pMKAU4HPGOQWN0fpQnnB9ny%2BLPcENCyYI6aUBqXy%2FuNTar%2Fi97tEtLwij9V5n08lHvSdnoSacq5MWT%2BrAxPPF4mw8yJ%2B6OLIb%2B3pumyGuQotNw1y1C4ljx%2BIofDqWzZlrBaT4dClDqpf1hSidO5t0XIUswwZvkUjY4tORbsRnUFg3GmUUSqsmRBTiMziMQsEeoakSB%2Bq0pV6skoZLLQBJyxYsO%2FqyaJ%2B1k5rDncAJL07DpBsugGiUj0dgqvyKcNUNQrdzgeGSokaqGainWdFhsHS8hHSkKoO6qF%2BJV%2FBtx4mzbboYLx6Qt2%2BuvzddzCOH7LyhvFSP3P1%2B14ncsL5P2HYt%2BTh0oM474x6oE9NHLgt%2FKO0RfBlx1iNNKWp8aXGGuiVFjS%2Fnx1CblQMfZtIkpOPLIDLSLSlqfPk6htouWYuadZiG8OCyGgdW4TsBLcxicoQRLMosujE8qdjCNyJrHJgMNb7BxFGXFnYmqLEKZYsI5cIgJPJY2O9E6P8CF2qLn4fJ%2BRulY%2BWYJ9jRm79K2f23Mf%2Fo5UcxV3hWaHW46ENDuIlgjQOTsfm4ditXnISFbHYEpCq3AAjPSatxYCWyhVWfmVLvQEeaUtS1CtnAh5vLhlblh1pjTbZnAobV9Ji2VMCQpjd0vULA8OHmAibNy%2BhI8zK6UcFufLg5uw0pu5HmgvRGBbvx4ebsbpStimWhFcITW9iqWLmFRZqc0st2Gs%2BLCD7cXESalRZ20p2NuJzhs7RMzuSGFmk6UW9VyBk%2B3FzOWhV5Huu4Uz86vniUdZlZ0WX4cPMuk2WcTKzhpFkVB%2BOze5zdslQZwtOAOburQkt86p%2Bz25axG2u8Qk%2FcFaPG6vbTI2bFqLF6z%2FRkWTFqrA4dPfNGbmgnXRKdUI7VxaAH4CzRcpnynaFHU0AWVgtmlSRELaz63ypdh57EDuOthLGTwn6sY4uWIBR6BqupsPQSzmIdu7RMosBZrObMMko4i9WL18wSzmI1uZYkYYXwqFO2e6taIg1YgwytdD9nzmB8NoYxWGpijpedQngAK6NZp1P91Wt8iMwBEyfyJB%2FwzBUhG%2FGpasbGiokShNv08qO7S%2Ffp5czGp70ZsyumSRDuL8yZrUmYjc8XZcyumHBAuL8xZ3bpBsec2fjcU8bsVqX%2BhFVvSXsMnw7lPWbAbRFsEYiUDfi0G2dDIz1llu9d1kKqG1qVc3rAQ8JGyEU6OlstuHzCjo2Q5s%2BAx6ON8A5feMh4ZxaQ4gtdGFKrgBTf1AJDWlXSDhx9wpjHgDnr4udhxuqZUhUieHQ2q3vFJAI3sktJ3L6x57YfXvcPCxt2lHyncAzIsGAinBtlp4%2BrYEVpwzZpXx7afjzHlvQOwa47cQ9dERwOEDWAolLju02enPxPsBo39kx0VS1ht0jyzg3Dm49fMi%2BAdzl3%2F1zu%2Fnl%2BT0bg0cCr05MJvchzw%2Bxu7UE4Qk6REa%2BUtBi%2FlUktuSx%2BmRFZduriVImMlHO5IxtLqV14EH4yHcqWFjLK9Nl138U%2B3SPLDer895SIu5wRZ8yOuJWO53T93Tr7NSXSriakRbly1bNcy6zQ6cf1MPTbXrxYOCQiE8bnTmcMaQAZQnz4%2FAmigRv6g6Dtrm1FR1033HPdaLrcemrf7Q3q9LLWDqfCKisjugmXgqV3pkvXhb7Tc7v1%2BDotym5nlLVmJ9%2Fnsx6bjmz%2FcqlLlewmhc%2Fd5nMadtoZ5uw6YzkvZtPpjk9lHm4DFoZyxlizG3%2FP9p1dr%2BcQ97Ke3k1rHP5mRqE9Owqf6TiRsxt4nXpyMy36flfquQJFQNLApKVAXCUgXAvJV5WrMtRY5yH00onOBDXWhD5d%2B8XGoDbDOORymZaZjhr%2BO%2BkQwJq1p2vEeLeceOQk7pZLRdU4nU75qbRTsM4h6KUlpQlqfNMJHHVThhrfrABHXXp%2BW4IaXz6eoy5ddJGgxpeb56itktO9VPn5qKl78Vy5i4twe2e21Y4qhozPs2CQNZkXCDyoV9IAbD7hq8WdXa8fXc8fBzOaVpe8Epa0lW%2BT3OByhtWEq5UbPScUYLV3agNKAVbbpzahFGC1gyqxg1elFGhs1gpffofNWtmRskjzqid8nMP4m2UnieBGWdpp9qhE1vdJbhcr1uDALXclDcCSFxDRR7gUaIHhIs7gEP71tnfg3vMITwJXNBX5JPsXxF2kXhFdugTCjy%2FzwvDrRDGmKztkgyHd9lA8mqA7L4sbgDmBbKWEbVrsMduCnUdbeAxWaFiEy4twmiqswKHwXlhII3kv7DT6C0PvRXgK7QLDVUCKdKzQg2dHkOLz%2BhlSo4AUn3fPkDaK4wNYNyQeH8ATweVlTI0kA9GAtSaBA9MzUDjH1VoaTP1A4cBa4zamZck0%2FPyvR8oKPwow%2FX72sJFLbibrsUdPxMFcPhYLfFRWyzIdXAt%2FOoGffz5NqNx3dqbNqL%2BYhrOfyK0OUwuMy2UzuTPkMnAwNWEkXjhww9DtUubc8txuR%2FBQ7XGgaMKjO1mRwT16Heeozst8fI5AmISZ8a%2F6I1V5vd4f7HS9dn2IS%2FXsFUNHFlwb98gCuVTBfCl%2B4LxtcxuljrMrQe4xWLxZPBA9KarVdZg1krUAMyAvyaMaUKggQwFdRSFDAdunXd4G7NgveRvSsAXYhrRXJMFXIsjGcd0UAyYXtZ2HH4i3RslEHbiXeeExWAgokSwDpkS%2FBojaI1s%2FPhyYggHCgU1ZPDPU2AduxwvcdjTaY9k2eOSbvbDvB1FccHrH7xSOplryel50g86ziE5xTRy4VW4gsgfoFH7ZUhZBQ4uZwNPLZqrnxXUEY2xpn7c9W8Si9PtpG18vbUOFtXI4iQWk1wlWrJRxE6aCrtAcuM8PyNy%2Bn60o0hCuUa5xYFLYWGdM6HLfF8r6iePGWjvQNOW4sVYPNC05bnwTUxy3LbUewOQDzHoAD5WXwYH5CEA4MGeYR%2F%2BaMI3yJMNTGW9gHm2xBZO30FJhLpOsBZi7sryTr5jI5oC4sZe9AOaASEZiC988GT%2BwR5Xjxpc%2F57g1OW582XSOW5fjxpdb57gNOW58mXaOuxEpT3shdaWSI9JvHnphISyQ0YbVSaS7VchwY%2FUSW%2BmWha2W%2Bha%2FGWdWMfcYLM6UGDBg9lHWwqQYUvuiTeqiZC3AvIrC9jHpHvCRDpzXlTYxTlox60QT5u7JKw7YbLqFL8JgFQdmCdkwtxJENr4AhZFtAfHjC1QY%2FtI4JR11Osx15b68qsFKTRLX3yhbejizybx0bt1gSUuEe8yyLjMyT%2F%2FGntPbFabcnhzzCrzD5y0x3jVGeSeKrGbIO3zeGONds4AUn%2F%2FFkLZGe1nkPDzJXr4SuF3XCd1tqmGDfXZiPEeJAB7EiuW2gkXV4TaJ8d8sx0%2BZvRVvs8FdOKBJk0%2FtJ%2Ft1qcAJYxYW2ND9PT49gYXo%2B24YOrtuWE9uprQQffnaGNyCOfGcWzPcGOTZB58O3OCoPvDq7O7awJsWv76RUTjDDUJWOIXs13RW3i7fzUib4XYbl8s6bzoEfrt%2F%2BP9nX8OqlfgAAA%3D%3D&javax.faces.partial.ajax=true&javax.faces.source=cargoTrckingFindButton&javax.faces.partial.execute=@all&javax.faces.partial.render=bookingNumbers billToBookingGrop billofLading_Table3 release_Information_bill release_Information_booking cargoTrackingOrderBillInformation cargoTrackingBookingOfLadingInformation cargoTrackingContainerHistory cargoTrackingContainerInfoStatus cargoTrackingContainerBillOfLadingNumber1 cargoTrackingContainerInfoByContainerNumber release_Information_booking_version release_Information_bill_version actualLoadingInfo containerInfoByBlNum containerInfoByBkgNumTable actualLoadingInfo5 documentStatus cargoTrackingAcivePictures containerNumberAll containerInfo_table3 containerInfo_table4 cargoTrackingPrintByContainer containerNumberAllByBookingNumber registerUserValidate validateCargoTracking isbillOfLadingExist isbookingNumberExist cargoTrackingContainerPictureByContainer cargoTrackingContainerHistory1 cargoTrackingOrderBillMyFocus cargoTrackingBookingMyFocus userId contaienrNoExist billChange4 bookingChange4 bookingChange3 cargoTrackingContainerHistory6 numberType containerSize containerMessage containerTab isLogin cargoTrackingBillContainer cargoTrackingBillContainer1 BillMessage BookingMessage searchSuccess searchError containerTransportationMode&cargoTrckingFindButton=cargoTrckingFindButton" );
- //       curl_setopt($ch, CURLOPT_HTTPHEADER,     array('Host: elines.coscoshipping.com','Connection: keep-alive','Origin: http://elines.coscoshipping.com',
- //           'User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/66.0.3359.139 Safari/537.36',
-  //          'Content-Type: application/x-www-form-urlencoded','Accept: application/xml, text/xml, */*; q=0.01','Faces-Request: partial/ajax','X-Requested-With: XMLHttpRequest',
-   //         'DNT: 1','Referer: http://elines.coscoshipping.com/NewEBWeb/public/cargoTracking/cargoTracking.xhtml','Accept-Language: en-US,en;q=0.9',
-  //          'Cookie: $cookieString'));
-/*
-        $output=curl_exec($ch);
-        if (curl_error($ch)) {
-            return NULL;
-        }
-        curl_close($ch);
-        $DOM = new DOMDocument();
-        libxml_use_internal_errors(true);
-        $DOM->loadHTML($output);
-        $table=$DOM->getElementById('containerInfoByBlNum');
-        $Header = $table->getElementsByTagName('th');
-        $Detail = $table->getElementsByTagName('td');
-        //#Get header name of the table
-        foreach($Header as $NodeHeader) {
-            $aDataTableHeaderHTML[] = trim($NodeHeader->textContent);
-        }
-
-        //#Get row data/detail table without header name as key
-        $i = 0;
-        $j = 0;
-        foreach($Detail as $sNodeDetail) {
-            $aDataTableDetailHTML[$j][] = trim($sNodeDetail->textContent);
-            $i = $i + 1;
-            $j = $i % count($aDataTableHeaderHTML) == 0 ? $j + 1 : $j;
-        }
-        //print_r($aDataTableDetailHTML); die();
-
-        //#Get row data/detail table with header name as key and outer array index as row number
-        for($i = 0; $i < count($aDataTableDetailHTML); $i++) {
-            for($j = 0; $j < count($aDataTableHeaderHTML); $j++) {
-                if (array_key_exists($j,$aDataTableDetailHTML[$i])) {
-                    $aTempData[$i][$aDataTableHeaderHTML[$j]] = $aDataTableDetailHTML[$i][$j];
-                } else{
-                    break;
-                }
-            }
-        }
-        $aDataTableDetailHTML = $aTempData; unset($aTempData);
-        //print_r($aDataTableDetailHTML[0]);
-        if (isset($aDataTableDetailHTML[0]['Rail LFD'])) {
-            echo "<hr/>";
-            echo $aDataTableDetailHTML[0]['Rail LFD'];
-            echo "<hr/>";
-            return $aDataTableDetailHTML[0]['Rail LFD'];
-        } else {
-            if (isset($aDataTableDetailHTML[0]['Depot LFD'])) {
-                echo "<hr/>";
-                echo $aDataTableDetailHTML[0]['Depot LFD'];
-                echo "<hr/>";
-                return $aDataTableDetailHTML[0]['Depot LFD'];
-            }
-        }
-        return NULL;
-    }
-*/
     var $hasCookie = false;
     var $cookies = array();
 
@@ -443,6 +362,7 @@ class Shipments extends CI_Controller
             //  echo "<hr/>";
             //	var_dump($cookies);
             curl_close($ch);
+            $this->hasCookie = true;
         }
         $ch = curl_init();
         //$requestUrl = "http://elines.coscoshipping.com/NewEBWeb/public/cargoTracking/cargoTracking.xhtml?language=en&page=null&token=eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MjU5MDEyNDgsInVzZXJfbmFtZSI6ImxpYnJhIiwic2NvcGUiOlsicmVhZCJdLCJhdXRob3JpdGllcyI6WyJST0xFX1NBUF9Vc2VyIl0sInN5cyI6ImViIiwiYXVkIjpbIm1vYmlsZS1yZXNvdXJjZSJdLCJqdGkiOiI5YmNmMGFjNS1hNDI5LTQ5MDAtYjg5NS1hZjZmZmRmMmZjZGEiLCJjbGllbnRTb3VyY2UiOiJwYyIsImNsaWVudF9pZCI6Im0xIn0.JcMTTo0T-qHKkOko0SU5j5Gios_bVxhqtjFZoP5-GGwuyioA-b2JaRhC8SMxGlT2bMszSIqauZKCHEuZbdKjOderxE6C1gCN8i1UP6G_QggOYybhep514oG9nTwDGuPMVO6WU_o_9ZrgjBzi4Hfsy98uJcAEEe1uiX4GdzJPRR_gpbCOodhyoYHRybsDNH8EfZVikKFnDBY8fLmGPyA8kBiCxEIHd-WWvdAyWdCLZoMRkUYd5lyeImNuNROZWHS12q67YszJgyhrGJ1UYLBITqfCuus1z0CFnZ9RyxxvxpuIrAIgab6TquL4Hau11WRXcHiVLhhKAog2Cyhib5a6gw&uid=libra";
@@ -483,6 +403,9 @@ class Shipments extends CI_Controller
         }
         curl_close($ch);
         //echo $output;
+        if (!$this->hasCookie) {
+            echo $output;
+        }
          $DOM = new DOMDocument();
          libxml_use_internal_errors(true);
          $DOM->loadHTML($output);

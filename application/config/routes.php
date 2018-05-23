@@ -70,6 +70,7 @@ $route['index.php'] = 'Shipments/index';
 $route['Shipments'] = 'Shipments/getcurrent';
 $route['Ajax/Shipments'] = 'Ajax/Shipments';
 $route['users'] = 'users/login';
+$route['calendar'] = 'calendar';
 $route['users/register'] = 'users/register';
 $route['(:any)'] = 'pages/view/$1';
 $route['default_controller'] = 'pages/view';

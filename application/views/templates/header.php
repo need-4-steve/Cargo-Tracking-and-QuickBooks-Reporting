@@ -5,18 +5,19 @@
                 <meta name="viewport" content="width=device-width, initial-scale=1">
                 <title>Libra Cargo Management</title>
                 <link rel="stylesheet" href="<?php echo base_url(); ?>assets/css/custom.min.css">
-
                 <link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>assets/css/datatables.min.css">
                 <link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>assets/css/generator-base.css">
                 <link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>assets/css/editor.bootstrap4.min.css">
                 <link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>assets/css/fullcalendar.css" />
-                <script type="text/javascript" charset="utf-8" src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
+ 
+                <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
                 <script type="text/javascript" charset="utf-8" src="https://cdn.datatables.net/v/bs4-4.0.0/jq-3.2.1/moment-2.18.1/jszip-2.5.0/pdfmake-0.1.32/dt-1.10.16/af-2.2.2/b-1.5.1/b-colvis-1.5.1/b-flash-1.5.1/b-html5-1.5.1/b-print-1.5.1/cr-1.4.1/fc-3.2.4/fh-3.1.3/kt-2.3.2/r-2.2.1/rg-1.0.2/rr-1.2.3/sc-1.4.4/sl-1.2.5/datatables.min.js"></script>
                 <script type="text/javascript" charset="utf-8" src="<?php echo base_url(); ?>assets/js/dataTables.editor.min.js"></script>
                 <script type="text/javascript" charset="utf-8" src="<?php echo base_url(); ?>assets/js/editor.bootstrap4.min.js"></script>
                 <script type="text/javascript" charset="utf-8" src="<?php echo base_url(); ?>assets/js/moment.min.js"></script>
                 <script type="text/javascript" charset="utf-8" src="<?php echo base_url(); ?>assets/js/fullcalendar.js"></script>
                 <script type="text/javascript" charset="utf-8" src="<?php echo base_url(); ?>assets/js/table.shipments.js"></script>
+                <script src="<?php echo base_url() ?>assets/js/gcal.js"></script>
                 <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
                 <script src="<?php echo base_url(); ?>assets/js/custom.js"></script>
                 <!--[if lt IE 9]>
@@ -50,7 +51,7 @@
                                             <div class="dropdown-divider"></div>
                                             <a class="dropdown-item" href="<?php echo base_url(); ?>shipments/index">Shipment History</a>
                                             <div class="dropdown-divider"></div>
-                                            <a class="dropdown-item" href="<?php echo base_url(); ?>">Calendar</a>
+                                            <a class="dropdown-item" href="<?php echo base_url(); ?>calendar">Calendar</a>
                                             <div class="dropdown-divider"></div>
                                             <a class="dropdown-item" href="<?php echo base_url(); ?>users/logout">Logout</a>
                                         </div>

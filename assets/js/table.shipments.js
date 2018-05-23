@@ -10,6 +10,9 @@
         var editor = new $.fn.dataTable.Editor( {
             ajax: '/Ajax/Shipments',
             table: '#shipments',
+            columnDefs : [
+                { type : 'datetime', targets : [9,10,12] }
+            ], 
             fields:
                 [   {
                         label: "Status:",
@@ -56,13 +59,13 @@
                         label: "ETA:",
                         name: "shipments.eta",
                         type: "datetime",
-                        format:    'M/D/YYYY'
+                        format:    'MM-DD-YYYY'
                     },
                     {
                         label: "LFD:",
                         name: "shipments.lfd",
                         type: "datetime",
-                        format:    'M/D/YYYY'
+                        format:    'MM-DD-YYYY'
                     },
                     {
                         label: "Pickup Number:",
@@ -162,13 +165,11 @@
             select: {
                 style: 'true'
             },
+            buttons: [
+                'excel', 'pdf'
+              ],
             columns:
-                [   /*{   // Responsive control column
-                        data: null,
-                        defaultContent: '',
-                        className: 'control',
-                        orderable: false
-                    },*/
+                [   
                     {   // Checkbox select column
                         data: null,
                         defaultContent: '',
@@ -176,7 +177,21 @@
                         orderable: false
                     },
                     {
-                        data: "shipments.status"
+                        data: "shipments.status",
+                        render: function ( data, type, row ) {
+                            var color='';
+                            if ( type === 'display' ) {
+                                if (data==='0'){
+                                    color='circle_red';
+                                }else if (data==='1'){
+                                    color='circle_yellow';
+                                } else if (data==='2'){
+                                    color='circle_green';
+                                }
+                                return '<div class=\"'+color+'\"><p></p></div>';
+                            }
+                            return data;
+                        }
                     },
                     {data: "shipments.po"},
                     {data: "products.product_name", editField: "shipments.product_id"},
@@ -185,34 +200,10 @@
                     {data: "vendors.abbreviation", editField: "shipments.vendor_id"},
                     {data: "shipments.discharge_port"},
                     {data: "shipments.final_destination"},
-                    {
-                        data: "shipments.eta"/*,
-                        render: 
-                            function (data) {
-                                var date = new Date(data);
-                                var month = date.getMonth() + 1;
-                                return (month.length > 1 ? month : "0" + month) + "/" + date.getDate() + "/" + date.getFullYear();
-                            }*/
-                    },
-                    {
-                        data: "shipments.lfd",
-                       /* render: 
-                            function (data) {
-                                var date = new Date(data);
-                                var month = date.getMonth() + 1;
-                                return (month.length > 1 ? month : "0" + month) + "/" + date.getDate() + "/" + date.getFullYear();
-                            }*/
-                    },
+                    {data: "shipments.eta"},
+                    {data: "shipments.lfd"},
                     {data: "shipments.pickup_number"},
-                    {
-                        data: "shipments.truck_date"/*,
-                        render: 
-                            function (data) {
-                                var date = new Date(data);
-                                var month = date.getMonth() + 1;
-                                return (month.length > 1 ? month : "0" + month) + "/" + date.getDate() + "/" + date.getFullYear();
-                            }*/
-                    },
+                    {data: "shipments.truck_date"},
                     {data: "truckers.trucker_name", editField: "shipments.trucker_id"},
                     {data: "shipments.container_size"},
                     {data: "shipments.bl_status"},
@@ -236,10 +227,6 @@
                         },
                         className: "dt-body-center"
                     },
-                    /*{
-                         data: "shipments.isf_required",
-                         render: simple_checkbox
-                     },*/
                     {
                         data: "shipments.customs",
                         render: function ( data, type, row ) {
@@ -343,6 +330,13 @@
                     } else {
                         $("td:nth-child(22)", row).removeClass("status_blue");
                         $("td:nth-child(22)", row).addClass("status_red");
+                    }
+                    if (data.shipments.qb_rt==1 && data.shipments.qb_ws==1){
+                        $(row).css("font-style","italic");
+                        $(row).css("background-color","#d1d1d1c2");
+                        $(row).css("color","#aaaaaa");
+                    } else {
+                        $(row).css("font-weight","normal");
                     }
                    /* var columnIndex;
                     var colCount = data.length;
