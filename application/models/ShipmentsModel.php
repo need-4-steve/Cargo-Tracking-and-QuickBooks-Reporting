@@ -115,6 +115,14 @@ class ShipmentsModel extends CI_Model
                     ->setFormatter( function ( $val, $data, $opts ) {
                         return ! $val ? 0 : 1;
                     } ),
+                Field::inst( 'shipments.po_boolean' )
+                    ->getFormatter(
+                        function ( $val, $data ) {
+                            return $val ? 1  : 0;
+                        } )
+                    ->setFormatter( function ( $val, $data, $opts ) {
+                        return ! $val ? 0 : 1;
+                    } ),
                 Field::inst( 'shipments.qb_rt' )
                     ->getFormatter(
                         function ( $val, $data ) {
@@ -147,7 +155,7 @@ class ShipmentsModel extends CI_Model
                 Field::inst( 'shipments.container_size' )
                     ->validator( Validate::numeric() )
                     ->setFormatter( Format::ifEmpty( null ) ),
-                Field::inst( 'shipments.is_active' )
+                Field::inst( 'shipments.do' )
                     ->getFormatter(
                         function ( $val, $data ) {
                             return $val ? 1  : 0;
@@ -161,6 +169,24 @@ class ShipmentsModel extends CI_Model
             ->leftJoin( 'vendors', 'vendors.id', '=', 'shipments.vendor_id' )
             ->process( $_POST )
             ->json();
+    }
+
+    public function get_product_id_by_vendor_id($vendor_id){
+        if (!isset($vendor_id) || empty($vendor_id)){
+            return NULL;
+        }
+        $query = $this->db->get_where('vendor_products', array('vendor_id' => $vendor_id));
+        $result= $query->row_array();
+        if (!isset($result) || empty($result) || !array_key_exists('product_id',$result)) { 
+            return NULL;
+        }
+        return $result['product_id'];
+       /* $query2=$this->db->get_where('products', array('id' => $result['product_id']));
+        $result2=$query2->row_array();
+        if (!isset($result2) || empty($result2) || !array_key_exists('product_name',$result2)) { 
+            return NULL;
+        }
+        return $result2['product_name'];*/
     }
 
     public function mark_everything_inactive(){
@@ -177,6 +203,14 @@ class ShipmentsModel extends CI_Model
         $query = $this->db->get_where('vendors', array('name' => $vendorName));
         $result= $query->row_array();
         return $result['id'];
+    }
+
+    public function container_has_files($container_number){
+        if (is_null($container_number) || empty($container_number)) return false;
+        $query = $this->db->get_where('container_files', array('container_number' => $container_number));
+        $rows= $query->result_array();
+        if (count($rows)<=0) return false;
+        return true;
     }
 
     public function getISFreq($port_of_discharge=FALSE){

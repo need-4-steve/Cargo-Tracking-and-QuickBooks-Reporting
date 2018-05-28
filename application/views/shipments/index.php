@@ -3,16 +3,17 @@
     <thead>
     <tr>
         <th colspan="16"></th>
-        <th colspan="6">Reminders</th>
+        <th colspan="8">Reminders</th>
+        <th></th>
     </tr>
     <tr>
         <th>Select</th>
         <th>Status</th>
-        <th>Purchase Order</th>
-        <th>Product</th>
-        <th>Container Number</th>
+        <th>P/O#</th>
+        <th>Prod. Type</th>
+        <th>Cont. Num</th>
         <th>Bill of Lading</th>
-        <th>Vendor Name</th>
+        <th>Vendor</th>
         <th>Discharge Port</th>
         <th>FD</th>
         <th>ETA</th>
@@ -20,16 +21,17 @@
         <th>Pickup#</th>
         <th>Truck Date</th>
         <th>Trucker Name</th>
-        <th>Cntnr Size</th>
-        <th>BL Status</th>
+        <th>Cont. Size</th>
+        <th>B/L Status</th>
         <th>Freight</th>
         <th>ISF</th>
         <th>Cstms</th>
-        <th>QB-RT?</th>
-        <th>QB-WS?</th>
-        <!-- <th>Latest Event</th>
-         <th>Latest Event Time and Date</th>-->
-        <th>Vendor Payment?</th>
+        <th>PO</th>
+        <th>QB-RT</th>
+        <th>QB-WS</th>
+        <th>Vendor Payment</th>
+        <th>D.O.</th>
+        <th>Docs</th>
     </tr>
     </thead>
 </table>

@@ -1,0 +1,643 @@
+<html>
+<head>
+<meta http-equiv=3D"Content-Type" content=3D"text/html; charset=3Dutf-8" />
+<title>6183107850 - COSCO SHIPPING Lines - Update : ETA Change at Final Des=
+tination</title>
+<style type=3D"text/css">
+
+<!--
+
+body, td,th, span, font{
+=09COLOR: #000000;
+=09FONT-FAMILY:Arial, Helvetica, sans-serif;
+=09FONT-SIZE: 12px;
+}
+
+/*03 Dec 2008*/
+A {
+=09COLOR: #006ab6;
+=09TEXT-DECORATION:underline;=20
+=09font-weight:normal;
+}
+A:hover {
+=09COLOR: #e85100;
+=09TEXT-DECORATION: underline;=20
+=09font-weight:normal;
+}
+A.noticeLink{
+=09color:#999999;
+}
+/*a{
+=09color:#999999;
+}*/
+/*03 Dec 2008*/
+
+.emailTitle {
+=09color:#000000;
+=09font-size:120%;
+=09font-weight: bold;
+=09height: 40px;
+}
+.summaryTitle {
+=09color:#404040;
+=09background-color:#dce2ed;
+=09padding-top: 4px;
+=09padding-bottom: 4px;
+=09FONT-SIZE: 14px;
+}
+.detailTitle {
+=09color:#404040;
+=09background-color:#dce2ed;
+=09padding-top: 4px;
+=09padding-bottom: 4px;
+=09FONT-SIZE: 14px;
+}
+
+TD.emailSectionTitle {
+=09color:#404040;
+=09padding-top: 4px;
+=09padding-bottom: 2px;
+=09font-weight: bold;
+}
+.Notice {
+=09color: #858a90;
+=09font-size: 90%;
+}
+.labelText {
+=09color: #555555;
+=09vertical-align: top;
+=09font-weight:bold;
+}
+Table.emailInfo {
+=09border: 1px dotted #9ca6b7;
+}
+Td.emailInfo {
+=09color: #9ca6b7;
+=09font-size: 70%;
+}
+Table.emailNotice {
+=09border: 1px dotted #CED2D9;
+}
+Td.emailNotice {
+=09color: #CED2D9;
+=09font-size: 70%;
+}
+TABLE.dataTable {
+=09border: 1px solid #d2d2d2;
+=09border-collapse:collapse;
+}
+.dataTable TH{
+=09background-color:#f3f3f3;
+=09color: #404040;
+=09border: 1px solid #d2d2d2;
+}
+.dataTable TD{
+  =09border-left:1px solid #d2d2d2;
+=09border-right:1px solid #d2d2d2;
+=09border-top:1px solid #d2d2d2;
+=09border-bottom:1px solid #d2d2d2;
+=09padding:1px;
+=09font-weight: bold
+}
+.frameTable{
+=09border: 3px double #4975b6;
+=09border-collapse:collapse;
+}
+.titleBg {
+=09/*background-color:#f4f4f4;*/
+=09border-top: #4975b6 double 3px;
+}
+.date {
+=09font-size:60%;
+=09color:#333333;
+}
+
+/*#################Added 17 Oct 2008####################*/
+
+/*-------------------- Content Text ------------------*/
+
+.indicateLabel{
+=09color: #404040;
+=09vertical-align: top;
+=09font-weight:bold;
+}
+.highlightText {
+=09color:#000000;
+=09font-style:italic;
+}
+.comment{
+=09color: #666666;
+}
+
+/*-------------------- Page Layout ------------------*/
+
+TD.leftRightPadding {
+=09padding-left: 6px;
+=09padding-right: 6px;
+}
+TD.topBottomPadding {
+=09padding-top: 3px;
+=09padding-bottom:3px;
+}
+
+TD.allPadding {
+ padding-top: 6px;
+ padding-bottom:6px;
+ padding-left: 6px;
+ padding-right: 6px;
+}
+
+.sectionTitle {/* Section Title (1st Level Title) */
+  =09color: #000000;
+=09font-weight:bold;
+=09padding-bottom: 2px;
+=09padding-top: 3px;
+}
+
+.subTitle {/* Sub Title (3rd Level Title) */
+=09color:#404040;
+=09font-weight: bold;
+}
+
+.disableText { /*09 Oct 2008*/
+=09color: #666666;
+=09font-style: italic;
+}
+
+/* Section Table Style */
+TABLE.sectionTable {
+=09border-bottom:0px solid #000000;
+=09border-collapse:collapse;
+}
+TH.sectionTable {
+=09color:#404040;
+=09background-color:#dce2ed;
+=09padding-top: 4px;
+=09padding-bottom: 4px;
+=09FONT-SIZE: 14px;
+=09text-align:left;
+}
+
+TH.sectionTable TD{
+=09border: 0px none #000000;
+  =09color: #404040;
+=09font-weight: bold;
+}
+
+TD.sectionTable {
+=09border: 0px none #d2d2d2;
+=09padding-left: 0px;
+=09padding-right: 0px;
+=09padding-top: 0px;
+=09padding-bottom: 12px;
+}
+
+
+.dataTable TD TD{
+ border:0px none #000000;
+ padding-left:1px;
+ padding-right:1px;
+ padding-bottom:0px;
+ padding-top:0px;
+}
+
+
+.dataTable TD div TD{
+=09border:0px none #000000;
+}
+
+.borderTD {
+=09border-bottom:1px solid #d2d2d2 !important;
+}
+
+
+TABLE.viewTable {
+=09border: 1px solid #d2d2d2 !important;
+=09border-collapse:collapse;
+  =09background-color:#ffffff;
+}
+.viewTable TH{
+  =09background-color:#ffffff;
+  =09color: #404040;
+=09padding-left: 1px;
+=09padding-right: 1px;
+=09padding-top: 1px;
+=09padding-bottom: 1px;
+  =09border:1px solid #d2d2d2;
+}
+
+.viewTable TD{
+  =09border:1px solid #d2d2d2 !important;
+=09padding-left:1px !important;
+=09padding-right:1px !important;
+=09padding-top:2px !important;
+=09padding-bottom:2px !important;
+}
+.viewTable TD TD{
+ border:0px none #000000!important;
+}
+TABLE.pageIndex {
+  =09border-left:1px solid #d2d2d2;
+=09border-right:1px solid #d2d2d2;
+=09border-top:0px none #d2d2d2;
+=09border-bottom:1px solid #d2d2d2;
+=09border-collapse:collapse;
+}
+.pageIndex TD{
+=09color: #404040;
+=09padding-left: 6px;
+=09padding-right: 6px;
+=09padding-top: 1px;
+=09padding-bottom: 1px;
+}
+
+
+/* Group Table Style */
+TABLE.groupTable {
+=09border: 1px solid #d2d2d2;
+=09border-collapse:collapse;
+}
+TD.groupTitle {/* Group Title (2nd Level Title) */
+=09color: #404040;
+=09font-weight: bold;
+=09height: 21px;
+=09border-bottom: 1px solid #e4e6e8;
+=09padding-left: 6px;
+=09font-size:12px;
+=09background-color:#f3f3f3;
+}
+
+/* Rotund Table Style */
+.topBorder {
+=09border-bottom: 0px none #000000;
+=09border-left: 0px none #000000;
+=09border-right: 0px none #000000;
+=09border-top: 1px solid #d2d2d2;
+}
+.bottomBorder {
+=09border-bottom: 1px solid #d2d2d2;
+=09border-left: 0px none #000000;
+=09border-right: 0px none #000000;
+=09border-top: 0px none #000000;
+}
+.leftRightBorder {
+=09border-bottom: 0px none #000000;
+=09border-left: 1px solid #d2d2d2;
+=09border-right: 1px solid #d2d2d2;
+=09border-top: 0px none #000000;
+=09padding-left: 6px;
+=09padding-right: 6px;
+}
+Table.rotundWhiteBg {
+=09background-color: #ffffff;
+}
+
+.CornerLeftTop {
+=09border-bottom: 0px none #000000;
+=09border-left: 1px solid #d2d2d2;
+=09border-right: 0px none #000000;
+=09border-top: 1px solid #d2d2d2;
+=09background-position:left top;
+=09background-repeat:no-repeat;
+=09width:6px;
+=09height:6px;
+}
+.CornerLeftBottom {
+=09border-bottom: 1px solid #d2d2d2;
+=09border-left: 1px solid #d2d2d2;
+=09border-right: 0px none #000000;
+=09border-top: 0px none #000000;
+=09background-position:left bottom;
+=09background-repeat:no-repeat;
+=09width:6px;
+=09height:6px;
+}
+
+.CornerRightTop {
+=09border-bottom: 0px none #000000;
+=09border-left:  0px none #000000;
+=09border-right: 1px solid #d2d2d2;
+=09border-top: 1px solid #d2d2d2;
+=09background-position:right top;
+=09background-repeat:no-repeat;
+=09width:6px;
+=09height:6px;
+}
+
+.CornerRightBottom {
+=09border-bottom: 1px solid #d2d2d2;
+=09border-left: 0px none #000000;
+=09border-right: 1px solid #d2d2d2;
+=09border-top: 0px none #000000;
+=09background-position:right bottom;
+=09background-repeat:no-repeat;
+=09width:6px;
+=09height:6px;
+}
+
+TD.thinbordercellLeft{=20
+        padding-left:5px;=20
+=09=09padding-right:0px;=20
+=09=09padding-top:0px;=20
+=09=09padding-bottom:0px;         =20
+=09=09border-top:1px solid #333333;
+=09=09border-right:1px solid #333333;
+=09=09border-left:0px none #000000;
+=09=09border-bottom:0px none #000000;
+}
+       =20
+TD.thinbordercellRight{=20
+        padding-left:5px;=20
+=09=09padding-right:0px;=20
+=09=09padding-top:0px;=20
+=09=09padding-bottom:0px;       =20
+=09=09border-top:1px solid #333333;
+=09=09border-right:0px none #333333;
+=09=09border-left:0px none #000000;
+=09=09border-bottom:0px none #000000;
+}
+.thinbar {
+=09background-color: #333333;
+=09font-size: 1pt;
+=09}
+-->
+</style>
+</head>
+<body>
+<table width=3D"945" border=3D"0" align=3D"center" cellpadding=3D"3" cellsp=
+acing=3D"0" class=3D"frameTable">
+ <tr>
+  <td width=3D"587" height=3D"80"><img src=3D"https://app.acz.lines.coscosh=
+ipping.com/admin/zone/resource.js?zoneId=3DCOSCON&resourceName=3DLOGO_IMAGE=
+"/></td>
+  <td width=3D"354" align=3D"right" valign=3D"bottom" class=3D"date"></td>
+</tr>
+  <tr>
+    <td colspan=3D"2" class=3D"titleBg"></td>
+  </tr>
+  <tr>
+    <td colspan=3D"2">
+      <table width=3D"100%" border=3D"0" cellspacing=3D"0" cellpadding=3D"1=
+0">
+      <tr>
+        <td><p>Dear Customer, </p>
+                    <p>COSCO SHIPPING Lines would like to inform you that t=
+he following milestone has been updated.</p>
+         =20
+                    <table width=3D"100%" cellspacing=3D"0" cellpadding=3D"=
+0" border=3D"0" align=3D"center">
+              <tbody><tr>
+                <th align=3D"left" class=3D"summaryTitle">Milestone Informa=
+tion </th>
+              </tr>
+                            <tr>
+                <td><table width=3D"100%" cellspacing=3D"0" cellpadding=3D"=
+0" border=3D"0">
+                    <tbody><tr>
+                      <td><table width=3D"100%" cellspacing=3D"2" cellpaddi=
+ng=3D"0" border=3D"0" class=3D"dataTable">
+                          <tbody>
+                           <tr valign=3D"top">
+=09<td class=3D"labelText" colspan=3D"2"><strong>Booking Number:
+=09</strong></td>
+=09<td width=3D"75%"><strong>6183107850</strong></td>
+</tr>
+<tr valign=3D"top">
+=09=09=09=09=09<td class=3D"labelText" colspan=3D"2"><strong>Milestone:</st=
+rong></td>
+=09=09=09=09<td><strong>ETA Change at Final Destination</strong></td>
+</tr>
+                           <tr valign=3D"top">
+=09<td class=3D"labelText" rowspan=3D"4" nowrap=3D"nowrap"><strong>ETA at F=
+ND</strong></td>
+=09<td class=3D"labelText"><strong>Original:</strong></td>
+=09<td><strong>29 Jun 2018,07:00 CDT</strong></td>
+</tr>
+<tr valign=3D"top">
+  <td class=3D"labelText"><strong>Previous:</strong></td>
+  <td><strong>29 Jun 2018,07:00 CDT</strong></td>
+</tr>
+<tr valign=3D"top">
+=09<td class=3D"labelText"><strong>Latest:</strong></td>
+=09<td><strong>25 Jun 2018,08:00 CDT</strong></td>
+</tr>
+<tr valign=3D"top">
+=09<td class=3D"labelText" nowrap=3D"nowrap"><strong>Variance of Latest vs =
+Previous:</strong></td>
+=09<td><strong>3 Day(s) 23 Hour(s)</strong></td>
+</tr>
+
+
+                                                    <tr valign=3D"top">
+                            <td class=3D"labelText" colspan=3D"2"><strong>R=
+eason of Schedule Change:</strong></td>
+                            <td><strong>FND ETA Changed.</strong></td>
+                          </tr>
+                         =20
+                        </tbody></table></td>
+                    </tr>
+                                    </tbody></table></td>
+              </tr>
+            </tbody></table>
+                    <br/>
+                    <table width=3D"100%" border=3D"0" align=3D"center" cel=
+lpadding=3D"0" cellspacing=3D"0">
+            <tr>
+              <th align=3D"left" class=3D"summaryTitle">Shipment Informatio=
+n </th>
+            </tr>
+            <tr>
+              <td ><table width=3D"100%" border=3D"0" cellpadding=3D"0" cel=
+lspacing=3D"0">
+                  <tr>
+                    <td><table width=3D"100%"  border=3D"0" cellpadding=3D"=
+0" cellspacing=3D"2" class=3D"dataTable">
+
+                                                <tr valign=3D"top">
+                          <td class=3D"labelText" colspan=3D"2"><strong>Boo=
+king Number:</strong></td>
+                          <td width=3D"75%"><strong>6183107850</strong></td=
+>
+                        </tr>
+                       =20
+                       =20
+                                                                           =
+     <tr valign=3D"top">
+                          <td rowspan=3D"5" class=3D"labelText" colspan=3D"=
+2"><strong>Reference Number :</strong></td>
+                          <td><strong>Shippers Identity For Shipment (SID):=
+BJS </strong></td>
+                        </tr>
+                                                                           =
+                     <tr valign=3D"top">
+                          <td><strong>Service Contract Number:HOI18023 </st=
+rong></td>
+                        </tr>
+                                                                           =
+                     <tr valign=3D"top">
+                          <td><strong>File Identifier:EDI2018052206171024-3=
+0 </strong></td>
+                        </tr>
+                                                                           =
+                     <tr valign=3D"top">
+                          <td><strong>Other:AMYFAN@TJ-CHF.COM </strong></td=
+>
+                        </tr>
+                                                                           =
+                     <tr valign=3D"top">
+                          <td><strong>CargoSmart Booking Reference Number:C=
+C6321123366 </strong></td>
+                        </tr>
+                                                                       =20
+                                                                           =
+           <tr valign=3D"top">
+                          <td rowspan=3D"1" class=3D"labelText" colspan=3D"=
+2"><strong>Container Information: </strong></td>
+                          <td><strong>1 X 40' Hi-Cube Container<br>TCNU5078=
+59-0 </strong></td>
+                        </tr>
+                                                                           =
+                                             <tr valign=3D"top">
+                          <td class=3D"labelText" colspan=3D"2"><strong>Ori=
+gin:</strong></td>
+                          <td><strong>Xingang, Tianjin, China</strong></td>
+                        </tr>
+            =09=09=09
+                                                <tr valign=3D"top">
+                          <td class=3D"labelText" rowspan=3D"2"><strong>Por=
+t of Load</strong></td>
+                          <td class=3D"labelText" ><strong>Original:</stron=
+g></td>
+                          <td><strong>Xingang</strong></td>
+                        </tr>
+                        <tr valign=3D"top">
+                          <td class=3D"labelText" ><strong>Latest:</strong>=
+</td>
+                          <td><strong>Xingang</strong></td>
+                        </tr>
+            =09=09=09                        =09                        <tr=
+ valign=3D"top">
+=09                          <td class=3D"labelText" rowspan=3D"2">
+=09                            <strong>
+=09                            =09                            Vessel Voyage=
+(Arrival at Last Port of Discharge)
+=09                            =09                            </strong>
+=09                         </td>
+=09                          <td class=3D"labelText" ><strong>Original:</st=
+rong></td>
+=09                          <td><strong>CSCL SUMMER 016W</strong></td>
+=09                        </tr>
+=09                        <tr valign=3D"top">
+=09                          <td class=3D"labelText" ><strong>Latest:</stro=
+ng></td>
+=09                          <td><strong>CSCL SUMMER 016E</strong></td>
+=09                        </tr>
+                       =20
+
+                                                <tr valign=3D"top">
+                          <td class=3D"labelText" rowspan=3D"2"><strong>Por=
+t of Discharge</strong></td>
+                          <td class=3D"labelText" ><strong>Original:</stron=
+g></td>
+                          <td><strong>Long Beach</strong></td>
+                        </tr>
+                        <tr valign=3D"top">
+                          <td class=3D"labelText" ><strong>Latest:</strong>=
+</td>
+                          <td><strong>Prince Rupert</strong></td>
+                        </tr>
+            =09=09=09
+                                                <tr valign=3D"top">
+                          <td class=3D"labelText" colspan=3D"2"><strong>Des=
+tination:</strong></td>
+                          <td><strong>Memphis, Tennessee, United States</st=
+rong></td>
+                        </tr>
+            =09=09=09            =09=09=09                        <tr valig=
+n=3D"top">
+                          <td class=3D"labelText" colspan=3D"2"><strong>Shi=
+pper:</strong></td>
+                          <td><strong>Tianjin Wanda Tyre Group Company Limi=
+ted</strong></td>
+                        </tr>
+                       =20
+            =09=09=09                        <tr valign=3D"top">
+                          <td class=3D"labelText" colspan=3D"2"><strong>For=
+warder:</strong></td>
+                          <td><strong>Tianjin Century Huifeng Logistics Co.=
+,Ltd</strong></td>
+                        </tr>
+                       =20
+            =09=09=09                        <tr valign=3D"top">
+                          <td class=3D"labelText" colspan=3D"2"><strong>Con=
+signee:</strong></td>
+                          <td><strong>Libra Resources Incorporated</strong>=
+</td>
+                        </tr>
+                       =20
+                    </table></td>
+                  </tr>
+              </table></td>
+            </tr>
+          </table>
+ <p>COSCO SHIPPING Lines Support</p></td>
+      </tr>
+
+    </table>    </td>
+  </tr>
+  <tr>
+    <td colspan=3D"2"></td>
+  </tr>
+              <tr>
+             <td></td>
+      </tr>  </table>
+
+<table width=3D"945" border=3D"0" align=3D"center" cellpadding=3D"3" cellsp=
+acing=3D"0" class=3D"emailNotice">
+<tr>
+<td colspan=3D"2">If you don't want to receive this email in the future, yo=
+u can click <a href=3D"http://elines.coscoshipping.com/admin/coscon/milesto=
+netemplate/mcc_ms_unsubscription.jsf?ENTRY_TYPE=3DCOSCON&ENTRY=3DMCC&domain=
+Name=3DSHIPMENT_PLAN_DOMAIN&milestoneName=3DETA Change at Final Destination=
+">Here</a> to unsubscribe, if you are not system user, please click non-sys=
+tem user unsubscribe <a href=3D"https://app.acz.lines.coscoshipping.com/shi=
+pmentplan/milestonetemplate/mcc_ms_unsubscription_nonsystem.jsf?ENTRY_TYPE=
+=3DCOSCON&ENTRY=3DMCC&domainName=3DSHIPMENT_PLAN_DOMAIN&milestoneName=3DETA=
+ Change at Final Destination">link</a>.</td>
+</tr>
+</table>
+<br>
+
+<table width=3D"945" border=3D"0" align=3D"center" cellpadding=3D"0" cellsp=
+acing=3D"6" class=3D"emailNotice"><tbody><tr> <td valign=3D"top" class=3D"e=
+mailNotice">IMPORTANT NOTICE <br>Use of COSCO SHIPPING Lines Web Site, incl=
+uding this e-mail and the information contained herein, is covered by the C=
+OSCO SHIPPING Lines's "Terms of Use" and "Privacy and Security Statement". =
+Please read the current version of the Terms of Use and the Privacy and Sec=
+urity Statement which you may access by clicking on the "Terms of Use" and =
+the "Privacy and Security Statement" on the bottom of the page at <a href=
+=3D"http://lines.coscoshipping.com">http://lines.coscoshipping.com</a>. By =
+using the information contained in this e-mail you are deemed to have accep=
+ted and agreed to be bound by the Terms of Use and the Privacy and Security=
+ Statement.</td> </tr><tr><td valign=3D" top" class=3D"emailNotice">Under n=
+o circumstances shall this information or the information contained in any =
+e-mail constitute a binding agreement to carry or for provision of carriage=
+ services whether with COSCO SHIPPING Lines or alternative carriers or vess=
+els. COSCO SHIPPING Lines may, in its absolute discretion, at any time and =
+without prior notice, change the arrangement listed or make alternate arran=
+gement or decline a booking. We recommend you to check with COSCO SHIPPING =
+Lines for any changes. The actual provision of carriage services is subject=
+ to the final acceptance of COSCO SHIPPING Lines and subject to the availab=
+ility of the equipmen t and vessel and subject to the terms and conditions =
+set out in the COSCO SHIPPING Lines's standard bill of lading. </td></tr><t=
+r> <td valign=3D"top" class=3D"emailNotice">If you received this message in=
+ error, please notify us immediately and delete it from your system. You sh=
+ould not copy it, forward it or use it for any purpose or disclose the cont=
+ents to any person. </td> </tr><tr><td valign=3D"top" class=3D"emailNotice"=
+>Please note that error can occur in electronically transmitted material. W=
+ithout limitation, COSCO SHIPPING Lines and its affiliates accept no liabil=
+ity whatsoever and howsoever arising in connection of this e-mail. </td> </=
+tr><tr><td valign=3D"top" class=3D"emailNotice"></td></tr> </tbody></table>
+</body>
+
+</html>

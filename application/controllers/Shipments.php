@@ -1,6 +1,8 @@
 <?php
 
 defined('BASEPATH') OR exit('No direct script access allowed');
+use PHPHtmlParser\Dom;
+use Gufy\PdfToHtml\Config;
 
 class Shipments extends CI_Controller
 {
@@ -159,6 +161,7 @@ class Shipments extends CI_Controller
                     }
                 }
                 imap_close($inbox);
+                $this->check_for_vendor_emails();
             }
             //bill of lading	CN #	Vendor	Port of Discharge 	Destination City	Destination State	Destination Country	ETA Date/Time	ETA Time Zone	Customs Clearance Status Date/Time	Customs Clearance Status Time Zone	Customs Clearance Status	B/L Status	Latest Container Event 	Latest Container Event Date/Time	Latest Container Event Time Zone	Latest Container Event Location
             $columnNames = array("bill_of_lading", "container_number", "vendor_name", "discharge_port", "destination_city", "destination_state", "destination_country", "eta", "eta-timezone", "customs-clearance-datetime", "customs-clearance-timezone", "customs_status", "bl_status", "latest_event", "latest_event_timestamp", "latest_event_timestamp-timezone", "latest_event_location", "container_size");
@@ -218,7 +221,7 @@ class Shipments extends CI_Controller
                                                         /*$statusValue = "circle_red";*/
                             $statusValue=0;
                         } else {
-                            if ($daysDifference > 0 && $daysDifference< 3) {
+                            if ($daysDifference >= 0 && $daysDifference< 3) {
                                 $statusValue=0;
                                 /* $statusValue="circle_red";*/
                             } else if ($daysDifference >= 3 && $daysDifference<=7) {
@@ -231,8 +234,18 @@ class Shipments extends CI_Controller
                         }
                         $data['newContainers'][$c - 1]['status'] = $statusValue;/*str_replace("[TYPE]", $statusValue, $statusHTML);*/
                     }
-                    $data['newContainers'][$c - 1]['final_destination'] = $data['newContainers'][$c - 1]['destination_city'] . ', ' . $data['newContainers'][$c - 1]['destination_state'];
+                    $data['newContainers'][$c - 1]['final_destination'] = $data['newContainers'][$c - 1]                                                                          ['destination_city'] 
+                                                                            . ', ' . 
+                                                                          $data['newContainers'][$c - 1]                    ['destination_state'];
+                    if (isset($data['newContainers'][$c-1]['final_destination']) 
+                        && !empty($data['newContainers'][$c-1]['final_destination'])) {
+                            $data['newContainers'][$c-1]['do'] = 
+                                            strpos(strtoupper($data['newContainers'][$c-1]['final_destination']), 'MEMPHIS');
+                    } else {
+                        $data['newContainers'][$c-1]['do']=false;
+                    }
                     $data['newContainers'][$c - 1]['vendor_id'] = $this->ShipmentsModel->get_vendor_id_by_name($data['newContainers'][$c - 1]['vendor_name']);
+                    $data['newContainers'][$c - 1]['product_id'] = $this->ShipmentsModel->get_product_id_by_vendor_id($data['newContainers'][$c - 1]['vendor_id']);                    
                     $data['newContainers'][$c - 1]['isf_required'] = $this->ShipmentsModel->getISFreq($data['newContainers'][$c - 1]['discharge_port']);
                     $data['newContainers'][$c - 1]['latest_event_time_and_date'] = date("Y-m-d\TH:i:s", strtotime($data['newContainers'][$c - 1]['latest_event_timestamp']));
                 }
@@ -245,16 +258,18 @@ class Shipments extends CI_Controller
                     'status' => $data['newContainers'][$a]['status'],
                     'bill_of_lading' => $data['newContainers'][$a]['bill_of_lading'],
                     'vendor_id' => $data['newContainers'][$a]['vendor_id'],
+                    'product_id' => $data['newContainers'][$a]['product_id'],
                     'discharge_port' => $data['newContainers'][$a]['discharge_port'],
                     'final_destination' => $data['newContainers'][$a]['final_destination'],
                     'isf_required' => isset($data['newContainers'][$a]['isf_required']) ? $data['newContainers'][$a]['isf_required'] : false,
-                    'eta' => empty($data['newContainers'][$a]['eta']) ? NULL : date("Y-m-d\TH:i:s", strtotime($data['newContainers'][$a]['eta'])),//date("m/d/Y h:i A", strtotime($data['newContainers'][$a]['eta'])),
+                    'eta' => empty($data['newContainers'][$a]['eta']) ? NULL : date("Y-m-d\TH:i:s", strtotime($data['newContainers'][$a]['eta'])),
                     'bl_status' => $data['newContainers'][$a]['bl_status'],
                     'container_size' => $data['newContainers'][$a]['container_size'],
                     'latest_event' => $data['newContainers'][$a]['latest_event'],
-                    'latest_event_time_and_date' => date("Y-m-d\TH:i:s", strtotime($data['newContainers'][$a]['latest_event_timestamp'])),//date("m/d/Y h:i A", strtotime($data['newContainers'][$a]['latest_event_timestamp'])),
+                    'latest_event_time_and_date' => date("Y-m-d\TH:i:s", strtotime($data['newContainers'][$a]['latest_event_timestamp'])),
                     'is_active' => TRUE,
-                    'is_complete' => false
+                    'is_complete' => false,
+                    'do' => $data['newContainers'][$a]['do']
                 );
                /* echo 'container_number: '.$data['newContainers'][$a]['container_number'].PHP_EOL;*/
                 $tempObj = $this->ShipmentsModel->get_by_container_number($data['newContainers'][$a]['container_number']);
@@ -275,6 +290,13 @@ class Shipments extends CI_Controller
                             $updateData['customs'] = $tmpObj['customs'];
                         } else {
                             $updateData['customs'] =false;
+                        }
+                    }
+                    if (array_key_exists('po_boolean', $tmpObj) && isset($tmpObj['po_boolean'])){
+                        if  (!isset($data['newContainers'][$a]['po_boolean']) || $tmpObj['po_boolean'] !== $data['newContainers'][$a]['po_boolean']) {
+                            $updateData['po_boolean'] = $tmpObj['po_boolean'];
+                        } else {
+                            $updateData['po_boolean'] =false;
                         }
                     }
                     if (array_key_exists('qb_rt', $tmpObj) && isset($tmpObj['qb_rt'])){
@@ -303,6 +325,13 @@ class Shipments extends CI_Controller
                             $updateData['is_complete'] = $tmpObj['is_complete'];
                         } else {
                             $updateData['is_complete'] =false;
+                        }
+                    }
+                    if (array_key_exists('do', $tmpObj) && isset($tmpObj['do'])){
+                        if  (!isset($data['newContainers'][$a]['do']) || $tmpObj['do'] !== $data['newContainers'][$a]['do']) {
+                            $updateData['do'] = $tmpObj['do'];
+                        } else {
+                            $updateData['do'] =false;
                         }
                     }
                     $this->ShipmentsModel->update_record(array('container_number' => $data['newContainers'][$a]['container_number']), $updateData);
@@ -335,12 +364,223 @@ class Shipments extends CI_Controller
             $execution_time = round($execution_time,2);//makes time two decimal places long
             echo 'Total Execution Time: '.$execution_time.' Secs'.PHP_EOL;
         } else {
+            /* else not a command line call.... */
+            set_time_limit(4000);
+            // Connect to gmail
+            $hostname = '{imap.gmail.com:993/imap/ssl}INBOX';
+            $username = 'cargodata.libra@gmail.com';
+            $password = 'Libra123$$';
+            // try to connect
+            $inbox = imap_open($hostname,$username,$password,NULL,1) or die('Cannot connect to Gmail: ' . print_r(imap_errors()));
+            $date = date("j F Y");
+            $newdate = strtotime ( '-1 day' , strtotime ( $date ) ) ;
+            $newdate = date ( 'j F Y' , $newdate );
+            $emails = imap_search($inbox,'NEW SINCE "'.$newdate.'"', SE_UID );
+            if (!empty($emails)) {
+                rsort($emails);
+                foreach ($emails as $mail) {
+                    $msgno = imap_msgno($inbox, $mail);
+
+                    $headerInfo = imap_headerinfo($inbox, $msgno);
+                    $msgBody = imap_body($inbox, $msgno);
+                    /* get information specific to this email */
+                    //echo "<br/>email_number: $email_number <br/> msgNo: $msgno<br/>";
+                    $overview = imap_fetch_overview($inbox, $msgno, 0) or die("can't fetch overview: " . imap_last_error());
+
+                    $pos = strpos($overview[0]->subject, 'Update : ETA Change at Final Destination');
+                    $pos2 = strpos($overview[0]->from, 'coscon@coscon.com');
+                    if ($pos !== false && $pos2 !== false) {
+                        $dom = new Dom;
+                        $dom->load($msgBody);
+                        $title   = $dom->getElementsbyTag('title')->text;
+                        $htmlBoL = substr($title, 0, 10);
+                        echo "<hr/><h1>BoL</h1><br/>".$htmlBoL."<hr/>";
+                        $dateSpan =  $dom->getElementsbyTag('strong')[10]->text;
+                        echo "<hr/><h1>DateSpan</h1><br/>".$dateSpan."<hr/>";
+                        $newETAdate = date("Y-m-d", strtotime($dateSpan));
+                        if (!empty($htmlBoL)) {
+                            $this->ShipmentsModel->update_record(array('bill_of_lading' => $htmlBoL), array('eta'=> $newETAdate));
+                        }
+                    }
+                }
+            }
+            // colse the connection
+            imap_expunge($inbox);
+            imap_close($inbox);
             $data['title'] = "Active Shipments";
             $this->load->view('templates/header', $data);
             $this->load->view('shipments/index', $data);
             $this->load->view('templates/footer');
         }
     }
+
+
+    public function check_for_vendor_emails(){
+        /* connect to gmail */
+        set_time_limit(4000);
+        $hostname = '{imap.gmail.com:993/imap/ssl}INBOX';
+        $username = 'cargodata.libra';
+        $password = 'Libra123$$';
+        /* try to connect */
+        $inbox = imap_open($hostname, $username, $password) or die('Cannot connect to Gmail: ' . imap_last_error());
+        $subjpass = 'COSCO SHIPPING Lines report, Daily B/L Report';
+        /* if emails are returned, cycle through each... */
+        $failSafe = TRUE;
+        if ($inbox !== FALSE) {
+            $numMsg = imap_num_msg($inbox);
+            $emails = imap_search($inbox, 'ALL', SE_UID);
+            if (!$emails) {
+                echo "NO NEW DATA";
+                $failSafe = FALSE;
+            }
+            if ($failSafe) {
+                //var_dump($emails);
+                /* put the newest emails on top */
+                rsort($emails);
+                /* for every email... */
+                foreach ($emails as $email_number) {
+                    $msgno = imap_msgno($inbox, $email_number);
+                    $header = imap_headerinfo($inbox, $msgno);
+                    //var_dump($header);
+                    if ($header === false) {
+                        echo "email header parsing error. vendor emails Shipments.php -sv";
+                    }
+                    $msgBody = imap_body($inbox, $msgno);
+                    /* get information specific to this email */
+                    //echo "<br/>email_number: $email_number <br/> msgNo: $msgno<br/>";
+                    $overview = imap_fetch_overview($inbox, $msgno, 0) or die("can't fetch overview: " . imap_last_error());
+                    if (!$overview) {
+                        echo "overview failed...container vendor emails<br/>";
+                        $failSafe = FALSE;
+                    }
+                    if ($failSafe) {
+                        $vendorAbbr='';
+                        $vendorMatched=false;
+                        $pos = strpos($overview[0]->from, '@tjwanda.com');
+                        if (!$pos){
+                            $pos=strpos($overview[0]->from, '@other-vendor-address');
+                        } else {
+                            //$vendorAbbr will equal the vendor above the one immediately above this position
+                            //so in this case, if $pos was a nonzero value, its because it made a hit on the
+                            //@tjwanda.com query, therefore the abbreviation will be fore wanda
+                           if (!$vendorMatched) {
+                               $vendorAbbr = 'WN';
+                               $vendorMatched=true;
+                           }
+                        }
+                        //repeat above conditional until $pos!==false, then we'll be able to set the $vendorAbbr
+                        
+                        if ($pos !== false) {
+                            /* get mail structure */
+                            $structure = imap_fetchstructure($inbox, $msgno);
+                            $attachments = array();
+                            /* if any attachments found... */
+                            if (isset($structure->parts) && count($structure->parts)) {
+                                for ($i = 0; $i < count($structure->parts); $i++) {
+                                    $attachments[$i] = array('is_attachment' => false, 'filename' => '', 'name' => '', 'attachment' => '', 'file_extension' => '');
+                                    if ($structure->parts[$i]->ifdparameters) {
+                                        foreach ($structure->parts[$i]->dparameters as $object) {
+                                            if (strtolower($object->attribute) == 'filename') {
+                                                $attachments[$i]['is_attachment'] = true;
+                                                $attachments[$i]['filename'] = $object->value;
+                                                //echo "attachment found...".$attachments[$i]['filename']."<br/>";
+                                            }
+                                        }
+                                    }
+                                    if ($structure->parts[$i]->ifparameters) {
+                                        foreach ($structure->parts[$i]->parameters as $object) {
+                                            if (strtolower($object->attribute) == 'name') {
+                                                $attachments[$i]['is_attachment'] = true;
+                                                $attachments[$i]['name'] = $object->value;
+                                                //echo "attachment found...".$attachments[$i]['name']."<br/>";
+                                            }
+                                        }
+                                    }
+                                    if ($attachments[$i]['is_attachment']) {
+                                        $attachments[$i]['file_extension']=$structure->parts[$i]->subtype;
+                                        $attachments[$i]['attachment'] = imap_fetchbody($inbox, $msgno, $i + 1);
+                                        if ($structure->parts[$i]->encoding == 3) {
+                                            //echo "BASE64 decoding file...<br/>";
+                                            /* 3 = BASE64 encoding */
+                                            $attachments[$i]['attachment'] = base64_decode($attachments[$i]['attachment']);
+                                        } elseif ($structure->parts[$i]->encoding == 4) {
+                                            //echo "QUOTED-PRINTABLE decoding file...<br/>";
+                                            /* 4 = QUOTED-PRINTABLE encoding */
+                                            $attachments[$i]['attachment'] = quoted_printable_decode($attachments[$i]['attachment']);
+                                        }
+                                    }
+                                }
+                            }
+                            
+                            // change pdftohtml bin location
+                            Config::set('pdftohtml.bin', 'C:/wamp64/apps/poppler0.51/bin/pdftohtml.exe'); //F:\xampp\htdocs\assets\poppler0.51\bin <-ASUS Desktop
+
+                            // change pdfinfo bin location
+                            Config::set('pdfinfo.bin', 'C:/wamp64/apps/poppler0.51/bin/pdfinfo.exe'); //C:/wamp64/apps/poppler0.51/bin/ <-Server 2016 Machisne
+                            /* iterate through each attachment and save it */
+                            foreach ($attachments as $attachment) {
+                                if ($attachment['is_attachment'] == 1) {
+                                    $filename = $attachment['name'];
+                                    if (empty($filename)) $filename = $attachment['filename'];
+                                    if (empty($filename)) $filename = $vendorAbbr. time() . $attachment['file_extension'];
+
+                                    $directoryName =$vendorAbbr . '';
+                                    //get PO# and Cont.Num.
+                                    //first we gotta figure out which entry the document goes to
+                                    if (strtoupper($attachment['file_extension'])==='PDF'){
+                                        // initiate
+                                        $pdf = new Gufy\PdfToHtml\Pdf($attachment['attachment']);
+
+                                        // convert to html and return it as [Dom Object]
+                                        $html = $pdf->html();
+/*                                  gotta figure out what to do with this
+                                        // check if your pdf has more than one pages
+                                        $total_pages = $pdf->getPages();
+
+                                        // Your pdf happen to have more than one pages and you want to go another page? Got it. use this command to change the current page to page 3
+                                        $html->goToPage(3);
+
+                                        // and then you can do as you please with that dom, you can find any element you want
+                                        $paragraphs = $html->find('body > p');
+                                    */
+                                    }
+                                    
+                                    $fp = fopen("./vendor_documents/$directoryName/" . $filename, "w+");
+                                    //              echo "file created...writing data...!<br/>";
+                                    fwrite($fp, $attachment['attachment']);
+                                    //               echo "data written to file successfully!<br/>";
+                                    fclose($fp);
+
+                                    //               echo "\n\nFILE DATA:\n-----------------------------------<br/>";
+                                    $row = 1;
+                                    if (($handle = fopen("./" . $msgno . "-" . $filename, "r")) !== FALSE) {
+                                        while (($recordData = fgetcsv($handle, 1000, ",")) !== FALSE) {
+                                            $num = count($recordData);
+                                            //                          echo "<p> $num fields in line $row: <br /></p><br/>";
+                                            $dataRows[$row - 1] = array();
+                                            for ($c = 0; $c < $num; $c++) {
+                                                //                              echo $recordData[$c] . "<br />";
+                                                $dataRows[$row - 1][$c] = $recordData[$c];
+                                            }
+                                            $row++;
+                                        }
+                                        fclose($handle);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    // Mark as Read
+                    $setflagSEENresult = imap_setflag_full($inbox, $email_number, "\\Seen", ST_UID);
+                    if ($setflagSEENresult === false) {
+                        echo "error occurred while setting UNSEEN flag to SEEN. line 148 Shipments.php -sv<br/>";
+                    }
+                }
+            }
+            imap_close($inbox);
+        }
+    }
+
 
     var $hasCookie = false;
     var $cookies = array();
