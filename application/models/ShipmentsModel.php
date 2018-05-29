@@ -199,6 +199,17 @@ class ShipmentsModel extends CI_Model
         return $result;
     }
 
+    public function set_has_documents($container_number= false, $hasDocuments=true){
+        if (is_null($container_number) || empty($container_number) || $container_number === FALSE) {
+            return false;
+        }
+        $this->db->set('has_documents', $hasDocuments);
+        $this->db->where('container_number', $container_number);
+        $this->db->update('shipments');
+        return $this->db->affected_rows();
+    }
+
+
     public function get_vendor_id_by_name($vendorName=FALSE){
         if ($vendorName === FALSE){
             return false;

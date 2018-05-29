@@ -537,7 +537,8 @@ class Shipments extends CI_Controller
                                     $filename = $attachment['name'];
                                     if (empty($filename)) $filename = $attachment['filename'];
                                     if (empty($filename)) $filename = $vendorAbbr . '-' . date('mdy') . '.' . $attachment['file_extension'];
-                                    file_put_contents("$directoryStructure/$filename", $attachment['attachment']);
+                                    $tmpFileDir="$directoryStructure/tmp/$filename";
+                                    file_put_contents($tmpFileDir, $attachment['attachment']);
                                     switch (strtoupper($associatedVendorData['abbreviation'])) {
                                         case "WANDA":
                                             if      (preg_match('LB\d{2}', $filename, $match))  { $vendorIdLabelForDocuments = trim($match[0]); }
@@ -551,7 +552,7 @@ class Shipments extends CI_Controller
                                             switch (strtoupper($attachment['file_extension'])) {
                                                 case "PDF":
                                                     $documentType="Bill_of_Lading";
-                                                    $pdf = new \TonchikTm\PdfToHtml\Pdf($directoryStructure/$filename, [
+                                                    $pdf = new \TonchikTm\PdfToHtml\Pdf($tmpFileDir, [
                                                         'pdftohtml_path' => 'F:/xampp/htdocs/assets/poppler0.51/bin/pdftohtml.exe',
                                                         'pdfinfo_path' => 'F:/xampp/htdocs/assets/poppler0.51/bin/pdfinfo.exe'
                                                     ]);
@@ -588,10 +589,10 @@ class Shipments extends CI_Controller
                                         $yearDigits = date('Y');
                                         $purchase_order_number = ((is_null($associatedCargoData['po']) || empty($associatedCargoData['po'])) ? ('000000') : ($associatedCargoData['po']));
                                         $associatedCargoData = $this->ShipmentsModel->update_record(array('container_number' => $documentCN), array('po' => $purchase_order_number));
-                                        $directoryStructure  .= '/' . $associatedVendorData['abbreviation'] .  
+                                        $directoryStructure  .= '/' . strtoupper($associatedVendorData['abbreviation']) .  
                                                                 '/' . $yearDigits .  
                                                                 '/' . $purchase_order_number .  
-                                                                '/' . $documentCN;  
+                                                                '/' . strtoupper($documentCN);  
                                         //$directoryStructure=$_SERVER['DOCUMENT_ROOT'] . "/vendor_documents";
                                         //$directoryStructure .= '/' . $associatedCargoData[] . $yearDigits . '-' . $purchase_order_number . ' ' . $documentCN . '/';
                                         //a better way to do it would be to use directories for each data piece
@@ -599,7 +600,8 @@ class Shipments extends CI_Controller
                                         //       $directoryName=$_SERVER['DOCUMENT_ROOT'] . "/vendor_documents" .
                                         //                       "/$vendor" . "/$current_year" . "/purchse_order_number" . 
                                         //                       "/$container_number" . "/document_type" . "/$filename";
-                                        $directoryStructure.=  '/' . $documentType . '/';
+                                        $directoryStructure.=  '/' . strtoupper($documentType) . '/';
+                                        $this->ShipmentsModel->set_has_documents($documentCN, true);
                                     }
                                     $fullPathAndFileName = $directoryStructure . $filename;
                                     if (!file_exists(dirname($fullPathAndFileName))) mkdir(dirname($fullPathAndFileName), 0777, true);
@@ -615,7 +617,6 @@ class Shipments extends CI_Controller
                                         );
                                         $newDocumentId = $this->Document_model->add_document($documentData);
                                     }
-                                    unlink($fullPathAndFileName);   
                                 }
                             }
                         }
@@ -700,6 +701,36 @@ class Shipments extends CI_Controller
         $table = $DOM->getElementById('containerInfoByBlNum');
         $Header = $table->getElementsByTagName('th');
         $Detail = $table->getElementsByTagName('td');
+        $tableOBLstatus = $DOM->getElementById('CargoTarcking_booking');
+        $TableRowOBLstatus = $tableOBLstatus->getElementsByTagName('tr');
+        $DetailOBLstatus = $tableOBLstatus->getElementsByTagName('td');
+        $DetailOBLstatus2 = $TableRowOBLstatus->getElementsByTagName('td');
+        $y=0;$z=0;
+        $testStatus='';
+        foreach ($TableRowOBLstatus as $tableStatusRow) {
+            $oblStatus[$y] = trim($tableStatusRow->textContent);
+            $y++;
+        }
+        foreach ($DetailOBLstatus as $detailStatus){
+            $oblStatusTd[$z] = trim($detailStatus->textContent);
+            $z++;
+        }
+        echo '<hr/><hr/>';
+        print_r($oblStatus);
+        echo '<hr/><hr/>';
+        print_r($oblStatusTd);
+        echo '<hr/><hr/>';
+        $z=0;
+        foreach ($oblStatusTd as $stats){
+            if (strpos(trim($stats->textContent), 'OBL Release Status')) {
+                $testStatus=$oblStatusTd[$z+2]->textContext;
+            }
+            $z++;
+        }
+        echo '<hr/><hr/>';
+        print_r($testStatus);
+        echo '<hr/><hr/>';
+        //$LabelOBLstatus = $DetailOBLstatus->getElementsByTagName('label');
         //#Get header name of the table
         foreach ($Header as $NodeHeader) {
             $aDataTableHeaderHTML[] = trim($NodeHeader->textContent);
