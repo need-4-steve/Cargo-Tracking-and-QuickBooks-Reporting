@@ -12,6 +12,10 @@ class ComposerStaticInitb10d9616e87fb2c59a272bfd1d6d7387
     );
 
     public static $prefixLengthsPsr4 = array (
+        'T' => 
+        array (
+            'TonchikTm\\PdfToHtml\\' => 20,
+        ),
         'S' => 
         array (
             'Symfony\\Polyfill\\Mbstring\\' => 26,
@@ -21,6 +25,7 @@ class ComposerStaticInitb10d9616e87fb2c59a272bfd1d6d7387
         array (
             'Psr\\SimpleCache\\' => 16,
             'Psr\\Container\\' => 14,
+            'Pelago\\' => 7,
         ),
         'I' => 
         array (
@@ -39,6 +44,10 @@ class ComposerStaticInitb10d9616e87fb2c59a272bfd1d6d7387
     );
 
     public static $prefixDirsPsr4 = array (
+        'TonchikTm\\PdfToHtml\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/tonchik-tm/pdf-to-html/src',
+        ),
         'Symfony\\Polyfill\\Mbstring\\' => 
         array (
             0 => __DIR__ . '/..' . '/symfony/polyfill-mbstring',
@@ -54,6 +63,10 @@ class ComposerStaticInitb10d9616e87fb2c59a272bfd1d6d7387
         'Psr\\Container\\' => 
         array (
             0 => __DIR__ . '/..' . '/psr/container/src',
+        ),
+        'Pelago\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/pelago/emogrifier/Classes',
         ),
         'Illuminate\\Support\\' => 
         array (
@@ -89,6 +102,20 @@ class ComposerStaticInitb10d9616e87fb2c59a272bfd1d6d7387
                 0 => __DIR__ . '/..' . '/paquettg/string-encode/src',
             ),
         ),
+        'T' => 
+        array (
+            'TonchikTm' => 
+            array (
+                0 => __DIR__ . '/..' . '/tonchik-tm/pdf-to-html/src',
+            ),
+        ),
+        'S' => 
+        array (
+            'Smalot\\PdfParser\\' => 
+            array (
+                0 => __DIR__ . '/..' . '/smalot/pdfparser/src',
+            ),
+        ),
         'P' => 
         array (
             'PHPHtmlParser' => 
@@ -105,6 +132,23 @@ class ComposerStaticInitb10d9616e87fb2c59a272bfd1d6d7387
         ),
     );
 
+    public static $classMap = array (
+        'Datamatrix' => __DIR__ . '/..' . '/tecnickcom/tcpdf/include/barcodes/datamatrix.php',
+        'PDF417' => __DIR__ . '/..' . '/tecnickcom/tcpdf/include/barcodes/pdf417.php',
+        'QRcode' => __DIR__ . '/..' . '/tecnickcom/tcpdf/include/barcodes/qrcode.php',
+        'TCPDF' => __DIR__ . '/..' . '/tecnickcom/tcpdf/tcpdf.php',
+        'TCPDF2DBarcode' => __DIR__ . '/..' . '/tecnickcom/tcpdf/tcpdf_barcodes_2d.php',
+        'TCPDFBarcode' => __DIR__ . '/..' . '/tecnickcom/tcpdf/tcpdf_barcodes_1d.php',
+        'TCPDF_COLORS' => __DIR__ . '/..' . '/tecnickcom/tcpdf/include/tcpdf_colors.php',
+        'TCPDF_FILTERS' => __DIR__ . '/..' . '/tecnickcom/tcpdf/include/tcpdf_filters.php',
+        'TCPDF_FONTS' => __DIR__ . '/..' . '/tecnickcom/tcpdf/include/tcpdf_fonts.php',
+        'TCPDF_FONT_DATA' => __DIR__ . '/..' . '/tecnickcom/tcpdf/include/tcpdf_font_data.php',
+        'TCPDF_IMAGES' => __DIR__ . '/..' . '/tecnickcom/tcpdf/include/tcpdf_images.php',
+        'TCPDF_IMPORT' => __DIR__ . '/..' . '/tecnickcom/tcpdf/tcpdf_import.php',
+        'TCPDF_PARSER' => __DIR__ . '/..' . '/tecnickcom/tcpdf/tcpdf_parser.php',
+        'TCPDF_STATIC' => __DIR__ . '/..' . '/tecnickcom/tcpdf/include/tcpdf_static.php',
+    );
+
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
@@ -112,6 +156,7 @@ class ComposerStaticInitb10d9616e87fb2c59a272bfd1d6d7387
             $loader->prefixDirsPsr4 = ComposerStaticInitb10d9616e87fb2c59a272bfd1d6d7387::$prefixDirsPsr4;
             $loader->fallbackDirsPsr4 = ComposerStaticInitb10d9616e87fb2c59a272bfd1d6d7387::$fallbackDirsPsr4;
             $loader->prefixesPsr0 = ComposerStaticInitb10d9616e87fb2c59a272bfd1d6d7387::$prefixesPsr0;
+            $loader->classMap = ComposerStaticInitb10d9616e87fb2c59a272bfd1d6d7387::$classMap;
 
         }, null, ClassLoader::class);
     }

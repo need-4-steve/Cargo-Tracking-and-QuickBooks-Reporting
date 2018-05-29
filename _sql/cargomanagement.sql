@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.7.9
+-- version 4.8.0.1
 -- https://www.phpmyadmin.net/
 --
--- Host: 127.0.0.1:3306
--- Generation Time: May 23, 2018 at 09:53 PM
--- Server version: 5.7.21
--- PHP Version: 7.0.29
+-- Host: 127.0.0.1
+-- Generation Time: May 29, 2018 at 05:33 PM
+-- Server version: 10.1.31-MariaDB
+-- PHP Version: 7.2.4
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
@@ -28,9 +28,8 @@ SET time_zone = "+00:00";
 -- Table structure for table `archived_shipments`
 --
 
-DROP TABLE IF EXISTS `archived_shipments`;
-CREATE TABLE IF NOT EXISTS `archived_shipments` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `archived_shipments` (
+  `id` int(11) NOT NULL,
   `status` text,
   `po` varchar(32) DEFAULT NULL,
   `product_id` int(11) DEFAULT NULL,
@@ -59,13 +58,8 @@ CREATE TABLE IF NOT EXISTS `archived_shipments` (
   `container_notes` text,
   `last_update` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `container_size` smallint(11) DEFAULT NULL,
-  `do` tinyint(1) DEFAULT '0',
-  PRIMARY KEY (`id`),
-  KEY `bill_of_lading` (`bill_of_lading`),
-  KEY `requires_payment` (`requires_payment`) USING BTREE,
-  KEY `active_shipments` (`is_active`) USING BTREE,
-  KEY `container_number` (`container_number`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=9817 DEFAULT CHARSET=latin1;
+  `do` tinyint(1) DEFAULT '0'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `archived_shipments`
@@ -8949,7 +8943,15 @@ INSERT INTO `archived_shipments` (`id`, `status`, `po`, `product_id`, `container
 (9805, '0', NULL, 1, 'CCLU688295-2', '6160592460', 11, 'Prince Rupert', 'Memphis, Tennessee', '2018-05-09', '2018-05-11', 755828, NULL, 1, 'Not Released', NULL, 1, 1, NULL, NULL, NULL, NULL, 'Empty Container Returned to Carrier at Destination', '2018-05-15 08:11:00', 0, NULL, NULL, '2018-05-23 12:13:22', 40, 0),
 (9806, '0', NULL, 1, 'TEMU320999-9', '6179359100', 2, 'Prince Rupert', 'Memphis, Tennessee', '2018-05-09', '2018-05-13', 916665, NULL, 1, 'Not Released', NULL, 1, NULL, NULL, NULL, NULL, NULL, 'Picked up at Final Destination for Delivery', '2018-05-11 13:11:00', 0, NULL, NULL, '2018-05-23 12:13:22', 20, 0),
 (9807, '0', NULL, NULL, 'TCNU657533-2', '6160592450', 11, 'Long Beach', 'Memphis, Tennessee', '2018-05-12', '2018-05-15', 4210700, NULL, NULL, 'Not Released', NULL, 0, NULL, NULL, NULL, NULL, NULL, 'Empty Container Returned to Carrier at Destination', '2018-05-15 12:11:00', 0, NULL, NULL, '2018-05-23 12:13:22', 40, 0),
-(9816, '1', NULL, NULL, 'TCIU455408-8', '6181625210', 7, 'Prince Rupert (Intended)', 'Memphis, Tennessee', '2018-05-23', NULL, NULL, NULL, NULL, '', NULL, 1, NULL, NULL, NULL, NULL, NULL, 'Vessel Arrival at Last POD', '2018-05-13 01:11:00', 0, NULL, NULL, '2018-05-23 12:13:22', 20, 0);
+(9810, '0', NULL, 1, 'BSIU956318-9', '6160593130', 11, 'Prince Rupert', 'Memphis, Tennessee', '2018-05-15', '2018-05-17', 795166, NULL, 1, 'Not Released', NULL, 1, NULL, 0, NULL, 1, 1, 'Empty Container Returned to Carrier at Destination', '2018-05-17 16:00:00', 0, NULL, NULL, '2018-05-28 15:15:29', 40, 0),
+(9811, '0', NULL, 2, 'TCKU257611-0', '6179390070', 2, 'Prince Rupert', 'Memphis, Tennessee', '2018-05-15', '2018-05-17', 905060, NULL, 1, 'Not Released', NULL, 1, NULL, 0, NULL, 1, 1, 'Empty Container Returned to Carrier at Destination', '2018-05-17 14:00:00', 0, NULL, NULL, '2018-05-28 15:15:29', 20, 0),
+(9814, '0', NULL, NULL, 'MAGU536349-3', '6160585150', 11, 'Long Beach', 'Memphis, Tennessee', '2018-05-16', '2018-05-19', 4210709, NULL, NULL, 'Not Released', NULL, 0, NULL, 0, NULL, NULL, NULL, 'Empty Container Returned to Carrier at Destination', '2018-05-21 09:00:00', 0, NULL, NULL, '2018-05-28 15:15:29', 40, 0),
+(9815, '0', NULL, 6, 'TCNU617717-5', '6179335990', 9, 'Long Beach', 'Memphis, Tennessee', '2018-05-16', '2018-05-19', 4210802, NULL, 1, 'Not Released', 0, 1, 0, 0, 0, 1, 1, 'Empty Container Returned to Carrier at Destination', '2018-05-18 08:00:00', 0, 1, NULL, '2018-05-28 15:15:29', 40, 1),
+(9816, '1', NULL, NULL, 'TCIU455408-8', '6181625210', 7, 'Prince Rupert (Intended)', 'Memphis, Tennessee', '2018-05-23', NULL, NULL, NULL, NULL, '', NULL, 1, NULL, NULL, NULL, NULL, NULL, 'Vessel Arrival at Last POD', '2018-05-13 01:11:00', 0, NULL, NULL, '2018-05-23 12:13:22', 20, 0),
+(9858, '2', NULL, NULL, 'Unassigned[12]', '6183108290', 11, 'Long Beach (Intended)', 'Memphis, Tennessee', '2018-07-13', NULL, NULL, NULL, NULL, '', 0, 0, 0, 0, 0, 0, 0, 'No event received', '1970-01-01 00:00:00', 0, 0, NULL, '2018-05-28 15:15:29', 40, 0),
+(9859, '2', NULL, NULL, 'Unassigned[13]', '6183104660', 11, 'Prince Rupert (Intended)', 'Memphis, Tennessee', '2018-07-16', NULL, NULL, NULL, NULL, '', 0, 1, 0, 0, 0, 0, 0, 'No event received', '1970-01-01 00:00:00', 0, 0, NULL, '2018-05-28 15:15:29', 40, 0),
+(9860, '2', NULL, NULL, 'Unassigned[14]', '6183108390', 11, 'Prince Rupert (Intended)', 'Memphis, Tennessee', '2018-07-16', NULL, NULL, NULL, NULL, '', 0, 1, 0, 0, 0, 0, 0, 'No event received', '1970-01-01 00:00:00', 0, 0, NULL, '2018-05-28 15:15:29', 40, 0),
+(9861, '2', NULL, NULL, 'Unassigned[15]', '6183104650', 11, 'Long Beach (Intended)', 'Memphis, Tennessee', '2018-07-20', NULL, NULL, NULL, NULL, '', 0, 0, 0, 0, 0, 0, 0, 'No event received', '1970-01-01 00:00:00', 0, 0, NULL, '2018-05-28 15:15:29', 40, 0);
 
 -- --------------------------------------------------------
 
@@ -8957,8 +8959,7 @@ INSERT INTO `archived_shipments` (`id`, `status`, `po`, `product_id`, `container
 -- Table structure for table `calendar_events`
 --
 
-DROP TABLE IF EXISTS `calendar_events`;
-CREATE TABLE IF NOT EXISTS `calendar_events` (
+CREATE TABLE `calendar_events` (
   `ID` int(11) NOT NULL,
   `title` varchar(500) COLLATE utf8_unicode_ci NOT NULL,
   `start` datetime NOT NULL,
@@ -8972,12 +8973,10 @@ CREATE TABLE IF NOT EXISTS `calendar_events` (
 -- Table structure for table `products`
 --
 
-DROP TABLE IF EXISTS `products`;
-CREATE TABLE IF NOT EXISTS `products` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `product_name` varchar(64) DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=latin1;
+CREATE TABLE `products` (
+  `id` int(11) NOT NULL,
+  `product_name` varchar(64) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `products`
@@ -8999,9 +8998,8 @@ INSERT INTO `products` (`id`, `product_name`) VALUES
 -- Table structure for table `shipments`
 --
 
-DROP TABLE IF EXISTS `shipments`;
-CREATE TABLE IF NOT EXISTS `shipments` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `shipments` (
+  `id` int(11) NOT NULL,
   `status` tinyint(4) DEFAULT NULL,
   `po` varchar(32) DEFAULT NULL,
   `product_id` int(11) DEFAULT NULL,
@@ -9030,79 +9028,74 @@ CREATE TABLE IF NOT EXISTS `shipments` (
   `container_notes` text,
   `last_update` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `container_size` smallint(6) DEFAULT NULL,
-  `do` tinyint(1) DEFAULT '0',
-  PRIMARY KEY (`id`),
-  KEY `bill_of_lading` (`bill_of_lading`),
-  KEY `requires_payment` (`requires_payment`) USING BTREE,
-  KEY `active_shipments` (`is_active`) USING BTREE,
-  KEY `container_number` (`container_number`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=9862 DEFAULT CHARSET=latin1;
+  `do` tinyint(1) DEFAULT '0'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `shipments`
 --
 
 INSERT INTO `shipments` (`id`, `status`, `po`, `product_id`, `container_number`, `bill_of_lading`, `vendor_id`, `discharge_port`, `final_destination`, `eta`, `lfd`, `pickup_number`, `truck_date`, `trucker_id`, `bl_status`, `freight`, `isf_required`, `customs`, `is_complete`, `po_boolean`, `qb_rt`, `qb_ws`, `latest_event`, `latest_event_time_and_date`, `is_active`, `requires_payment`, `container_notes`, `last_update`, `container_size`, `do`) VALUES
-(9796, 2, NULL, NULL, 'SEGU443110-8', '6160597330', 11, 'Prince Rupert', 'Memphis, Tennessee', '2018-06-16', NULL, NULL, NULL, NULL, 'Not Released', NULL, 1, NULL, 0, NULL, NULL, NULL, 'Vessel Departure at First POL', '2018-05-18 06:00:00', 1, NULL, NULL, '2018-05-23 20:01:09', 40, 0),
-(9797, 0, NULL, NULL, 'TEMU628934-4', '6160597350', 11, 'Prince Rupert', 'Memphis, Tennessee', NULL, NULL, NULL, NULL, 1, 'Not Released', NULL, 1, NULL, 0, NULL, NULL, NULL, 'Vessel Departure at First POL', '2018-05-22 03:00:00', 1, NULL, NULL, '2018-05-23 20:01:09', 40, 0),
-(9798, 0, NULL, NULL, 'BMOU439963-1', '6160597360', 11, 'Prince Rupert', 'Memphis, Tennessee', NULL, NULL, NULL, NULL, 1, 'Not Released', NULL, 1, NULL, 0, NULL, NULL, NULL, 'Vessel Departure at First POL', '2018-05-22 03:00:00', 1, NULL, NULL, '2018-05-23 20:01:09', 40, 0),
-(9799, 0, NULL, NULL, 'CXDU122177-4', '6160598210', 11, 'Prince Rupert', 'Memphis, Tennessee', NULL, NULL, NULL, NULL, NULL, 'Not Released', NULL, 1, NULL, 0, NULL, NULL, NULL, 'Vessel Departure at Transshipment Port', '2018-05-13 02:00:00', 1, NULL, NULL, '2018-05-23 20:01:09', 40, 0),
-(9800, 0, NULL, 3, 'TLLU447704-5', '6179524840', 3, 'Long Beach', 'Memphis, Tennessee', '2018-05-25', NULL, NULL, NULL, 1, 'Not Released', NULL, 0, NULL, 0, NULL, 1, 1, 'Intermodal Departure from Last Port of Discharge', '2018-05-21 15:00:00', 1, NULL, NULL, '2018-05-23 20:01:09', 40, 0),
-(9801, 0, NULL, 3, 'TCNU557797-9', '6179524840', 3, 'Long Beach', 'Memphis, Tennessee', '2018-05-25', NULL, NULL, NULL, 1, 'Not Released', NULL, 0, NULL, 0, NULL, 1, 1, 'Intermodal Departure from Last Port of Discharge', '2018-05-21 16:00:00', 1, NULL, NULL, '2018-05-23 20:01:09', 40, 0),
-(9802, 0, NULL, 5, 'TRHU168632-1', '6182545470', 5, 'Prince Rupert', 'Memphis, Tennessee', NULL, NULL, NULL, NULL, NULL, 'Not Released', NULL, 1, NULL, 0, NULL, NULL, NULL, 'Vessel Departure at Transshipment Port', '2018-05-13 02:00:00', 1, NULL, NULL, '2018-05-23 20:01:09', 20, 0),
-(9808, 0, NULL, 4, 'TEMU013800-0', '6181441580', 4, 'Charleston', 'Loris, South Carolina', NULL, NULL, NULL, NULL, NULL, 'Not Released', NULL, 0, NULL, 0, NULL, NULL, NULL, 'Discharged from Vessel at Last Port of Discharge', '2018-05-18 00:00:00', 1, NULL, NULL, '2018-05-23 20:01:09', 20, 0),
-(9809, 0, NULL, 4, 'DFSU119674-0', '6181441580', 4, 'Charleston', 'Loris, South Carolina', NULL, NULL, NULL, NULL, NULL, 'Not Released', NULL, 0, NULL, 0, NULL, NULL, NULL, 'Discharged from Vessel at Last Port of Discharge', '2018-05-18 00:00:00', 1, NULL, NULL, '2018-05-23 20:01:09', 20, 0),
-(9810, 0, NULL, NULL, 'BSIU956318-9', '6160593130', 11, 'Prince Rupert', 'Memphis, Tennessee', '2018-05-15', '2018-05-17', 795166, NULL, NULL, 'Not Released', NULL, 1, NULL, 0, NULL, NULL, NULL, 'Empty Container Returned to Carrier at Destination', '2018-05-17 16:00:00', 1, NULL, NULL, '2018-05-23 20:01:09', 40, 0),
-(9811, 0, NULL, 2, 'TCKU257611-0', '6179390070', 2, 'Prince Rupert', 'Memphis, Tennessee', '2018-05-15', '2018-05-17', 905060, NULL, NULL, 'Not Released', NULL, 1, NULL, 0, NULL, NULL, NULL, 'Empty Container Returned to Carrier at Destination', '2018-05-17 14:00:00', 1, NULL, NULL, '2018-05-23 20:01:09', 20, 0),
-(9812, 1, NULL, NULL, 'CCLU797283-4', '6160593110', 11, 'Long Beach', 'Memphis, Tennessee', '2018-05-28', NULL, NULL, NULL, NULL, 'Not Released', NULL, 0, NULL, 0, NULL, NULL, NULL, 'Intermodal Departure from Last Port of Discharge', '2018-05-18 22:00:00', 1, NULL, NULL, '2018-05-23 20:01:09', 40, 0),
-(9813, 1, NULL, NULL, 'TCNU228429-9', '6160593120', 11, 'Long Beach', 'Memphis, Tennessee', '2018-05-28', NULL, NULL, NULL, NULL, 'Not Released', NULL, 0, NULL, 0, NULL, NULL, NULL, 'Intermodal Departure from Last Port of Discharge', '2018-05-18 22:00:00', 1, NULL, NULL, '2018-05-23 20:01:09', 40, 0),
-(9814, 0, NULL, NULL, 'MAGU536349-3', '6160585150', 11, 'Long Beach', 'Memphis, Tennessee', '2018-05-16', '2018-05-19', 4210709, NULL, NULL, 'Not Released', NULL, 0, NULL, 0, NULL, NULL, NULL, 'Empty Container Returned to Carrier at Destination', '2018-05-21 09:00:00', 1, NULL, NULL, '2018-05-23 20:01:09', 40, 0),
-(9815, 0, NULL, 6, 'TCNU617717-5', '6179335990', 9, 'Long Beach', 'Memphis, Tennessee', '2018-05-16', '2018-05-19', 4210802, NULL, NULL, 'Not Released', NULL, 0, NULL, 0, NULL, NULL, NULL, 'Empty Container Returned to Carrier at Destination', '2018-05-18 08:00:00', 1, NULL, NULL, '2018-05-23 20:01:09', 40, 0),
-(9817, 0, NULL, 4, 'CBHU598224-2', '6181628000', 4, 'Los Angeles', 'Hewitt, Texas', '2018-05-22', '2018-05-25', 510, NULL, NULL, 'Not Released', NULL, 0, NULL, 0, NULL, NULL, NULL, 'Last Deramp Under I/B', '2018-05-22 17:00:00', 1, NULL, NULL, '2018-05-23 20:01:09', 20, 0),
-(9818, 0, NULL, 5, 'SEGU303576-1', '6182529680', 5, 'Norfolk', 'Lexington, North Carolina', '2018-05-24', NULL, NULL, NULL, 1, 'Not Released', NULL, 0, NULL, 0, NULL, NULL, NULL, 'Vessel Departure at Transshipment Port', '2018-04-24 10:00:00', 1, NULL, NULL, '2018-05-23 20:01:09', 20, 0),
-(9819, 0, NULL, NULL, 'CCLU663506-3', '6160595830', 11, 'Prince Rupert', 'Memphis, Tennessee', '2018-05-25', NULL, 570128, NULL, NULL, 'Not Released', NULL, 1, NULL, 0, NULL, NULL, NULL, 'First Loaded on Rail Under I/B', '2018-05-15 23:00:00', 1, NULL, NULL, '2018-05-23 20:01:09', 40, 0),
-(9820, 0, NULL, NULL, 'CBHU705070-4', '6160596190', 11, 'Prince Rupert', 'Memphis, Tennessee', '2018-05-25', NULL, 720931, NULL, NULL, 'Not Released', NULL, 1, NULL, 0, NULL, NULL, NULL, 'First Loaded on Rail Under I/B', '2018-05-15 23:00:00', 1, NULL, NULL, '2018-05-23 20:01:09', 40, 0),
-(9821, 0, NULL, NULL, 'CCLU725168-0', '6160595850', 11, 'Long Beach', 'Memphis, Tennessee', '2018-05-26', NULL, NULL, NULL, NULL, 'Not Released', NULL, 0, NULL, 0, NULL, NULL, NULL, 'Discharged from Vessel at Last Port of Discharge', '2018-05-18 16:00:00', 1, NULL, NULL, '2018-05-23 20:01:09', 40, 0),
-(9822, 1, NULL, NULL, 'UETU516083-1', '6160595840', 11, 'Prince Rupert', 'Memphis, Tennessee', '2018-05-28', NULL, NULL, NULL, NULL, 'Not Released', NULL, 1, NULL, 0, NULL, NULL, NULL, 'First Loaded on Rail Under I/B', '2018-05-18 15:00:00', 1, NULL, NULL, '2018-05-23 20:01:09', 40, 0),
-(9823, 1, NULL, NULL, 'CCLU769484-1', '6160598220', 11, 'Prince Rupert', 'Memphis, Tennessee', '2018-05-28', NULL, NULL, NULL, NULL, 'Not Released', NULL, 1, NULL, 0, NULL, NULL, NULL, 'First Loaded on Rail Under I/B', '2018-05-21 12:00:00', 1, NULL, NULL, '2018-05-23 20:01:09', 40, 0),
-(9824, 1, NULL, NULL, 'BMOU455577-6', '6160598230', 11, 'Prince Rupert', 'Memphis, Tennessee', '2018-05-28', NULL, NULL, NULL, NULL, 'Not Released', NULL, 1, NULL, 0, NULL, NULL, NULL, 'First Loaded on Rail Under I/B', '2018-05-18 15:00:00', 1, NULL, NULL, '2018-05-23 20:01:09', 40, 0),
-(9825, 1, NULL, 3, 'TCNU137006-8', '6179518010', 3, 'Prince Rupert', 'Memphis, Tennessee', '2018-05-30', NULL, NULL, NULL, NULL, 'Not Released', NULL, 1, NULL, 0, NULL, NULL, NULL, 'First Loaded on Rail Under I/B', '2018-05-21 07:00:00', 1, NULL, NULL, '2018-05-23 20:01:09', 40, 0),
-(9826, 1, NULL, 3, 'FSCU879069-9', '6179518010', 3, 'Prince Rupert', 'Memphis, Tennessee', '2018-05-30', NULL, NULL, NULL, NULL, 'Not Released', NULL, 1, NULL, 0, NULL, NULL, NULL, 'First Loaded on Rail Under I/B', '2018-05-21 07:00:00', 1, NULL, NULL, '2018-05-23 20:01:09', 40, 0),
-(9827, 1, NULL, 3, 'TLLU487706-2', '6179522280', 3, 'Prince Rupert', 'Memphis, Tennessee', '2018-05-30', NULL, NULL, NULL, NULL, 'Not Released', NULL, 1, NULL, 0, NULL, NULL, NULL, 'First Loaded on Rail Under I/B', '2018-05-21 12:00:00', 1, NULL, NULL, '2018-05-23 20:01:09', 40, 0),
-(9828, 2, NULL, 5, 'CSLU200428-7', '6181429080', 6, 'Prince Rupert', 'Memphis, Tennessee', '2018-06-02', NULL, NULL, NULL, NULL, 'Not Released', NULL, 1, NULL, 0, NULL, NULL, NULL, 'Vessel Departure at First POL', '2018-05-09 04:00:00', 1, NULL, NULL, '2018-05-23 20:01:09', 20, 0),
-(9829, 1, NULL, 2, 'DFSU156558-2', '6179386310', 2, 'Prince Rupert', 'Memphis, Tennessee', '2018-05-31', NULL, NULL, NULL, NULL, 'Not Released', NULL, 1, NULL, 0, NULL, NULL, NULL, 'First Loaded on Rail Under I/B', '2018-05-21 11:00:00', 1, NULL, NULL, '2018-05-23 20:01:09', 20, 0),
-(9830, 2, NULL, 5, 'CBHU568861-8', '6182552700', 5, 'Prince Rupert', 'Memphis, Tennessee', '2018-06-01', NULL, NULL, NULL, NULL, 'Not Released', NULL, 1, NULL, 0, NULL, NULL, NULL, 'First Loaded on Rail Under I/B', '2018-05-21 11:00:00', 1, NULL, NULL, '2018-05-23 20:01:09', 20, 0),
-(9831, 2, NULL, 3, 'Unassigned[1]', '6182111620', 3, 'Prince Rupert (Intended)', 'Memphis, Tennessee', '2018-06-18', NULL, NULL, NULL, NULL, '', NULL, 1, NULL, 0, NULL, NULL, NULL, 'No event received', '1970-01-01 00:00:00', 1, NULL, NULL, '2018-05-23 20:01:09', 40, 0),
-(9832, 2, NULL, 5, 'Unassigned[2]', '6182630420', 5, 'Prince Rupert (Intended)', 'Memphis, Tennessee', '2018-06-25', NULL, NULL, NULL, NULL, '', NULL, 1, NULL, 0, NULL, NULL, NULL, 'No event received', '1970-01-01 00:00:00', 1, NULL, NULL, '2018-05-23 20:01:09', 20, 0),
-(9833, 2, NULL, 3, 'FSCU872354-0', '6182110120', 3, 'Prince Rupert', 'Memphis, Tennessee', '2018-06-08', NULL, NULL, NULL, NULL, 'Not Released', NULL, 1, NULL, 0, NULL, NULL, NULL, 'Vessel Departure at First POL', '2018-05-17 19:00:00', 1, NULL, NULL, '2018-05-23 20:01:09', 40, 0),
-(9834, 2, NULL, 3, 'DFSU632170-0', '6182110120', 3, 'Prince Rupert', 'Memphis, Tennessee', '2018-06-08', NULL, NULL, NULL, NULL, 'Not Released', NULL, 1, NULL, 0, NULL, NULL, NULL, 'Vessel Departure at First POL', '2018-05-17 19:00:00', 1, NULL, NULL, '2018-05-23 20:01:09', 40, 0),
-(9835, 2, NULL, NULL, 'TCNU644757-9', '6160596700', 11, 'Prince Rupert', 'Memphis, Tennessee', '2018-06-09', NULL, NULL, NULL, NULL, 'Not Released', NULL, 1, NULL, 0, NULL, NULL, NULL, 'Vessel Departure at Transshipment Port', '2018-05-13 02:00:00', 1, NULL, NULL, '2018-05-23 20:01:09', 40, 0),
-(9836, 2, NULL, NULL, 'TCNU259060-0', '6160597320', 11, 'Prince Rupert', 'Memphis, Tennessee', '2018-06-16', NULL, NULL, NULL, NULL, 'Not Released', NULL, 1, NULL, 0, NULL, NULL, NULL, 'Vessel Departure at First POL', '2018-05-18 06:00:00', 1, NULL, NULL, '2018-05-23 20:01:09', 40, 0),
-(9837, 2, NULL, NULL, 'CCLU689366-4', '6160597340', 11, 'Prince Rupert', 'Memphis, Tennessee', '2018-06-16', NULL, NULL, NULL, NULL, 'Not Released', NULL, 1, NULL, 0, NULL, NULL, NULL, 'Vessel Departure at First POL', '2018-05-18 06:00:00', 1, NULL, NULL, '2018-05-23 20:01:09', 40, 0),
-(9838, 2, NULL, 2, 'CAIU344452-5', '6185488790', 2, 'Prince Rupert', 'Memphis, Tennessee', '2018-06-16', NULL, NULL, NULL, NULL, 'Not Released', NULL, 1, NULL, 0, NULL, NULL, NULL, 'Vessel Departure at First POL', '2018-05-21 20:00:00', 1, NULL, NULL, '2018-05-23 20:01:09', 20, 0),
-(9839, 2, NULL, 7, 'TCNU862477-6', '6185516940', 8, 'Prince Rupert', 'Memphis, Tennessee', '2018-06-16', NULL, NULL, NULL, NULL, 'Not Released', NULL, 1, NULL, 0, NULL, NULL, NULL, 'Vessel Departure at First POL', '2018-05-21 20:00:00', 1, NULL, NULL, '2018-05-23 20:01:09', 40, 0),
-(9840, 2, NULL, 2, 'Unassigned[3]', '6185511510', 2, 'Prince Rupert (Intended)', 'Memphis, Tennessee', '2018-06-25', NULL, NULL, NULL, NULL, '', NULL, 1, NULL, 0, NULL, NULL, NULL, 'No event received', '1970-01-01 00:00:00', 1, NULL, NULL, '2018-05-23 20:01:09', 20, 0),
-(9841, 2, NULL, NULL, 'CBHU832619-2', '6160597370', 11, 'Prince Rupert', 'Memphis, Tennessee', '2018-06-18', NULL, NULL, NULL, NULL, 'Not Released', NULL, 1, NULL, 0, NULL, NULL, NULL, 'Vessel Departure at First POL', '2018-05-22 03:00:00', 1, NULL, NULL, '2018-05-23 20:01:09', 40, 0),
-(9842, 2, NULL, 2, 'Unassigned[4]', '6185511520', 2, 'Prince Rupert (Intended)', 'Memphis, Tennessee', '2018-06-25', NULL, NULL, NULL, NULL, '', NULL, 1, NULL, 0, NULL, NULL, NULL, 'No event received', '1970-01-01 00:00:00', 1, NULL, NULL, '2018-05-23 20:01:09', 20, 0),
-(9843, 2, NULL, 4, 'Unassigned[5]', '6008525240', 4, 'Prince Rupert (Intended)', 'Memphis, Tennessee', '2018-06-27', NULL, NULL, NULL, NULL, '', NULL, 1, NULL, 0, NULL, NULL, NULL, 'No event received', '1970-01-01 00:00:00', 1, NULL, NULL, '2018-05-23 20:01:09', 20, 0),
-(9844, 2, NULL, NULL, 'Unassigned[6]', '6183104300', 11, 'Prince Rupert (Intended)', 'Memphis, Tennessee', '2018-07-02', NULL, NULL, NULL, NULL, '', NULL, 0, NULL, 0, NULL, NULL, NULL, 'No event received', '1970-01-01 00:00:00', 1, NULL, NULL, '2018-05-23 20:01:09', 40, 0),
-(9845, 2, NULL, NULL, 'Unassigned[7]', '6183107820', 11, 'Prince Rupert (Intended)', 'Memphis, Tennessee', '2018-07-02', NULL, NULL, NULL, NULL, '', NULL, 0, NULL, 0, NULL, NULL, NULL, 'No event received', '1970-01-01 00:00:00', 1, NULL, NULL, '2018-05-23 20:01:09', 40, 0),
-(9846, 2, NULL, NULL, 'Unassigned[8]', '6183107830', 11, 'Prince Rupert (Intended)', 'Memphis, Tennessee', '2018-07-02', NULL, NULL, NULL, NULL, '', NULL, 0, NULL, 0, NULL, NULL, NULL, 'No event received', '1970-01-01 00:00:00', 1, NULL, NULL, '2018-05-23 20:01:09', 40, 0),
-(9847, 2, NULL, 4, 'CSLU235424-3', '6008526090', 4, 'Norfolk (Intended)', 'Henderson, North Carolina', '2018-06-26', NULL, NULL, NULL, NULL, '', NULL, 0, NULL, 0, NULL, NULL, NULL, 'Discharged at Port of Transhipment', '2018-05-21 22:00:00', 1, NULL, NULL, '2018-05-23 20:01:09', 20, 0),
-(9848, 2, NULL, NULL, 'Unassigned[9]', '6183107840', 11, 'Long Beach (Intended)', 'Memphis, Tennessee', '2018-07-06', NULL, NULL, NULL, NULL, '', NULL, 1, NULL, 0, NULL, NULL, NULL, 'No event received', '1970-01-01 00:00:00', 1, NULL, NULL, '2018-05-23 20:01:09', 40, 0),
-(9849, 0, NULL, NULL, 'TGHU685374-9', '6160596710', 11, 'Prince Rupert (Intended)', 'Memphis, Tennessee', NULL, NULL, NULL, NULL, NULL, '', 0, 1, 0, 0, 0, 0, 0, 'No event received', '1970-01-01 00:00:00', 1, 0, NULL, '2018-05-23 20:01:09', 40, 0),
-(9850, 2, NULL, NULL, 'TCNU803965-8', '6185527170', NULL, 'Prince Rupert', 'Memphis, Tennessee', '2018-06-13', NULL, NULL, NULL, NULL, 'Not Released', 0, 1, 0, 0, 0, 0, 0, 'Vessel Departure at First POL', '2018-05-21 20:00:00', 1, 0, NULL, '2018-05-23 20:01:09', 40, 0),
-(9851, 2, NULL, 4, 'GLDU931983-3', '6008522700', 4, 'Prince Rupert (Intended)', 'Memphis, Tennessee', '2018-06-20', NULL, NULL, NULL, NULL, '', 0, 1, 0, 0, 0, 0, 0, 'Discharged at Port of Transhipment', '2018-05-21 11:00:00', 1, 0, NULL, '2018-05-23 20:01:09', 20, 0),
-(9852, 2, NULL, NULL, 'TCNU909669-4', '6183104310', 11, 'Prince Rupert (Intended)', 'Memphis, Tennessee', '2018-06-25', NULL, NULL, NULL, NULL, '', 0, 1, 0, 0, 0, 0, 0, 'Empty Container Picked Up', '2018-05-23 00:00:00', 1, 0, NULL, '2018-05-23 20:01:09', 40, 0),
-(9853, 2, NULL, NULL, 'TCNU507859-0', '6183107850', 11, 'Prince Rupert (Intended)', 'Memphis, Tennessee', '2018-06-25', NULL, NULL, NULL, NULL, '', 0, 1, 0, 0, 0, 0, 0, 'Empty Container Picked Up', '2018-05-22 17:00:00', 1, 0, NULL, '2018-05-23 20:01:09', 40, 0),
-(9854, 2, NULL, 4, 'CBHU552322-2', '6008522710', 4, 'Charleston (Intended)', 'Loris, South Carolina', '2018-06-26', NULL, NULL, NULL, NULL, '', 0, 0, 0, 0, 0, 0, 0, 'Discharged at Port of Transhipment', '2018-05-21 11:00:00', 1, 0, NULL, '2018-05-23 20:01:09', 20, 0),
-(9855, 2, NULL, 4, 'CSLU114281-0', '6008522710', 4, 'Charleston (Intended)', 'Loris, South Carolina', '2018-06-26', NULL, NULL, NULL, NULL, '', 0, 0, 0, 0, 0, 0, 0, 'Discharged at Port of Transhipment', '2018-05-21 11:00:00', 1, 0, NULL, '2018-05-23 20:01:09', 20, 0),
-(9856, 2, NULL, NULL, 'Unassigned[10]', '6183107800', 11, 'Prince Rupert (Intended)', 'Memphis, Tennessee', '2018-07-09', NULL, NULL, NULL, NULL, '', 0, 1, 0, 0, 0, 0, 0, 'No event received', '1970-01-01 00:00:00', 1, 0, NULL, '2018-05-23 20:01:09', 40, 0),
-(9857, 2, NULL, NULL, 'Unassigned[11]', '6183107810', 11, 'Prince Rupert (Intended)', 'Memphis, Tennessee', '2018-07-09', NULL, NULL, NULL, NULL, '', 0, 1, 0, 0, 0, 0, 0, 'No event received', '1970-01-01 00:00:00', 1, 0, NULL, '2018-05-23 20:01:09', 40, 0),
-(9858, 2, NULL, NULL, 'Unassigned[12]', '6183108290', 11, 'Long Beach (Intended)', 'Memphis, Tennessee', '2018-07-13', NULL, NULL, NULL, NULL, '', 0, 0, 0, 0, 0, 0, 0, 'No event received', '1970-01-01 00:00:00', 1, 0, NULL, '2018-05-23 20:01:09', 40, 0),
-(9859, 2, NULL, NULL, 'Unassigned[13]', '6183104660', 11, 'Prince Rupert (Intended)', 'Memphis, Tennessee', '2018-07-16', NULL, NULL, NULL, NULL, '', 0, 1, 0, 0, 0, 0, 0, 'No event received', '1970-01-01 00:00:00', 1, 0, NULL, '2018-05-23 20:01:09', 40, 0),
-(9860, 2, NULL, NULL, 'Unassigned[14]', '6183108390', 11, 'Prince Rupert (Intended)', 'Memphis, Tennessee', '2018-07-16', NULL, NULL, NULL, NULL, '', 0, 1, 0, 0, 0, 0, 0, 'No event received', '1970-01-01 00:00:00', 1, 0, NULL, '2018-05-23 20:01:09', 40, 0),
-(9861, 2, NULL, NULL, 'Unassigned[15]', '6183104650', 11, 'Long Beach (Intended)', 'Memphis, Tennessee', '2018-07-20', NULL, NULL, NULL, NULL, '', 0, 0, 0, 0, 0, 0, 0, 'No event received', '1970-01-01 00:00:00', 1, 0, NULL, '2018-05-23 20:01:09', 40, 0);
+(9875, NULL, NULL, NULL, '', '', NULL, '', '', NULL, NULL, NULL, NULL, 1, NULL, 0, 0, 0, 0, 0, 0, 0, NULL, NULL, 0, 0, NULL, '2018-05-28 18:55:49', NULL, 1),
+(9918, NULL, NULL, NULL, '', '', NULL, '', '', NULL, NULL, NULL, NULL, 1, NULL, 0, 0, 0, 0, 0, 0, 0, NULL, NULL, 0, 0, NULL, '2018-05-28 18:55:24', NULL, 1),
+(9926, 0, NULL, 8, 'TGHU685374-9', '6160596710', 11, 'Prince Rupert (Intended)', 'Memphis, Tennessee', NULL, NULL, NULL, NULL, NULL, '', 0, 1, 0, 0, 0, 0, 0, 'Container Arrival at First Port of Load', '2018-05-23 16:11:00', 1, 0, NULL, '2018-05-28 18:52:53', 40, 1),
+(9927, 0, NULL, 8, 'TEMU628934-4', '6160597350', 11, 'Prince Rupert', 'Memphis, Tennessee', NULL, NULL, NULL, NULL, NULL, 'Not Released', 0, 1, 0, 0, 0, 0, 0, 'Vessel Departure at First POL', '2018-05-22 03:11:00', 1, 0, NULL, '2018-05-28 18:52:53', 40, 1),
+(9928, 0, NULL, 8, 'BMOU439963-1', '6160597360', 11, 'Prince Rupert', 'Memphis, Tennessee', NULL, NULL, NULL, NULL, NULL, 'Not Released', 0, 1, 0, 0, 0, 0, 0, 'Vessel Departure at First POL', '2018-05-22 03:11:00', 1, 0, NULL, '2018-05-28 18:52:53', 40, 1),
+(9929, 0, NULL, 8, 'CBHU832619-2', '6160597370', 11, 'Prince Rupert', 'Memphis, Tennessee', NULL, NULL, NULL, NULL, NULL, 'Not Released', 0, 1, 0, 0, 0, 0, 0, 'Vessel Departure at First POL', '2018-05-22 03:11:00', 1, 0, NULL, '2018-05-28 18:52:53', 40, 1),
+(9930, 0, NULL, 8, 'CXDU122177-4', '6160598210', 11, 'Prince Rupert', 'Memphis, Tennessee', NULL, NULL, NULL, NULL, NULL, 'Not Released', 0, 1, 0, 0, 0, 0, 0, 'Discharged from Vessel at Last Port of Discharge', '2018-05-26 01:11:00', 1, 0, NULL, '2018-05-28 18:52:53', 40, 1),
+(9931, 0, NULL, 4, 'TEMU013800-0', '6181441580', 4, 'Charleston', 'Loris, South Carolina', NULL, NULL, NULL, NULL, 1, 'Not Released', 0, 0, 0, 0, 0, 0, 0, 'Empty Container Returned to Carrier at Destination', '2018-05-24 09:11:00', 1, 0, NULL, '2018-05-28 18:56:36', 20, 0),
+(9932, 0, NULL, 4, 'DFSU119674-0', '6181441580', 4, 'Charleston', 'Loris, South Carolina', NULL, NULL, NULL, NULL, 1, 'Not Released', 0, 0, 0, 0, 0, 0, 0, 'Empty Container Returned to Carrier at Destination', '2018-05-24 05:11:00', 1, 0, NULL, '2018-05-28 18:57:09', 20, 1),
+(9933, 0, NULL, 5, 'SEGU303576-1', '6182529680', 5, 'Norfolk', 'Lexington, North Carolina', NULL, NULL, NULL, NULL, NULL, 'Not Released', 0, 0, 0, 0, 0, 0, 0, 'Discharged from Vessel at Last Port of Discharge', '2018-05-26 20:11:00', 1, 0, NULL, '2018-05-28 18:52:53', 20, 0),
+(9934, 0, NULL, 5, 'TRHU168632-1', '6182545470', 5, 'Prince Rupert', 'Memphis, Tennessee', NULL, NULL, NULL, NULL, NULL, 'Not Released', 0, 1, 0, 0, 0, 0, 0, 'Discharged from Vessel at Last Port of Discharge', '2018-05-26 04:11:00', 1, 0, NULL, '2018-05-28 18:52:53', 20, 1),
+(9935, 0, NULL, 4, 'CBHU598224-2', '6181628000', 4, 'Los Angeles', 'Hewitt, Texas', '2018-05-22', '2018-05-25', 510, NULL, NULL, 'Not Released', 0, 0, 0, 0, 0, 0, 0, 'Empty Container Returned to Carrier at Destination', '2018-05-24 11:11:00', 1, 0, NULL, '2018-05-28 18:53:53', 20, 0),
+(9936, 0, NULL, 8, 'CCLU663506-3', '6160595830', 11, 'Prince Rupert', 'Memphis, Tennessee', '2018-05-23', '2018-05-25', 570128, NULL, NULL, 'Not Released', 0, 1, 0, 0, 0, 0, 0, 'Empty Container Returned to Carrier at Destination', '2018-05-25 10:11:00', 1, 0, NULL, '2018-05-28 18:53:10', 40, 1),
+(9937, 0, NULL, 8, 'CBHU705070-4', '6160596190', 11, 'Prince Rupert', 'Memphis, Tennessee', '2018-05-23', '2018-05-25', 720931, NULL, NULL, 'Not Released', 0, 1, 0, 0, 0, 0, 0, 'Picked up at Final Destination for Delivery', '2018-05-25 07:11:00', 1, 0, NULL, '2018-05-28 18:53:16', 40, 1),
+(9938, 0, NULL, 8, 'CCLU797283-4', '6160593110', 11, 'Long Beach', 'Memphis, Tennessee', '2018-05-24', '2018-05-29', 4874162, NULL, NULL, 'Not Released', 0, 0, 0, 0, 0, 0, 0, 'Last Deramp Under I/B', '2018-05-24 19:11:00', 1, 0, NULL, '2018-05-28 18:53:05', 40, 1),
+(9939, 0, NULL, 8, 'TCNU228429-9', '6160593120', 11, 'Long Beach', 'Memphis, Tennessee', '2018-05-24', '2018-05-29', 4874161, NULL, NULL, 'Not Released', 0, 0, 0, 0, 0, 0, 0, 'Picked up at Final Destination for Delivery', '2018-05-26 07:11:00', 1, 0, NULL, '2018-05-28 18:53:07', 40, 1),
+(9940, 0, NULL, 3, 'TLLU447704-5', '6179524840', 3, 'Long Beach', 'Memphis, Tennessee', '2018-05-25', NULL, NULL, NULL, NULL, 'Not Released', 0, 0, 0, 0, 0, 0, 0, 'First Loaded on Rail Under I/B', '2018-05-26 07:11:00', 1, 0, NULL, '2018-05-28 18:52:53', 40, 1),
+(9941, 0, NULL, 3, 'TCNU557797-9', '6179524840', 3, 'Long Beach', 'Memphis, Tennessee', '2018-05-25', NULL, NULL, NULL, NULL, 'Not Released', 0, 0, 0, 0, 0, 0, 0, 'First Loaded on Rail Under I/B', '2018-05-26 07:11:00', 1, 0, NULL, '2018-05-28 18:52:53', 40, 1),
+(9942, 0, NULL, 8, 'UETU516083-1', '6160595840', 11, 'Prince Rupert', 'Memphis, Tennessee', '2018-05-26', '2018-05-30', 388535, NULL, NULL, 'Not Released', 0, 1, 0, 0, 0, 0, 0, 'Carrier Released', '2018-05-27 20:11:00', 1, 0, NULL, '2018-05-28 18:53:12', 40, 1),
+(9943, 0, NULL, 8, 'BMOU455577-6', '6160598230', 11, 'Prince Rupert', 'Memphis, Tennessee', '2018-05-26', '2018-05-29', 233130, NULL, NULL, 'Not Released', 0, 1, 0, 0, 0, 0, 0, 'Carrier Released', '2018-05-27 20:11:00', 1, 0, NULL, '2018-05-28 18:53:38', 40, 1),
+(9944, 0, NULL, 8, 'CCLU725168-0', '6160595850', 11, 'Long Beach', 'Memphis, Tennessee', '2018-05-26', NULL, NULL, NULL, NULL, 'Not Released', 0, 0, 0, 0, 0, 0, 0, 'Discharged from Vessel at Last Port of Discharge', '2018-05-18 16:11:00', 1, 0, NULL, '2018-05-28 18:52:53', 40, 1),
+(9945, 0, NULL, 8, 'CCLU769484-1', '6160598220', 11, 'Prince Rupert', 'Memphis, Tennessee', '2018-05-28', NULL, NULL, NULL, NULL, 'Not Released', 0, 1, 0, 0, 0, 0, 0, 'First Loaded on Rail Under I/B', '2018-05-21 12:11:00', 1, 0, NULL, '2018-05-28 18:52:53', 40, 1),
+(9946, 0, NULL, 3, 'FSCU879069-9', '6179518010', 3, 'Prince Rupert', 'Memphis, Tennessee', '2018-05-30', NULL, NULL, NULL, NULL, 'Not Released', 0, 1, 0, 0, 0, 0, 0, 'First Loaded on Rail Under I/B', '2018-05-21 07:11:00', 1, 0, NULL, '2018-05-28 18:52:53', 40, 1),
+(9947, 0, NULL, 3, 'TCNU137006-8', '6179518010', 3, 'Prince Rupert', 'Memphis, Tennessee', '2018-05-30', NULL, NULL, NULL, NULL, 'Not Released', 0, 1, 0, 0, 0, 0, 0, 'First Loaded on Rail Under I/B', '2018-05-21 07:11:00', 1, 0, NULL, '2018-05-28 18:52:53', 40, 1),
+(9948, 0, NULL, 3, 'TLLU487706-2', '6179522280', 3, 'Prince Rupert', 'Memphis, Tennessee', '2018-05-30', NULL, NULL, NULL, NULL, 'Not Released', 0, 1, 0, 0, 0, 0, 0, 'First Loaded on Rail Under I/B', '2018-05-21 12:11:00', 1, 0, NULL, '2018-05-28 18:52:53', 40, 1),
+(9949, 0, NULL, 2, 'DFSU156558-2', '6179386310', 2, 'Prince Rupert', 'Memphis, Tennessee', '2018-05-31', NULL, NULL, NULL, NULL, 'Not Released', 0, 1, 0, 0, 0, 0, 0, 'First Loaded on Rail Under I/B', '2018-05-21 11:11:00', 1, 0, NULL, '2018-05-28 18:52:53', 20, 1),
+(9950, 1, NULL, 5, 'CBHU568861-8', '6182552700', 5, 'Prince Rupert', 'Memphis, Tennessee', '2018-06-01', NULL, NULL, NULL, NULL, 'Not Released', 0, 1, 0, 0, 0, 0, 0, 'First Loaded on Rail Under I/B', '2018-05-21 11:11:00', 1, 0, NULL, '2018-05-28 18:52:53', 20, 1),
+(9951, 1, NULL, 6, 'CSLU200428-7', '6181429080', 6, 'Prince Rupert', 'Memphis, Tennessee', '2018-06-02', NULL, NULL, NULL, NULL, 'Not Released', 0, 1, 0, 0, 0, 0, 0, 'First Loaded on Rail Under I/B', '2018-05-27 07:11:00', 1, 0, NULL, '2018-05-28 18:52:53', 20, 1),
+(9952, 2, NULL, 3, 'DFSU632170-0', '6182110120', 3, 'Prince Rupert', 'Memphis, Tennessee', '2018-06-06', NULL, NULL, NULL, NULL, 'Not Released', 0, 1, 0, 0, 0, 0, 0, 'Vessel Departure at First POL', '2018-05-17 19:11:00', 1, 0, NULL, '2018-05-28 18:52:53', 40, 1),
+(9953, 2, NULL, 3, 'FSCU872354-0', '6182110120', 3, 'Prince Rupert', 'Memphis, Tennessee', '2018-06-06', NULL, NULL, NULL, NULL, 'Not Released', 0, 1, 0, 0, 0, 0, 0, 'Vessel Departure at First POL', '2018-05-17 19:11:00', 1, 0, NULL, '2018-05-28 18:52:53', 40, 1),
+(9954, 2, NULL, 8, 'TCNU644757-9', '6160596700', 11, 'Prince Rupert', 'Memphis, Tennessee', '2018-06-09', NULL, NULL, NULL, NULL, 'Not Released', 0, 1, 0, 0, 0, 0, 0, 'Discharged from Vessel at Last Port of Discharge', '2018-05-25 20:11:00', 1, 0, NULL, '2018-05-28 18:52:53', 40, 1),
+(9955, 2, NULL, NULL, 'TCNU803965-8', '6185527170', NULL, 'Prince Rupert', 'Memphis, Tennessee', '2018-06-15', NULL, NULL, NULL, NULL, 'Not Released', 0, 1, 0, 0, 0, 0, 0, 'Vessel Departure at Transshipment Port', '2018-05-25 15:11:00', 1, 0, NULL, '2018-05-28 18:52:53', 40, 1),
+(9956, 2, NULL, 8, 'TCNU259060-0', '6160597320', 11, 'Prince Rupert', 'Memphis, Tennessee', '2018-06-16', NULL, NULL, NULL, NULL, 'Not Released', 0, 1, 0, 0, 0, 0, 0, 'Vessel Departure at First POL', '2018-05-18 06:11:00', 1, 0, NULL, '2018-05-28 18:52:54', 40, 1),
+(9957, 2, NULL, 8, 'SEGU443110-8', '6160597330', 11, 'Prince Rupert', 'Memphis, Tennessee', '2018-06-16', NULL, NULL, NULL, NULL, 'Not Released', 0, 1, 0, 0, 0, 0, 0, 'Vessel Departure at First POL', '2018-05-18 06:11:00', 1, 0, NULL, '2018-05-28 18:52:54', 40, 1),
+(9958, 2, NULL, 8, 'CCLU689366-4', '6160597340', 11, 'Prince Rupert', 'Memphis, Tennessee', '2018-06-16', NULL, NULL, NULL, NULL, 'Not Released', 0, 1, 0, 0, 0, 0, 0, 'Vessel Departure at First POL', '2018-05-18 06:11:00', 1, 0, NULL, '2018-05-28 18:52:54', 40, 1),
+(9959, 2, NULL, 2, 'CAIU344452-5', '6185488790', 2, 'Prince Rupert', 'Memphis, Tennessee', '2018-06-16', NULL, NULL, NULL, NULL, 'Not Released', 0, 1, 0, 0, 0, 0, 0, 'Vessel Departure at First POL', '2018-05-21 20:11:00', 1, 0, NULL, '2018-05-28 18:52:54', 20, 1),
+(9960, 2, NULL, 7, 'TCNU862477-6', '6185516940', 8, 'Prince Rupert', 'Memphis, Tennessee', '2018-06-16', NULL, NULL, NULL, NULL, 'Not Released', 0, 1, 0, 0, 0, 0, 0, 'Vessel Departure at First POL', '2018-05-21 20:11:00', 1, 0, NULL, '2018-05-28 18:52:54', 40, 1),
+(9961, 2, NULL, 3, 'FCIU987424-4', '6182111620', 3, 'Prince Rupert (Intended)', 'Memphis, Tennessee', '2018-06-18', NULL, NULL, NULL, NULL, '', 0, 1, 0, 0, 0, 0, 0, 'Vessel Departure at First POL', '2018-05-27 23:11:00', 1, 0, NULL, '2018-05-28 18:52:54', 40, 1),
+(9962, 2, NULL, 4, 'GLDU931983-3', '6008522700', 4, 'Prince Rupert', 'Memphis, Tennessee', '2018-06-20', NULL, NULL, NULL, NULL, 'Not Released', 0, 1, 0, 0, 0, 0, 0, 'Vessel Arrival at Transshipment Port', '2018-05-23 13:11:00', 1, 0, NULL, '2018-05-28 18:52:54', 20, 1),
+(9963, 2, NULL, 3, 'Unassigned[1]', '6182112950', 3, 'Prince Rupert (Intended)', 'Memphis, Tennessee', '2018-06-25', NULL, NULL, NULL, NULL, '', 0, 1, 0, 0, 0, 0, 0, 'No event received', '1970-01-01 01:00:00', 1, 0, NULL, '2018-05-28 18:52:54', 40, 1),
+(9964, 2, NULL, 3, 'Unassigned[2]', '6182112950', 3, 'Prince Rupert (Intended)', 'Memphis, Tennessee', '2018-06-25', NULL, NULL, NULL, NULL, '', 0, 1, 0, 0, 0, 0, 0, 'No event received', '1970-01-01 01:00:00', 1, 0, NULL, '2018-05-28 18:52:54', 40, 1),
+(9965, 2, NULL, 5, 'TCKU255801-3', '6182630420', 5, 'Prince Rupert (Intended)', 'Memphis, Tennessee', '2018-06-25', NULL, NULL, NULL, NULL, '', 0, 1, 0, 0, 0, 0, 0, 'Full Container Received by Carrier at Origin', '2018-05-27 01:11:00', 1, 0, NULL, '2018-05-28 18:52:54', 20, 1),
+(9966, 2, NULL, 8, 'TCNU909669-4', '6183104310', 11, 'Prince Rupert (Intended)', 'Memphis, Tennessee', '2018-06-25', NULL, NULL, NULL, NULL, '', 0, 1, 0, 0, 0, 0, 0, 'Full Container Received by Carrier at Origin', '2018-05-23 16:11:00', 1, 0, NULL, '2018-05-28 18:52:54', 40, 1),
+(9967, 2, NULL, 8, 'TCNU507859-0', '6183107850', 11, 'Prince Rupert (Intended)', 'Memphis, Tennessee', '2018-06-25', NULL, NULL, NULL, NULL, '', 0, 1, 0, 0, 0, 0, 0, 'Full Container Received by Carrier at Origin', '2018-05-23 17:11:00', 1, 0, NULL, '2018-05-28 18:52:54', 40, 1),
+(9968, 2, NULL, 2, 'Unassigned[3]', '6185511510', 2, 'Prince Rupert (Intended)', 'Memphis, Tennessee', '2018-06-25', NULL, NULL, NULL, NULL, '', 0, 1, 0, 0, 0, 0, 0, 'No event received', '1970-01-01 01:00:00', 1, 0, NULL, '2018-05-28 18:52:54', 20, 1),
+(9969, 2, NULL, 2, 'Unassigned[4]', '6185511520', 2, 'Prince Rupert (Intended)', 'Memphis, Tennessee', '2018-06-25', NULL, NULL, NULL, NULL, '', 0, 1, 0, 0, 0, 0, 0, 'No event received', '1970-01-01 01:00:00', 1, 0, NULL, '2018-05-28 18:52:54', 20, 1),
+(9970, 2, NULL, 4, 'CSLU114281-0', '6008522710', 4, 'Charleston', 'Loris, South Carolina', '2018-06-26', NULL, NULL, NULL, NULL, 'Not Released', 0, 0, 0, 0, 0, 0, 0, 'Vessel Arrival at Transshipment Port', '2018-05-23 13:11:00', 1, 0, NULL, '2018-05-28 18:52:54', 20, 0),
+(9971, 2, NULL, 4, 'CBHU552322-2', '6008522710', 4, 'Charleston', 'Loris, South Carolina', '2018-06-26', NULL, NULL, NULL, NULL, 'Not Released', 0, 0, 0, 0, 0, 0, 0, 'Vessel Arrival at Transshipment Port', '2018-05-23 13:11:00', 1, 0, NULL, '2018-05-28 18:52:54', 20, 0),
+(9972, 2, NULL, 4, 'CSLU235424-3', '6008526090', 4, 'Norfolk', 'Henderson, North Carolina', '2018-06-26', NULL, NULL, NULL, NULL, 'Not Released', 0, 0, 0, 0, 0, 0, 0, 'Vessel Departure at Transshipment Port', '2018-05-26 16:11:00', 1, 0, NULL, '2018-05-28 18:52:54', 20, 0),
+(9973, 2, NULL, 4, 'CBHU411055-9', '6008525240', 4, 'Prince Rupert (Intended)', 'Memphis, Tennessee', '2018-06-27', NULL, NULL, NULL, NULL, '', 0, 1, 0, 0, 0, 0, 0, 'Container Arrival at First Port of Load', '2018-05-25 03:11:00', 1, 0, NULL, '2018-05-28 18:52:54', 20, 1),
+(9974, 2, NULL, 8, 'TCNU634231-0', '6183104300', 11, 'Prince Rupert (Intended)', 'Memphis, Tennessee', '2018-07-02', NULL, NULL, NULL, NULL, '', 0, 1, 0, 0, 0, 0, 0, 'Empty Container Picked Up', '2018-05-27 19:11:00', 1, 0, NULL, '2018-05-28 18:52:54', 40, 1),
+(9975, 2, NULL, 8, 'Unassigned[5]', '6183107820', 11, 'Prince Rupert (Intended)', 'Memphis, Tennessee', '2018-07-02', NULL, NULL, NULL, NULL, '', 0, 1, 0, 0, 0, 0, 0, 'No event received', '1970-01-01 01:00:00', 1, 0, NULL, '2018-05-28 18:52:54', 40, 1),
+(9976, 2, NULL, 8, 'BMOU585674-8', '6183107830', 11, 'Prince Rupert (Intended)', 'Memphis, Tennessee', '2018-07-02', NULL, NULL, NULL, NULL, '', 0, 1, 0, 0, 0, 0, 0, 'Empty Container Picked Up', '2018-05-24 23:11:00', 1, 0, NULL, '2018-05-28 18:52:54', 40, 1),
+(9977, 2, NULL, 8, 'CSNU646679-0', '6183107840', 11, 'Long Beach (Intended)', 'Memphis, Tennessee', '2018-07-06', NULL, NULL, NULL, NULL, '', 0, 0, 0, 0, 0, 0, 0, 'Empty Container Picked Up', '2018-05-24 23:11:00', 1, 0, NULL, '2018-05-28 18:52:54', 40, 1),
+(9978, 2, NULL, 8, 'Unassigned[6]', '6183107800', 11, 'Prince Rupert (Intended)', 'Memphis, Tennessee', '2018-07-09', NULL, NULL, NULL, NULL, '', 0, 1, 0, 0, 0, 0, 0, 'No event received', '1970-01-01 01:00:00', 1, 0, NULL, '2018-05-28 18:52:54', 40, 1),
+(9979, 2, NULL, 8, 'Unassigned[7]', '6183107810', 11, 'Prince Rupert (Intended)', 'Memphis, Tennessee', '2018-07-09', NULL, NULL, NULL, NULL, '', 0, 1, 0, 0, 0, 0, 0, 'No event received', '1970-01-01 01:00:00', 1, 0, NULL, '2018-05-28 18:52:54', 40, 1),
+(9980, 2, NULL, 8, 'Unassigned[8]', '6183108290', 11, 'Long Beach (Intended)', 'Memphis, Tennessee', '2018-07-13', NULL, NULL, NULL, NULL, '', 0, 0, 0, 0, 0, 0, 0, 'No event received', '1970-01-01 01:00:00', 1, 0, NULL, '2018-05-28 18:52:54', 40, 1),
+(9981, 2, NULL, 8, 'Unassigned[9]', '6183104660', 11, 'Prince Rupert (Intended)', 'Memphis, Tennessee', '2018-07-16', NULL, NULL, NULL, NULL, '', 0, 1, 0, 0, 0, 0, 0, 'No event received', '1970-01-01 01:00:00', 1, 0, NULL, '2018-05-28 18:52:54', 40, 1),
+(9982, 2, NULL, 8, 'Unassigned[10]', '6183108390', 11, 'Prince Rupert (Intended)', 'Memphis, Tennessee', '2018-07-16', NULL, NULL, NULL, NULL, '', 0, 1, 0, 0, 0, 0, 0, 'No event received', '1970-01-01 01:00:00', 1, 0, NULL, '2018-05-28 18:52:54', 40, 1),
+(9983, 2, NULL, 8, 'Unassigned[11]', '6183104650', 11, 'Long Beach (Intended)', 'Memphis, Tennessee', '2018-07-20', NULL, NULL, NULL, NULL, '', 0, 0, 0, 0, 0, 0, 0, 'No event received', '1970-01-01 01:00:00', 1, 0, NULL, '2018-05-28 18:52:54', 40, 1);
 
 -- --------------------------------------------------------
 
@@ -9110,12 +9103,10 @@ INSERT INTO `shipments` (`id`, `status`, `po`, `product_id`, `container_number`,
 -- Table structure for table `truckers`
 --
 
-DROP TABLE IF EXISTS `truckers`;
-CREATE TABLE IF NOT EXISTS `truckers` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `trucker_name` varchar(64) DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
+CREATE TABLE `truckers` (
+  `id` int(11) NOT NULL,
+  `trucker_name` varchar(64) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `truckers`
@@ -9133,14 +9124,11 @@ INSERT INTO `truckers` (`id`, `trucker_name`) VALUES
 -- Table structure for table `update_events`
 --
 
-DROP TABLE IF EXISTS `update_events`;
-CREATE TABLE IF NOT EXISTS `update_events` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `update_events` (
+  `id` int(11) NOT NULL,
   `time_and_date` datetime NOT NULL,
   `content` text NOT NULL,
-  `container_number` varchar(16) NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `container_number` (`container_number`)
+  `container_number` varchar(16) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -9149,16 +9137,14 @@ CREATE TABLE IF NOT EXISTS `update_events` (
 -- Table structure for table `users`
 --
 
-DROP TABLE IF EXISTS `users`;
-CREATE TABLE IF NOT EXISTS `users` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `users` (
+  `id` int(11) NOT NULL,
   `name` varchar(255) NOT NULL,
   `email` varchar(255) NOT NULL,
   `username` varchar(255) NOT NULL,
   `password` varchar(255) NOT NULL,
-  `register_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+  `register_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `users`
@@ -9174,13 +9160,11 @@ INSERT INTO `users` (`id`, `name`, `email`, `username`, `password`, `register_da
 -- Table structure for table `vendors`
 --
 
-DROP TABLE IF EXISTS `vendors`;
-CREATE TABLE IF NOT EXISTS `vendors` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `vendors` (
+  `id` int(11) NOT NULL,
   `name` varchar(128) NOT NULL,
-  `abbreviation` varchar(32) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=latin1;
+  `abbreviation` varchar(32) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `vendors`
@@ -9202,16 +9186,27 @@ INSERT INTO `vendors` (`id`, `name`, `abbreviation`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `vendor_documents`
+--
+
+CREATE TABLE `vendor_documents` (
+  `id` int(11) NOT NULL,
+  `filename` varchar(255) NOT NULL,
+  `filepath` varchar(255) NOT NULL,
+  `shipment_id` int(11) DEFAULT NULL,
+  `creation_timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `vendor_products`
 --
 
-DROP TABLE IF EXISTS `vendor_products`;
-CREATE TABLE IF NOT EXISTS `vendor_products` (
+CREATE TABLE `vendor_products` (
   `id` int(11) NOT NULL,
   `vendor_id` int(11) NOT NULL,
-  `product_id` int(11) NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `vendors` (`vendor_id`)
+  `product_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -9219,16 +9214,137 @@ CREATE TABLE IF NOT EXISTS `vendor_products` (
 --
 
 INSERT INTO `vendor_products` (`id`, `vendor_id`, `product_id`) VALUES
-(1, 1, 1),
-(2, 2, 2),
-(3, 3, 3),
-(4, 4, 4),
-(5, 5, 5),
-(6, 6, 5),
-(7, 7, 6),
-(8, 8, 7),
-(9, 9, 6),
-(10, 10, 7);
+(1, 2, 2),
+(2, 3, 3),
+(3, 4, 4),
+(4, 5, 5),
+(5, 6, 6),
+(6, 7, 6),
+(7, 8, 7),
+(8, 9, 8),
+(9, 10, 7),
+(10, 11, 8);
+
+--
+-- Indexes for dumped tables
+--
+
+--
+-- Indexes for table `archived_shipments`
+--
+ALTER TABLE `archived_shipments`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `bill_of_lading` (`bill_of_lading`),
+  ADD KEY `requires_payment` (`requires_payment`) USING BTREE,
+  ADD KEY `active_shipments` (`is_active`) USING BTREE,
+  ADD KEY `container_number` (`container_number`) USING BTREE;
+
+--
+-- Indexes for table `products`
+--
+ALTER TABLE `products`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `shipments`
+--
+ALTER TABLE `shipments`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `bill_of_lading` (`bill_of_lading`),
+  ADD KEY `requires_payment` (`requires_payment`) USING BTREE,
+  ADD KEY `active_shipments` (`is_active`) USING BTREE,
+  ADD KEY `container_number` (`container_number`) USING BTREE;
+
+--
+-- Indexes for table `truckers`
+--
+ALTER TABLE `truckers`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `update_events`
+--
+ALTER TABLE `update_events`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `container_number` (`container_number`);
+
+--
+-- Indexes for table `users`
+--
+ALTER TABLE `users`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `vendors`
+--
+ALTER TABLE `vendors`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `vendor_documents`
+--
+ALTER TABLE `vendor_documents`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `shipment` (`shipment_id`);
+
+--
+-- Indexes for table `vendor_products`
+--
+ALTER TABLE `vendor_products`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `vendors` (`vendor_id`);
+
+--
+-- AUTO_INCREMENT for dumped tables
+--
+
+--
+-- AUTO_INCREMENT for table `archived_shipments`
+--
+ALTER TABLE `archived_shipments`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9862;
+
+--
+-- AUTO_INCREMENT for table `products`
+--
+ALTER TABLE `products`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+
+--
+-- AUTO_INCREMENT for table `shipments`
+--
+ALTER TABLE `shipments`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9984;
+
+--
+-- AUTO_INCREMENT for table `truckers`
+--
+ALTER TABLE `truckers`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT for table `update_events`
+--
+ALTER TABLE `update_events`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `users`
+--
+ALTER TABLE `users`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT for table `vendors`
+--
+ALTER TABLE `vendors`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+
+--
+-- AUTO_INCREMENT for table `vendor_documents`
+--
+ALTER TABLE `vendor_documents`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

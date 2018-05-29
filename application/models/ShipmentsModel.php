@@ -28,9 +28,12 @@ class ShipmentsModel extends CI_Model
     public function archiveInactiveRecords() {
         $q = $this->db->get_where('shipments', array('is_active' => false))->result_array();
         foreach ($q as $r) { // loop over results
-            $this->db->insert('archived_shipments', $r); // insert each row to another table
-            $this -> db -> where('id', $r['id']);
-            $this -> db -> delete('shipments');
+            $query = $this->db->get_where('container_number', array('container_number' => $r['container_number']));
+            $rows= $query->result_array();
+            if (count($rows)<=0){
+                $this->db->insert('archived_shipments', $r); // insert each row to another table
+                $this -> db -> where('container_number', $r['container_number']) -> delete('shipments');
+            }
         }
     }
 
@@ -205,9 +208,35 @@ class ShipmentsModel extends CI_Model
         return $result['id'];
     }
 
+    public function get_vendor_email_list_by_shortname($vendor_abbreviation=FALSE){
+        if ($vendor_abbreviation === FALSE){
+            return false;
+        }
+        $query = $this->db->get_where('vendors', array('abbreviation' => $vendor_abbreviation));
+        $result= $query->row_array();
+        return $result['email_addresses'];
+    }
+
+    public function get_all_vendor_data(){
+        $this->db->order_by('id', 'desc');
+        return $this->db->get('vendors')->result_array();
+    }
+    
+    public function get_vendor_data_by_id($vendor_id){
+        if (!isset($vendor_id) || empty($vendor_id)){
+            return null;
+        }
+        $query = $this->db->get_where('vendors', array('id' => $vendor_id));
+        $result= $query->row_array();
+        if (!isset($result) || empty($result) || !array_key_exists('product_id',$result)) { 
+            return NULL;
+        }
+        return $result;
+    }
+
     public function container_has_files($container_number){
         if (is_null($container_number) || empty($container_number)) return false;
-        $query = $this->db->get_where('container_files', array('container_number' => $container_number));
+        $query = $this->db->get_where('vendor_documents', array('container_number' => $container_number));
         $rows= $query->result_array();
         if (count($rows)<=0) return false;
         return true;
@@ -216,6 +245,11 @@ class ShipmentsModel extends CI_Model
     public function getISFreq($port_of_discharge=FALSE){
         if (!$port_of_discharge)return false;
         if (strpos($port_of_discharge, 'Prince Rupert') === false) return false;
+        return true;
+    }
+    public function getDOvalue($destination=FALSE){
+        if (!$destination)return false;
+        if (strpos($destination, 'Memphis') === false) return false;
         return true;
     }
 
@@ -232,6 +266,18 @@ class ShipmentsModel extends CI_Model
         } else {
             return NULL;
         }
+    }
+
+    public function get_by_vendor_specific_identifier($vendor_identifier=false){
+        if (!isset($vendor_identifier) || empty($vendor_identifier)){
+            return null;
+        }
+        $query = $this->db->get_where('shipments', array('vendor_identifier' => $vendor_identifier));
+        $result= $query->row_array();
+        if (!isset($result) || empty($result)) { 
+            return NULL;
+        }
+        return $result;
     }
 
     public function update_record($where=array(),$data=array()){

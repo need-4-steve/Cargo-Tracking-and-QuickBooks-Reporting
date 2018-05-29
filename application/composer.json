@@ -12,6 +12,8 @@
 	},
 	"require": {
 		"paquettg/php-html-parser": "^1.7",
-		"gufy/pdftohtml-php": "~2"
+		"gufy/pdftohtml-php": "~2",
+		"smalot/pdfparser": "^0.12.0",
+		"tonchik-tm/pdf-to-html": "~1"
 	}
 }
