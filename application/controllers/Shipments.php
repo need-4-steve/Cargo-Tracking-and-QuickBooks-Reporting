@@ -514,18 +514,19 @@ class Shipments extends CI_Controller
                         //test...@gmail.com
                         $vendors = $this->ShipmentsModel->get_all_vendor_data();
                         foreach ($vendors as $vendor) {
-                            $emailHosts = explode('|', $vendor['email_addresses']);
-                            foreach ($emailHosts as $vendorEmailHost) {
-                                $pos = strpos($overview[0]->from, $vendorEmailHost);
-                                if ($pos >= 0) {
-                                    $vendorMatched = true;
+                            if (!$vendorMatched){
+                                if (is_null($vendor['email_addresses']) || empty($vendor['email_addresses'])){
+                                    break;
                                 }
-
-                            }
-                            if ($vendorMatched) {
-                                $associatedVendorData = $this->ShipmentsModel->get_vendor_data_by_id($vendor['id']);
-                                /*$vendorAbbr = $vendor['document_initials'];*/
-                                break;
+                                $emailHosts = explode('|', $vendor['email_addresses']);
+                                foreach ($emailHosts as $vendorEmailHost) {
+                                    $pos = strpos($overview[0]->from, $vendorEmailHost);
+                                    if ($pos>=0) {
+                                        $vendorMatched = true;
+                                        $associatedVendorData = $this->ShipmentsModel->get_vendor_data_by_id($vendor['id']);
+                                        break;
+                                    }
+                                }
                             }
                         }
                         if (!$vendorMatched) {
@@ -588,21 +589,17 @@ class Shipments extends CI_Controller
                                     if ($fileExistsInDB) {
                                         break;
                                     }
-
                                     $filename = $attachment['name'];
                                     if (empty($filename)) {
                                         $filename = $attachment['filename'];
                                     }
-
                                     if (empty($filename)) {
                                         $filename = $vendorAbbr . '-' . date('mdy') . '.' . $attachment['file_extension'];
                                     }
-
                                     $tmpFileDir = "$directoryStructure/tmp/$filename";
                                     if (!file_exists(dirname($tmpFileDir))) {
                                         mkdir(dirname($tmpFileDir), 0777, true);
                                     }
-
                                     file_put_contents($tmpFileDir, $attachment['attachment']);
                                     switch (strtoupper($associatedVendorData['abbreviation'])) {
                                         case "WANDA":

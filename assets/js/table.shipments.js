@@ -14,9 +14,7 @@
                 { type: 'datetime', targets: [9, 10, 12] }
             ],
             fields: [{
-                    label: "Status",
-                    name: "shipments.status",
-                    type: "readonly"
+                    label: "Status"
                 },
                 {
                     label: "P/O#",
@@ -183,9 +181,39 @@
             ajax: '/Ajax/Shipments',
             //responsive: 'true',
             columnDefs: [{
-                "defaultContent": " ",
-                "targets": "_all"
-            }],
+                    "defaultContent": " ",
+                    "targets": "_all"
+                },
+                {
+                    targets: 1,
+                    render: function(data, type, row, meta) {
+                        var color = '';
+                        if (type === 'display') {
+                            if (data.shipments.status === '0') {
+                                color = 'circle_red';
+                            } else if (data.shipments.status === '1') {
+                                color = 'circle_yellow';
+                            } else if (data.shipments.status === '2') {
+                                color = 'circle_green';
+                            }
+                        }
+                        return '<div class=\"' + color + '\"><p></p></div>';
+                    }
+                },
+                {
+                    targets: 25,
+                    render: function(data, type, row, meta) {
+                        if (type === 'display') {
+                            if (data.shipments.has_documents == true) {
+                                return '<a href="{{ agent.url }}/documents/' + data.RowID + '"><img src="/assets/folder_icon.png"></a>';
+                            } else {
+                                //disabled_folder_icon
+                                return '<img src="/assets/folder_icon.png" class="disabled_folder_icon">';
+                            }
+                        }
+                    }
+                }
+            ],
             select: {
                 style: 'true'
             },
@@ -316,10 +344,10 @@
                     render: function(data, type, row) {
                         if (type === 'display') {
                             if (data == true) {
-                                return '<a href="#"><img src="/assets/folder_icon.png"></a>';
+                                return '<a href="{{ agent.url }}/documents/' + data.RowID + '"><img src="/assets/folder_icon.png"></a>';
                             } else {
                                 //disabled_folder_icon
-                                return '<a href="#"><img src="/assets/folder_icon.png" class="disabled_folder_icon"></a>';
+                                return '<img src="/assets/folder_icon.png" class="disabled_folder_icon">';
                             }
                         }
                     },
@@ -332,11 +360,8 @@
                 [2, 'asc']
             ],
             rowCallback: function(row, data) {
-                // Set the checked state of the checkbox in the table
-                //alert("data: "+data.toString());
                 if (data.shipments.eta === '1970-01-01') {
                     data.shipments.eta = '';
-                    // alert(data.shipments.eta);
                 }
                 $('#editor-freight', row).prop('checked', data.shipments.freight == 1);
                 $('#editor-isfrequired', row).prop('checked', data.shipments.isf_required == 1);
@@ -408,8 +433,20 @@
                     $(row).css("color", "#aaaaaa");
                 } else {
                     $(row).css("font-weight", "normal");
+                    $(row).filter(function(index) {
+                        return index % 2 === 1;
+                    }).css("background-color", "white"); //"#f5f5f5");
+                    $(row).filter(function(index) {
+                        return index % 2 === 0;
+                    }).css("background-color", "#f5f5f5");
+                    $(row).css("color", "#aaaaaa");
                 }
-
+                if (data.shipments.freight == 1 && data.shipments.isf_required == 1 &&
+                    data.shipments.customs == 1 && data.shipments.po_boolean == 1 &&
+                    data.shipments.qb_rt == 1 && data.shipments.qb_ws == 1 &&
+                    data.shipments.requires_payment == 1 && data.shipments.do == 1) {
+                    data.shipments.status = 2;
+                }
             }
         });
 
