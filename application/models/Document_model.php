@@ -25,6 +25,14 @@ class Document_model extends CI_Model
         return $this->db->get_where('vendor_documents', array('filename' => $filename))->row_array();
     }
 
+    public function md5_file_exists($md5){
+        if (is_null($md5) || empty($md5)) return false;
+        $query = $this->db->get_where('vendor_documents', array('md5_hash' => $md5));
+        $rows= $query->result_array();
+        if (count($rows)<=0) return false;
+        return true;
+    }
+
     /*
      * Get all documents
      */

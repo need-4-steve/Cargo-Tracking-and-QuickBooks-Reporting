@@ -1,8 +1,8 @@
 @import url(https://fonts.googleapis.com/css?family=Raleway:100);
-
-.container{
+.container {
     margin-left: 0px;
 }
+
 body.dataTables,
 body.jqueryui {
     font: 90%/1.45em "Helvetica Neue", HelveticaNeue, Arial, Helvetica, sans-serif;
@@ -11,11 +11,13 @@ body.jqueryui {
     color: #333;
     background-color: #fff;
 }
+
 body.dataTables div.container,
 body.jqueryui div.container {
     max-width: 980px;
     margin: 0 auto;
 }
+
 body.dataTables h1,
 body.jqueryui h1 {
     font-family: 'HelveticaNeue-UltraLight', 'Helvetica Neue UltraLight', 'Raleway', 'Helvetica Neue', Arial, Helvetica, sans-serif;
@@ -24,10 +26,12 @@ body.jqueryui h1 {
     font-size: 3em;
     line-height: 1em;
 }
+
 h1 span {
     font-size: 0.5em;
     line-height: 1em;
 }
+
 .highlight {
     background-color: whitesmoke !important;
 }
@@ -36,30 +40,35 @@ h1 span {
     background-color: #fafafa !important;
 }
 
-table.dataTable.display tbody>tr.odd>.selected, table.dataTable.order-column.stripe tbody>tr.odd>.selected {
+table.dataTable.display tbody>tr.odd>.selected,
+table.dataTable.order-column.stripe tbody>tr.odd>.selected {
     background-color: #a6b4cd;
 }
-table.dataTable tbody tr.selected, table.dataTable tbody th.selected, table.dataTable tbody td.selected {
+
+table.dataTable tbody tr.selected,
+table.dataTable tbody th.selected,
+table.dataTable tbody td.selected {
     color: black;
 }
 
-table.table-bordered.dataTable tbody th, table.table-bordered.dataTable tbody td {
+table.table-bordered.dataTable tbody th,
+table.table-bordered.dataTable tbody td {
     vertical-align: middle;
     position: relative;
     bottom: 1px;
 }
-table.dataTable thead th.select-checkbox.sorting_asc:before, 
-table.dataTable thead th.sorting_desc:before, 
-table.dataTable thead th.select-checkbox.sorting_asc_disabled:before, 
-table.dataTable thead th.select-checkbox.sorting_desc_disabled:before 
-{
+
+table.dataTable thead th.select-checkbox.sorting_asc:before,
+table.dataTable thead th.sorting_desc:before,
+table.dataTable thead th.select-checkbox.sorting_asc_disabled:before,
+table.dataTable thead th.select-checkbox.sorting_desc_disabled:before {
     content: "\2191";
 }
-table.dataTable thead th.select-checkbox.sorting_asc:after, 
-table.dataTable thead th.sorting_desc:after, 
-table.dataTable thead th.select-checkbox.sorting_asc_disabled:after, 
-table.dataTable thead th.select-checkbox.sorting_desc_disabled:after 
-{
+
+table.dataTable thead th.select-checkbox.sorting_asc:after,
+table.dataTable thead th.sorting_desc:after,
+table.dataTable thead th.select-checkbox.sorting_asc_disabled:after,
+table.dataTable thead th.select-checkbox.sorting_desc_disabled:after {
     content: "\2193";
 }
 
@@ -81,12 +90,15 @@ table.dataTable thead th.select-checkbox.sorting_desc_disabled:after
     background-color: #fff9d7 !important;
     border: 1px solid #ffe700 !important;
 }
+
+
 /* PINK
     color: #d119cf;
     background-color: #faebfa;
     border: 1px solid #f3aef2;
     white-space: nowrap;
     */
+
 .status_green {
     background-color: #d0e9c6 !important;
     border-color: forestgreen !important;
@@ -102,13 +114,22 @@ table.dataTable thead th.select-checkbox.sorting_desc_disabled:after
     background-color: #c6cbe9 !important;
     border: 1px solid #0c199c !important;
 }
+
+img.disabled_folder_icon {
+    opacity: 0.4;
+    filter: alpha(opacity=40);
+    /* msie */
+}
+
+
 /*
 warning
 color: #6e3d00;
     background-color: #f6e3cc;
     border-color: #f3d8b8;
 */
-input[type=checkbox].rowCB{
+
+input[type=checkbox].rowCB {
     -webkit-transition: all 0.30s ease-in-out;
     -moz-transition: all 0.30s ease-in-out;
     -ms-transition: all 0.30s ease-in-out;
@@ -118,7 +139,7 @@ input[type=checkbox].rowCB{
     height: 30px;
 }
 
-input[type=checkbox].rowCB:after{
+input[type=checkbox].rowCB:after {
     white-space: nowrap;
     position: absolute;
     content: '\0020';
@@ -135,58 +156,63 @@ input[type=checkbox].rowCB:after{
     border: 1px solid #ae3411;
     background-color: #ffb5b5;
     box-shadow: 0 0 5px #ae3411;
-  }
-  input[type=checkbox].rowCB:checked:after {
+}
+
+input[type=checkbox].rowCB:checked:after {
     transition: .25s all ease-in-out;
-    content: '\2714';/*content:'\2713';*/
-    color: #3399f3  !important;
+    content: '\2714';
+    /*content:'\2713';*/
+    color: #3399f3 !important;
     /*color: #1f5e11;*/
     /*background-color: #c5ffad;*/
     background-color: #c6cbe9 !important;
     border-color: #84b6d9;
     box-shadow: 0 0 5px rgba(81, 203, 238, 1);
-    text-shadow:1px 1px #B0BED9, -1px -1px #B0BED9, 1px -1px #B0BED9, -1px 1px #B0BED9;
-  }
-  input[type=checkbox].rowCB:hover:after{
-    border-color: rgba(43, 173, 209, 0.8);
-  }
+    text-shadow: 1px 1px #B0BED9, -1px -1px #B0BED9, 1px -1px #B0BED9, -1px 1px #B0BED9;
+}
 
-  .circle_red {
+input[type=checkbox].rowCB:hover:after {
+    border-color: rgba(43, 173, 209, 0.8);
+}
+
+.circle_red {
     transition: .25s all ease-in-out;
-	width: 30px;
-	height: 30px;
+    width: 30px;
+    height: 30px;
     background: #ff410c;
     border: 1px solid #ae3411;
-	-moz-border-radius: 15px;
-	-webkit-border-radius: 15px;
+    -moz-border-radius: 15px;
+    -webkit-border-radius: 15px;
     border-radius: 15px;
     box-shadow: 0 0 2px rgba(81, 203, 238, 1);
     margin: auto;
-   /* margin-top: -16px;*/
-  }  
-  .circle_yellow {
+    /* margin-top: -16px;*/
+}
+
+.circle_yellow {
     transition: .25s all ease-in-out;
-	width: 30px;
-	height: 30px;
+    width: 30px;
+    height: 30px;
     background: #fffc20;
     border: 1px solid #ffe055;
-	-moz-border-radius: 15px;
-	-webkit-border-radius: 15px;
-	border-radius: 15px;
+    -moz-border-radius: 15px;
+    -webkit-border-radius: 15px;
+    border-radius: 15px;
     box-shadow: 0 0 2px rgba(255, 255, 0, 1);
     margin: auto;
-   /* margin-top: -16px;*/
-  }  
-  .circle_green {
+    /* margin-top: -16px;*/
+}
+
+.circle_green {
     transition: .25s all ease-in-out;
-	width: 30px;
-	height: 30px;
+    width: 30px;
+    height: 30px;
     background: #93ff65;
     border: 1px solid #5bba34;
-	-moz-border-radius: 30px;
-	-webkit-border-radius: 30px;
-	border-radius: 30px;
+    -moz-border-radius: 30px;
+    -webkit-border-radius: 30px;
+    border-radius: 30px;
     box-shadow: 0 0 2px rgba(127, 255, 77, 1);
     margin: auto;
-   /* margin-top: -16px;*/
-}  
+    /* margin-top: -16px;*/
+}

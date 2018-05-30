@@ -158,7 +158,15 @@ class ShipmentsModel extends CI_Model
                 Field::inst( 'shipments.container_size' )
                     ->validator( Validate::numeric() )
                     ->setFormatter( Format::ifEmpty( null ) ),
-                Field::inst( 'shipments.do' )
+                    Field::inst( 'shipments.do' )
+                    ->getFormatter(
+                        function ( $val, $data ) {
+                            return $val ? 1  : 0;
+                        } )
+                    ->setFormatter( function ( $val, $data, $opts ) {
+                        return ! $val ? 0 : 1;
+                    } ),
+                Field::inst( 'shipments.has_documents' )
                     ->getFormatter(
                         function ( $val, $data ) {
                             return $val ? 1  : 0;
@@ -166,6 +174,7 @@ class ShipmentsModel extends CI_Model
                     ->setFormatter( function ( $val, $data, $opts ) {
                         return ! $val ? 0 : 1;
                     } )
+
             )
             ->leftJoin( 'products', 'products.id', '=', 'shipments.product_id' )
             ->leftJoin( 'truckers', 'truckers.id', '=', 'shipments.trucker_id' )

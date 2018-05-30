@@ -171,6 +171,10 @@
                     ],
                     separator: '',
                     unselectedValue: 0
+                },
+                {
+                    label: "Docs",
+                    name: "shipments.has_documents"
                 }
             ]
         });
@@ -308,13 +312,16 @@
                     className: "dt-body-center"
                 },
                 {
-                    /*data: "shipments.has_documents",*/
-                    data: "",
+                    data: "shipments.has_documents",
                     render: function(data, type, row) {
                         if (type === 'display') {
-
+                            if (data == true) {
+                                return '<a href="#"><img src="/assets/folder_icon.png"></a>';
+                            } else {
+                                //disabled_folder_icon
+                                return '<a href="#"><img src="/assets/folder_icon.png" class="disabled_folder_icon"></a>';
+                            }
                         }
-                        return '';
                     },
                     className: "dt-body-center"
                 }

@@ -221,7 +221,7 @@ class Shipments extends CI_Controller
                     if (!is_null($data['newContainers'][$c - 1]['eta']) && (strtotime($data['newContainers'][$c - 1]['eta']) < strtotime('2017-01-01 12:00'))) {
                         $data['newContainers'][$c - 1]['eta'] = null;
                         $data['newContainers'][$c - 1]['status'] = null;
-                    } else {
+                    } else if (!is_null($data['newContainers'][$c - 1]['eta'])) {
                         $start = strtotime($data['newContainers'][$c - 1]['eta']);
                         $end = time(); //now
                         $diff = ($end - $start) * -1;
@@ -245,6 +245,7 @@ class Shipments extends CI_Controller
                             }
                         }
                         $data['newContainers'][$c - 1]['status'] = $statusValue; /*str_replace("[TYPE]", $statusValue, $statusHTML);*/
+
                     }
                     $data['newContainers'][$c - 1]['final_destination'] = $data['newContainers'][$c - 1]['destination_city'] . ', ' . $data['newContainers'][$c - 1]['destination_state'];
                     $data['newContainers'][$c - 1]['vendor_id'] = $this->ShipmentsModel->get_vendor_id_by_name($data['newContainers'][$c - 1]['vendor_name']);
@@ -341,6 +342,25 @@ class Shipments extends CI_Controller
                         $this->ShipmentsModel->add_record($updateData);
                     }
                 }
+                $etaStartDate = date("m/d/Y H:II", strtotime($data['newContainers'][$a]['eta']));
+                date_time_set($etaStartDate, 00, 0);
+                $etaEndDate = date("m/d/Y H:II", strtotime($data['newContainers'][$a]['eta']));
+                date_time_set($etaEndDate, 23, 59);
+                $md5CheckValue = md5($data['newContainers'][$a]['container_number'] . '->ETA->' . $data['newContainers'][$a]['eta']);
+                $eventData = array(
+                    'title' => '<h2>' . $data['newContainers'][$a]['container_number'] . ' ETA</h2>',
+                    'start' => $etaStartDate,
+                    'end' => $etaEndDate,
+                    'description' => 'Estimated Time of Arrival for Container #: ' . $data['newContainers'][$a]['container_number'] . '.<br/> Times/Dates Subject to Change...',
+                    'shipment_id' => $data['newContainers'][$a]['id'],
+                    'md5_container_number_and_date' => $md5CheckValue
+                );
+                if (!$this->Calendar_Model->check_md5_if_event_exists($md5CheckValue)) {
+                    $this->Calendar_Model->add_event($eventData);
+                } else {
+                    $existingEvent = $this->Calendar_Model->get_event_by_md5($md5CheckValue);
+                    $this->Calendar_Model-update_event($existingEvent['id'], $eventData);
+                }
             }
             $this->ShipmentsModel->archiveInactiveRecords();
             $curlData = array();
@@ -351,6 +371,27 @@ class Shipments extends CI_Controller
                 $this->ShipmentsModel->update_record(array('bill_of_lading' => $uniqueBoLs[$i]["bill_of_lading"]),
                     array('lfd' => (empty($curlData['lfd']) ? null : date("Y-m-d", strtotime($curlData['lfd']))),
                         'pickup_number' => (empty($curlData['pickup_number']) ? null : $curlData['pickup_number'])));
+                if (!is_null($curlData['lfd']) && !empty($curlData['lfd'])){
+                    $lfdStartDate = date("m/d/Y H:II", strtotime($uniqueBoLs[$i]['lfd']));
+                    date_time_set($lfdStartDate, 00, 0);
+                    $lfdEndDate = date("m/d/Y H:II", strtotime($uniqueBoLs[$i]['lfd']));
+                    date_time_set($lfdEndDate, 23, 59);
+                    $md5CheckLFDValue = md5($uniqueBoLs[$i]['container_number'] . '->LFD->' . $uniqueBoLs[$i]['lfd']);
+                    $lfdEventData = array(
+                        'title' => '<h2>' . $uniqueBoLs[$i]['container_number'] . ' LFD</h2>',
+                        'start' => $etaStartDate,
+                        'end' => $etaEndDate,
+                        'description' => 'Last Free Day for Container #: ' . $uniqueBoLs[$i]['container_number'] . '.<br/> Times/Dates Subject to Change...',
+                        'shipment_id' => $uniqueBoLs[$i]['id'],
+                        'md5_container_number_and_date' => $md5CheckLFDValue
+                    );
+                    if (!$this->Calendar_Model->check_md5_if_event_exists($md5CheckLFDValue)) {
+                        $this->Calendar_Model->add_event($lfdEventData);
+                    } else {
+                        $existingEvent = $this->Calendar_Model->get_event_by_md5($md5CheckLFDValue);
+                        $this->Calendar_Model-update_event($existingEvent['id'], $lfdEventData);
+                    }
+                }
             }
             $data['title'] = "Active Shipments";
             echo "Start time: $starttime" . PHP_EOL;
@@ -449,6 +490,7 @@ class Shipments extends CI_Controller
                 /* put the newest emails on top */
                 rsort($emails);
                 /* for every email... */
+                $vendorMatched = false;
                 foreach ($emails as $email_number) {
                     $msgno = imap_msgno($inbox, $email_number);
                     $header = imap_headerinfo($inbox, $msgno);
@@ -475,15 +517,20 @@ class Shipments extends CI_Controller
                             $emailHosts = explode('|', $vendor['email_addresses']);
                             foreach ($emailHosts as $vendorEmailHost) {
                                 $pos = strpos($overview[0]->from, $vendorEmailHost);
-                                if ($pos >= 0) $vendorMatched = true;
+                                if ($pos >= 0) {
+                                    $vendorMatched = true;
+                                }
+
                             }
-                            if ($vendorMatched) { 
+                            if ($vendorMatched) {
                                 $associatedVendorData = $this->ShipmentsModel->get_vendor_data_by_id($vendor['id']);
-                                $vendorAbbr = $vendor['document_initials'];
+                                /*$vendorAbbr = $vendor['document_initials'];*/
                                 break;
                             }
                         }
-                        if ($vendorMatched) {
+                        if (!$vendorMatched) {
+                            break;
+                        } else {
                             /* get mail structure */
                             $structure = imap_fetchstructure($inbox, $msgno);
                             $attachments = array();
@@ -523,46 +570,68 @@ class Shipments extends CI_Controller
                                         }
                                     }
                                 }
+                            } else {
+                                break;
                             }
                             $documentBL = '';
                             $documentCN = '';
                             $documentType = '';
                             $associatedCargoData = null;
                             $directoryStructure = $_SERVER['DOCUMENT_ROOT'] . "/vendor_documents";
-                            $filename='';
-                            $fullPathAndFileName='';
+                            $filename = '';
+                            $fullPathAndFileName = '';
                             $vendorIdLabelForDocuments = '';
                             foreach ($attachments as $attachment) {
                                 if ($attachment['is_attachment'] == 1) {
+                                    $md5_test = md5($attachment['attachment']);
+                                    $fileExistsInDB = $this->Document_model->md5_file_exists($md5_test);
+                                    if ($fileExistsInDB) {
+                                        break;
+                                    }
+
                                     $filename = $attachment['name'];
-                                    if (empty($filename)) $filename = $attachment['filename'];
-                                    if (empty($filename)) $filename = $vendorAbbr . '-' . date('mdy') . '.' . $attachment['file_extension'];
-                                    $tmpFileDir="$directoryStructure/tmp/$filename";
+                                    if (empty($filename)) {
+                                        $filename = $attachment['filename'];
+                                    }
+
+                                    if (empty($filename)) {
+                                        $filename = $vendorAbbr . '-' . date('mdy') . '.' . $attachment['file_extension'];
+                                    }
+
+                                    $tmpFileDir = "$directoryStructure/tmp/$filename";
+                                    if (!file_exists(dirname($tmpFileDir))) {
+                                        mkdir(dirname($tmpFileDir), 0777, true);
+                                    }
+
                                     file_put_contents($tmpFileDir, $attachment['attachment']);
                                     switch (strtoupper($associatedVendorData['abbreviation'])) {
                                         case "WANDA":
-                                            if      (preg_match('LB\d{2}', $filename, $match))  { $vendorIdLabelForDocuments = trim($match[0]); }
-                                            else if (preg_match('LB\d{3}', $filename, $match))  { $vendorIdLabelForDocuments = trim($match[0]); }
-                                            else {
+                                            if (preg_match('LB\d{2}', $filename, $match)) {$vendorIdLabelForDocuments = trim($match[0]);} else if (preg_match('LB\d{3}', $filename, $match)) {$vendorIdLabelForDocuments = trim($match[0]);} else {
                                                 if (strpos(strtoupper($filename), strtoupper($attachment['file_extension']))) {
-                                                    $vendorIdLabelForDocuments =trim(substr($filename,strripos($filename, ' ') + 1,
-                                                                                            ((strpos(strtoupper($filename), strtoupper($attachment['file_extension'])) - 1) - (strripos($filename, ' ') + 1))));
+                                                    $vendorIdLabelForDocuments = trim(substr($filename, strripos($filename, ' ') + 1,
+                                                        ((strpos(strtoupper($filename), strtoupper($attachment['file_extension'])) - 1) - (strripos($filename, ' ') + 1))));
                                                 }
                                             }
                                             switch (strtoupper($attachment['file_extension'])) {
                                                 case "PDF":
-                                                    $documentType="Bill_of_Lading";
+                                                    $documentType = "Bill_of_Lading";
                                                     $pdf = new \TonchikTm\PdfToHtml\Pdf($tmpFileDir, [
                                                         'pdftohtml_path' => 'F:/xampp/htdocs/assets/poppler0.51/bin/pdftohtml.exe',
-                                                        'pdfinfo_path' => 'F:/xampp/htdocs/assets/poppler0.51/bin/pdfinfo.exe'
+                                                        'pdfinfo_path' => 'F:/xampp/htdocs/assets/poppler0.51/bin/pdfinfo.exe',
                                                     ]);
                                                     $pdfInfo = $pdf->getInfo();
                                                     $contentFirstPage = $pdf->getHtml()->getPage(1);
                                                     $paragraphs = $dom->find('p');
                                                     if (count($paragraphs) > 86) {
-                                                        if (!is_null($paragraphs[86]) && !empty($paragraphs[86])) $documentCN = trim($paragraphs[86]);
-                                                        if (!is_null($paragraphs[64]) && !empty($paragraphs[64])) $documentBL = trim($paragraphs[64]);
-                                                        $associatedCargoData = $this->ShipmentsModel->update_record( array('container_number' => $documentCN), array('vendor_identifier' => $vendorIdLabelForDocuments) );
+                                                        if (!is_null($paragraphs[86]) && !empty($paragraphs[86])) {
+                                                            $documentCN = trim($paragraphs[86]);
+                                                        }
+
+                                                        if (!is_null($paragraphs[64]) && !empty($paragraphs[64])) {
+                                                            $documentBL = trim($paragraphs[64]);
+                                                        }
+
+                                                        $associatedCargoData = $this->ShipmentsModel->update_record(array('container_number' => $documentCN), array('vendor_identifier' => $vendorIdLabelForDocuments));
                                                     }
                                                     break;
                                                 case "XLS":
@@ -589,22 +658,25 @@ class Shipments extends CI_Controller
                                         $yearDigits = date('Y');
                                         $purchase_order_number = ((is_null($associatedCargoData['po']) || empty($associatedCargoData['po'])) ? ('000000') : ($associatedCargoData['po']));
                                         $associatedCargoData = $this->ShipmentsModel->update_record(array('container_number' => $documentCN), array('po' => $purchase_order_number));
-                                        $directoryStructure  .= '/' . strtoupper($associatedVendorData['abbreviation']) .  
-                                                                '/' . $yearDigits .  
-                                                                '/' . $purchase_order_number .  
-                                                                '/' . strtoupper($documentCN);  
+                                        $directoryStructure .= '/' . strtoupper($associatedVendorData['abbreviation']) .
+                                        '/' . $yearDigits .
+                                        '/' . $purchase_order_number .
+                                        '/' . strtoupper($documentCN);
                                         //$directoryStructure=$_SERVER['DOCUMENT_ROOT'] . "/vendor_documents";
                                         //$directoryStructure .= '/' . $associatedCargoData[] . $yearDigits . '-' . $purchase_order_number . ' ' . $documentCN . '/';
                                         //a better way to do it would be to use directories for each data piece
                                         //  ie-> for a wanda invoice from 2018 with PO 123456 and CN ABCD123456
                                         //       $directoryName=$_SERVER['DOCUMENT_ROOT'] . "/vendor_documents" .
-                                        //                       "/$vendor" . "/$current_year" . "/purchse_order_number" . 
+                                        //                       "/$vendor" . "/$current_year" . "/purchse_order_number" .
                                         //                       "/$container_number" . "/document_type" . "/$filename";
-                                        $directoryStructure.=  '/' . strtoupper($documentType) . '/';
+                                        $directoryStructure .= '/' . strtoupper($documentType) . '/';
                                         $this->ShipmentsModel->set_has_documents($documentCN, true);
                                     }
                                     $fullPathAndFileName = $directoryStructure . $filename;
-                                    if (!file_exists(dirname($fullPathAndFileName))) mkdir(dirname($fullPathAndFileName), 0777, true);
+                                    if (!file_exists(dirname($fullPathAndFileName))) {
+                                        mkdir(dirname($fullPathAndFileName), 0777, true);
+                                    }
+
                                     $md5_hash = md5($attachment['attachment']);
                                     if (file_put_contents($fullPathAndFileName, $attachment['attachment'])) {
                                         $documentData = array(
@@ -613,7 +685,7 @@ class Shipments extends CI_Controller
                                             'shipment_id' => ((is_null($associatedCargoData) || empty($associatedCargoData) || is_null($associatedCargoData['id']) || empty($associatedCargoData['id'])) ? null : $associatedCargoData['id']),
                                             'md5_hash' => $md5_hash,
                                             'identifying_label' => $vendorIdLabelForDocuments,
-                                            'creation_timestamp' => date("Y-m-d H:i:s")
+                                            'creation_timestamp' => date("Y-m-d H:i:s"),
                                         );
                                         $newDocumentId = $this->Document_model->add_document($documentData);
                                     }
@@ -623,7 +695,10 @@ class Shipments extends CI_Controller
                     }
                     // Mark as Read
                     $setflagSEENresult = imap_setflag_full($inbox, $email_number, "\\Seen", ST_UID);
-                    if ($setflagSEENresult === false) echo "error occurred while setting UNSEEN flag to SEEN<br/>";
+                    if ($setflagSEENresult === false) {
+                        echo "error occurred while setting UNSEEN flag to SEEN<br/>";
+                    }
+
                 }
             }
             imap_close($inbox);
@@ -701,17 +776,18 @@ class Shipments extends CI_Controller
         $table = $DOM->getElementById('containerInfoByBlNum');
         $Header = $table->getElementsByTagName('th');
         $Detail = $table->getElementsByTagName('td');
-        $tableOBLstatus = $DOM->getElementById('CargoTarcking_booking');
+        $tableOBLstatus = $DOM->getElementById('orderBillInformation');
         $TableRowOBLstatus = $tableOBLstatus->getElementsByTagName('tr');
         $DetailOBLstatus = $tableOBLstatus->getElementsByTagName('td');
         $DetailOBLstatus2 = $TableRowOBLstatus->getElementsByTagName('td');
-        $y=0;$z=0;
-        $testStatus='';
+        $y = 0;
+        $z = 0;
+        $testStatus = '';
         foreach ($TableRowOBLstatus as $tableStatusRow) {
             $oblStatus[$y] = trim($tableStatusRow->textContent);
             $y++;
         }
-        foreach ($DetailOBLstatus as $detailStatus){
+        foreach ($DetailOBLstatus as $detailStatus) {
             $oblStatusTd[$z] = trim($detailStatus->textContent);
             $z++;
         }
@@ -720,10 +796,10 @@ class Shipments extends CI_Controller
         echo '<hr/><hr/>';
         print_r($oblStatusTd);
         echo '<hr/><hr/>';
-        $z=0;
-        foreach ($oblStatusTd as $stats){
+        $z = 0;
+        foreach ($oblStatusTd as $stats) {
             if (strpos(trim($stats->textContent), 'OBL Release Status')) {
-                $testStatus=$oblStatusTd[$z+2]->textContext;
+                $testStatus = $oblStatusTd[$z + 2]->textContext;
             }
             $z++;
         }
