@@ -16,6 +16,16 @@ class Documents extends CI_Controller
         $this->load->view('templates/footer');
     }
 
+    public function view($shipment_id)
+    {
+        $data['documents'] = $this->Document_model->get_all_documents();
+        
+        $data['title'] = "Active Shipments";
+        $this->load->view('templates/header', $data);
+        $this->load->view('documents/index', $data);
+        $this->load->view('templates/footer');
+    }
+
 /*
  * Adding a new document
  */

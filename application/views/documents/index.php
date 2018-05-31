@@ -1,39 +1,62 @@
+<html>
+<head>
+	<title>Documents Manager</title>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+	<link rel="stylesheet" href="<?php echo base_url(); ?>assets/css/ciFileManager.css" />
+	<link href='https://fonts.googleapis.com/css?family=Droid+Serif:400,400italic,700,700italic' rel='stylesheet' type='text/css'>
+	<link href='https://fonts.googleapis.com/css?family=Ubuntu:300italic,400,400italic,700,700italic' rel='stylesheet' type='text/css'>
+	<script type="text/javascript" src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+	crossorigin="anonymous"></script>
+	<script type="text/javascript" src="<?php echo base_url(); ?>assets/js/ciFileBrowser.js"></script>
+	<script type="text/javascript" src="<?php echo base_url(); ?>assets/js/ciFileBrowser.filemanager.js"></script>
+	<script type="text/javascript" src="<?php echo base_url(); ?>assets/js/ciFileBrowser.filemanager.createFile.js"></script>
+	<script type="text/javascript" src="<?php echo base_url(); ?>assets/js/ciFileBrowser.filemanager.createControl.js"></script>
+	<script type="text/javascript" src="<?php echo base_url(); ?>assets/js/ciFileBrowser.input.listfiles.js"></script>
+</head>
 
-<div class="row">
-    <div class="col-md-12">
-        <div class="box">
-            <div class="box-header">
-                <h3 class="box-title">Documents Listing</h3>
-            	<div class="box-tools">
-                    <a href="<?php echo site_url('documents/add'); ?>" class="btn btn-success btn-sm">Add</a> 
-                </div>
-            </div>
-            <div class="box-body">
-                <table class="table table-striped">
-                    <tr>
-						<th>ID</th>
-						<th>Shipment Id</th>
-						<th>Filename</th>
-						<th>Filepath</th>
-						<th>Creation Timestamp</th>
-						<th>Actions</th>
-                    </tr>
-                    <?php foreach($documents as $v){ ?>
-                    <tr>
-						<td><?php echo $v['id']; ?></td>
-						<td><?php echo $v['shipment_id']; ?></td>
-						<td><?php echo $v['filename']; ?></td>
-						<td><?php echo $v['filepath']; ?></td>
-						<td><?php echo $v['creation_timestamp']; ?></td>
-						<td>
-                            <a href="<?php echo site_url('documents/edit/'.$v['id']); ?>" class="btn btn-info btn-xs"><span class="fa fa-pencil"></span> Edit</a> 
-                            <a href="<?php echo site_url('documents/remove/'.$v['id']); ?>" class="btn btn-danger btn-xs"><span class="fa fa-trash"></span> Delete</a>
-                        </td>
-                    </tr>
-                    <?php } ?>
-                </table>
-                                
-            </div>
-        </div>
-    </div>
-</div>
+<body>
+	<script>
+		$(function () {
+			ciFileBrowser.filemanager.create();
+			html_board = $('#html_board');
+			ciFileBrowser.input.listfiles.create({
+				name: 'files',
+				path: function () {
+					return ciFileBrowser.filemanager.getCurrent();
+				},
+				btnSend: $('#btn_upload_files'),
+				done: function () {
+					ciFileBrowser.filemanager.loadFolder(ciFileBrowser.filemanager.getCurrent());
+				}
+			});
+		});
+	</script>
+	<h3>File Manager</h3>
+	<div id="html_map"></div>
+	<div id="html_board">
+		<div id="path_current"></div>
+		<div id="path_content"></div>
+	</div>
+	<hr>
+	<div id="file_uploads">
+		<form enctype="multipart/form-data">
+			<div class="box-input-list-files">
+				<label>Upload file</label>
+
+				<input type="file" name="files" id="files" multiple>
+
+				<div class="bag-list-info-file" for="files"></div>
+
+				<b class="btn" id="btn_upload_files">Upload files</b>
+
+			</div>
+
+		</form>
+
+	</div>
+	<div>
+		<b class="btn" id="btn_create_forder" onclick="ciFileBrowser.filemanager.createFolderOnServer()">Create forder</b>
+	</div>
+</body>
+
+</html>

@@ -5,16 +5,14 @@ use PHPHtmlParser\Dom;
 
 class Shipments extends CI_Controller
 {
-    public function index()
-    {
+    public function index() {
         if (!$this->session->userdata('logged_in')) {
             redirect('users/login');
         }
         redirect('shipments/getcurrent');
     }
 
-    public function autoupdate($uname, $pw)
-    {
+    public function autoupdate($uname, $pw) {
         if ($this->users_model->login($uname, $pw)) {
 
         } else {
@@ -22,8 +20,7 @@ class Shipments extends CI_Controller
         }
     }
 
-    public function getcurrent()
-    {
+    public function getcurrent() {
         $starttime = microtime(true);
         if (is_cli()) {
             echo "cli...";
@@ -35,15 +32,12 @@ class Shipments extends CI_Controller
         }
         if (is_cli()) {
             $dataRows = array();
-            /* connect to gmail */
             set_time_limit(4000);
             $hostname = '{imap.gmail.com:993/imap/ssl}INBOX';
             $username = 'cargodata.libra';
             $password = 'Libra123$$';
-            /* try to connect */
             $inbox = imap_open($hostname, $username, $password) or die('Cannot connect to Gmail: ' . imap_last_error());
             $subjpass = 'COSCO SHIPPING Lines report, Daily B/L Report';
-            /* if emails are returned, cycle through each... */
             $failSafe = true;
             if ($inbox !== false) {
                 $numMsg = imap_num_msg($inbox);
@@ -53,25 +47,18 @@ class Shipments extends CI_Controller
                     $failSafe = false;
                 }
                 if ($failSafe) {
-                    //var_dump($emails);
-                    /* put the newest emails on top */
                     rsort($emails);
-                    /* for every email... */
                     $reportEmailFound = false;
                     foreach ($emails as $email_number) {
                         if ($reportEmailFound) {
                             break;
                         }
-
                         $msgno = imap_msgno($inbox, $email_number);
                         $header = imap_headerinfo($inbox, $msgno);
-                        //var_dump($header);
                         if ($header === false) {
                             echo "email header parsing error. line 52 Shipments.php -sv";
                         }
                         $msgBody = imap_body($inbox, $msgno);
-                        /* get information specific to this email */
-                        //echo "<br/>email_number: $email_number <br/> msgNo: $msgno<br/>";
                         $overview = imap_fetch_overview($inbox, $msgno, 0) or die("can't fetch overview: " . imap_last_error());
                         if (!$overview) {
                             echo "overview failed...container line 124<br/>";
@@ -82,10 +69,8 @@ class Shipments extends CI_Controller
                             $pos2 = strpos($overview[0]->from, 'coscon@coscon.com');
                             if ($pos !== false && $pos2 !== false) {
                                 $reportEmailFound = true;
-                                /* get mail structure */
                                 $structure = imap_fetchstructure($inbox, $msgno);
                                 $attachments = array();
-                                /* if any attachments found... */
                                 if (isset($structure->parts) && count($structure->parts)) {
                                     for ($i = 0; $i < count($structure->parts); $i++) {
                                         $attachments[$i] = array('is_attachment' => false, 'filename' => '', 'name' => '', 'attachment' => '');
@@ -94,7 +79,6 @@ class Shipments extends CI_Controller
                                                 if (strtolower($object->attribute) == 'filename') {
                                                     $attachments[$i]['is_attachment'] = true;
                                                     $attachments[$i]['filename'] = $object->value;
-                                                    //echo "attachment found...".$attachments[$i]['filename']."<br/>";
                                                 }
                                             }
                                         }
@@ -103,56 +87,37 @@ class Shipments extends CI_Controller
                                                 if (strtolower($object->attribute) == 'name') {
                                                     $attachments[$i]['is_attachment'] = true;
                                                     $attachments[$i]['name'] = $object->value;
-                                                    //echo "attachment found...".$attachments[$i]['name']."<br/>";
                                                 }
                                             }
                                         }
                                         if ($attachments[$i]['is_attachment']) {
                                             $attachments[$i]['attachment'] = imap_fetchbody($inbox, $msgno, $i + 1);
                                             if ($structure->parts[$i]->encoding == 3) {
-                                                //echo "BASE64 decoding file...<br/>";
-                                                /* 3 = BASE64 encoding */
                                                 $attachments[$i]['attachment'] = base64_decode($attachments[$i]['attachment']);
                                             } elseif ($structure->parts[$i]->encoding == 4) {
-                                                //echo "QUOTED-PRINTABLE decoding file...<br/>";
-                                                /* 4 = QUOTED-PRINTABLE encoding */
                                                 $attachments[$i]['attachment'] = quoted_printable_decode($attachments[$i]['attachment']);
                                             }
                                         }
                                     }
                                 }
-                                /* iterate through each attachment and save it */
                                 foreach ($attachments as $attachment) {
                                     if ($attachment['is_attachment'] == 1) {
                                         $filename = $attachment['name'];
                                         if (empty($filename)) {
                                             $filename = $attachment['filename'];
                                         }
-
                                         if (empty($filename)) {
                                             $filename = time() . ".dat";
                                         }
-
-                                        /*
-                                         * prefix the email number to the filename in case two emails
-                                         * have the attachment with the same file name.
-                                         */
-                                        //                echo "writing attachment to file: \n\t ./" . $msgno . "-" . $filename . "<br/>";
                                         $fp = fopen("./" . $msgno . "-" . $filename, "w+");
-                                        //              echo "file created...writing data...!<br/>";
                                         fwrite($fp, $attachment['attachment']);
-                                        //               echo "data written to file successfully!<br/>";
                                         fclose($fp);
-
-                                        //               echo "\n\nFILE DATA:\n-----------------------------------<br/>";
                                         $row = 1;
                                         if (($handle = fopen("./" . $msgno . "-" . $filename, "r")) !== false) {
                                             while (($recordData = fgetcsv($handle, 1000, ",")) !== false) {
                                                 $num = count($recordData);
-                                                //                          echo "<p> $num fields in line $row: <br /></p><br/>";
                                                 $dataRows[$row - 1] = array();
                                                 for ($c = 0; $c < $num; $c++) {
-                                                    //                              echo $recordData[$c] . "<br />";
                                                     $dataRows[$row - 1][$c] = $recordData[$c];
                                                 }
                                                 $row++;
@@ -163,7 +128,6 @@ class Shipments extends CI_Controller
                                 }
                             }
                         }
-                        // Mark as Read
                         $setflagSEENresult = imap_setflag_full($inbox, $email_number, "\\Seen", ST_UID);
                         if ($setflagSEENresult === false) {
                             echo "error occurred while setting UNSEEN flag to SEEN. line 148 Shipments.php -sv<br/>";
@@ -172,41 +136,26 @@ class Shipments extends CI_Controller
                 }
                 imap_close($inbox);
             }
-            //bill of lading    CN #    Vendor    Port of Discharge     Destination City    Destination State    Destination Country    ETA Date/Time    ETA Time Zone    Customs Clearance Status Date/Time    Customs Clearance Status Time Zone    Customs Clearance Status    B/L Status    Latest Container Event     Latest Container Event Date/Time    Latest Container Event Time Zone    Latest Container Event Location
             $columnNames = array("bill_of_lading", "container_number", "vendor_name", "discharge_port", "destination_city", "destination_state", "destination_country", "eta", "eta-timezone", "customs-clearance-datetime", "customs-clearance-timezone", "customs_status", "bl_status", "latest_event", "latest_event_timestamp", "latest_event_timestamp-timezone", "latest_event_location", "container_size");
             $data['newContainers'] = array();
             $unassignedContainerCount = 0;
             if (count($dataRows) > 0) {
                 $this->ShipmentsModel->mark_everything_inactive();
-                /*$this->ShipmentsModel->archiveInactiveRecords();*/
-                //return;
                 $num = count($dataRows);
-                //echo "<br/>LINE 228: <br>num: $num<br>";
                 for ($c = 1; $c < $num; $c++) {
                     $valueCount = count($dataRows[$c]);
-                    //echo "<br/>LINE 231: <br>c: $c<br> valueCount: $valueCount<br>";
-                    //var_dump($dataRows[$c]);
-                    //echo"<br/>";
                     for ($d = 0; $d < $valueCount - 1; $d++) {
                         $key = $columnNames[$d];
-                        //echo "<br/>LINE 236: <br>c: $c<br> d: $d<br>key: $key<br>dataRows[$c][$d]:";
-                        //var_dump($dataRows[$c][$d]);
-                        //echo "<br>";
                         $data['newContainers'][$c - 1][$key] = $dataRows[$c][$d];
                         if ($key === 'bill_of_lading') {
                             $data['newContainers'][$c - 1][$key] = trim(substr($data['newContainers'][$c - 1][$key], strpos($data['newContainers'][$c - 1][$key], '"') + 1, strlen($data['newContainers'][$c - 1][$key]) - (strpos($data['newContainers'][$c - 1][$key], '"') + 1) - 1));
                         } else if ($key === 'eta' || $key === 'latest_event_timestamp') {
-                            //$data['newContainers'][$c-1][$key]= trim(substr($data['newContainers'][$c-1][$key],0,strlen($data['newContainers'][$c-1][$key])-strpos($data['newContainers'][$c-1][$key],'('))-1);
-                            //var_dump($data['newContainers'][$c-1][$key]);
-                            // "<br><hr>";
                             if (strlen($data['newContainers'][$c - 1][$key]) >= 15) {
                                 $data['newContainers'][$c - 1][$key] = trim(substr($data['newContainers'][$c - 1][$key], 0, 16));
                                 $data['newContainers'][$c - 1][$key] = date('m/d/Y H:II', strtotime($data['newContainers'][$c - 1][$key]));
                             } else {
                                 $data['newContainers'][$c - 1][$key] = null;
                             }
-                            //$sqlFormat = 'Y-m-d H:i:s';
-                            //$data['newContainers'][$c-1][$key]=date($sqlFormat, strtotime($data['newContainers'][$c-1][$key]));
                         } else if ($key === 'container_number') {
                             if ($data['newContainers'][$c - 1][$key] === 'Unassigned') {
                                 $unassignedContainerCount++;
@@ -226,7 +175,6 @@ class Shipments extends CI_Controller
                         $end = time(); //now
                         $diff = ($end - $start) * -1;
                         $daysDifference = floor($diff / (60 * 60 * 24));
-                        /* $statusHTML ="<div class='[TYPE]'><p></p></div>";*/
                         echo $data['newContainers'][$c - 1]['container_number'] . "= $end - $start =  $diff \n";
                         $statusValue = -1;
                         if ($diff < 0) {
@@ -234,18 +182,14 @@ class Shipments extends CI_Controller
                             $statusValue = 0;
                         } else {
                             if ($daysDifference >= 0 && $daysDifference < 3) {
-                                /* $statusValue="circle_red";*/
                                 $statusValue = 0;
                             } else if ($daysDifference >= 3 && $daysDifference <= 7) {
-                                /*$statusValue="circle_yellow";*/
                                 $statusValue = 1;
                             } else if ($daysDifference > 7) {
-                                /*  $statusValue="circle_green";*/
                                 $statusValue = 2;
                             }
                         }
-                        $data['newContainers'][$c - 1]['status'] = $statusValue; /*str_replace("[TYPE]", $statusValue, $statusHTML);*/
-
+                        $data['newContainers'][$c - 1]['status'] = $statusValue;
                     }
                     $data['newContainers'][$c - 1]['final_destination'] = $data['newContainers'][$c - 1]['destination_city'] . ', ' . $data['newContainers'][$c - 1]['destination_state'];
                     $data['newContainers'][$c - 1]['vendor_id'] = $this->ShipmentsModel->get_vendor_id_by_name($data['newContainers'][$c - 1]['vendor_name']);
@@ -260,7 +204,7 @@ class Shipments extends CI_Controller
             $numObjects = count($data['newContainers']);
             for ($a = 0; $a < $numObjects; $a++) {
                 $updateData = array(
-                    'status' => $data['newContainers'][$a]['status'],
+                    'status' => (array_key_exists('status',$data['newContainers'][$a]) && !is_null($data['newContainers'][$a]['status']) && !empty($data['newContainers'][$a]['status']) ? $data['newContainers'][$a]['status'] : 2),
                     'bill_of_lading' => $data['newContainers'][$a]['bill_of_lading'],
                     'vendor_id' => $data['newContainers'][$a]['vendor_id'],
                     'product_id' => $data['newContainers'][$a]['product_id'],
@@ -274,7 +218,7 @@ class Shipments extends CI_Controller
                     'latest_event_time_and_date' => date("Y-m-d\TH:i:s", strtotime($data['newContainers'][$a]['latest_event_timestamp'])),
                     'is_active' => true,
                     'is_complete' => false,
-                    'do' => $data['newContainers'][$a]['do'],
+                    'do' => $data['newContainers'][$a]['do']
                 );
                 $tempObj = $this->ShipmentsModel->get_by_container_number($data['newContainers'][$a]['container_number']);
                 $tmpObj = json_decode(json_encode($tempObj), true);
@@ -340,26 +284,28 @@ class Shipments extends CI_Controller
                     if (isset($data['newContainers'][$a]['bill_of_lading']) && $data['newContainers'][$a]['bill_of_lading'] !== '') {
                         $updateData['container_number'] = $data['newContainers'][$a]['container_number'];
                         $this->ShipmentsModel->add_record($updateData);
+                        $tempObj = $this->ShipmentsModel->get_by_container_number($data['newContainers'][$a]['container_number']);
                     }
                 }
-                $etaStartDate = date("m/d/Y H:II", strtotime($data['newContainers'][$a]['eta']));
+                $tmpObj = json_decode(json_encode($tempObj), true);
+                $etaStartDate = new DateTime($data['newContainers'][$a]['eta']);
                 date_time_set($etaStartDate, 00, 0);
-                $etaEndDate = date("m/d/Y H:II", strtotime($data['newContainers'][$a]['eta']));
+                $etaEndDate = new DateTime($data['newContainers'][$a]['eta']);
                 date_time_set($etaEndDate, 23, 59);
                 $md5CheckValue = md5($data['newContainers'][$a]['container_number'] . '->ETA->' . $data['newContainers'][$a]['eta']);
                 $eventData = array(
-                    'title' => '<h2>' . $data['newContainers'][$a]['container_number'] . ' ETA</h2>',
-                    'start' => $etaStartDate,
-                    'end' => $etaEndDate,
+                    'title' => $data['newContainers'][$a]['container_number'],
+                    'start' => $etaStartDate->format('Y-m-d H:i:s'),
+                    'end' => $etaEndDate->format('Y-m-d H:i:s'),
                     'description' => 'Estimated Time of Arrival for Container #: ' . $data['newContainers'][$a]['container_number'] . '.<br/> Times/Dates Subject to Change...',
-                    'shipment_id' => $data['newContainers'][$a]['id'],
+                    'shipment_id' => $tmpObj['id'],
                     'md5_container_number_and_date' => $md5CheckValue
                 );
                 if (!$this->Calendar_Model->check_md5_if_event_exists($md5CheckValue)) {
                     $this->Calendar_Model->add_event($eventData);
                 } else {
                     $existingEvent = $this->Calendar_Model->get_event_by_md5($md5CheckValue);
-                    $this->Calendar_Model-update_event($existingEvent['id'], $eventData);
+                    $this->Calendar_Model->update_event($existingEvent['ID'], $eventData);
                 }
             }
             $this->ShipmentsModel->archiveInactiveRecords();
@@ -368,30 +314,36 @@ class Shipments extends CI_Controller
             for ($i = 0; $i < count($uniqueBoLs); $i++) {
                 $bol = $uniqueBoLs[$i]["bill_of_lading"];
                 $curlData = $this->get_lfd_and_pickup_number_from_bol($bol);
-                $this->ShipmentsModel->update_record(array('bill_of_lading' => $uniqueBoLs[$i]["bill_of_lading"]),
-                    array('lfd' => (empty($curlData['lfd']) ? null : date("Y-m-d", strtotime($curlData['lfd']))),
-                        'pickup_number' => (empty($curlData['pickup_number']) ? null : $curlData['pickup_number'])));
-                if (!is_null($curlData['lfd']) && !empty($curlData['lfd'])){
-                    $lfdStartDate = date("m/d/Y H:II", strtotime($uniqueBoLs[$i]['lfd']));
-                    date_time_set($lfdStartDate, 00, 0);
-                    $lfdEndDate = date("m/d/Y H:II", strtotime($uniqueBoLs[$i]['lfd']));
-                    date_time_set($lfdEndDate, 23, 59);
-                    $md5CheckLFDValue = md5($uniqueBoLs[$i]['container_number'] . '->LFD->' . $uniqueBoLs[$i]['lfd']);
-                    $lfdEventData = array(
-                        'title' => '<h2>' . $uniqueBoLs[$i]['container_number'] . ' LFD</h2>',
-                        'start' => $etaStartDate,
-                        'end' => $etaEndDate,
-                        'description' => 'Last Free Day for Container #: ' . $uniqueBoLs[$i]['container_number'] . '.<br/> Times/Dates Subject to Change...',
-                        'shipment_id' => $uniqueBoLs[$i]['id'],
-                        'md5_container_number_and_date' => $md5CheckLFDValue
-                    );
-                    if (!$this->Calendar_Model->check_md5_if_event_exists($md5CheckLFDValue)) {
-                        $this->Calendar_Model->add_event($lfdEventData);
-                    } else {
-                        $existingEvent = $this->Calendar_Model->get_event_by_md5($md5CheckLFDValue);
-                        $this->Calendar_Model-update_event($existingEvent['id'], $lfdEventData);
+                $containers = $this->ShipmentsModel->get_by_bol($bol);
+                foreach($containers as $container){
+                    $this->ShipmentsModel
+                            ->update_record( array('bill_of_lading' => $uniqueBoLs[$i]["bill_of_lading"]),
+                                                    array('lfd' => (empty($curlData['lfd']) ? null : date("Y-m-d", strtotime($curlData['lfd']))),
+                                                          'pickup_number' => (empty($curlData['pickup_number']) ? null : $curlData['pickup_number']),
+                                                          'bl_status' => (!array_key_exists('bl_status', $curlData) || is_null($curlData['bl_status']) || empty($curlData['bl_status']) ? null : $curlData['bl_status'])));
+                    if (!is_null($curlData['lfd']) && !empty($curlData['lfd'])){
+                        $lfdStartDate = new DateTime($curlData['lfd']);
+                        date_time_set($lfdStartDate, 00, 0);
+                        $lfdEndDate = new DateTime($curlData['lfd']);
+                        date_time_set($lfdEndDate, 23, 59);
+                        $md5CheckLFDValue = md5($container['container_number'] . '->LFD->' . $curlData['lfd']);
+                        $lfdEventData = array(
+                                'title' => $container['container_number'],
+                                'start' => $lfdStartDate->format('Y-m-d H:i:s'),
+                                'end' => $lfdEndDate->format('Y-m-d H:i:s'),
+                                'description' => 'Last Free Day for Container #: ' . $container['container_number'] . '.<br/> Times/Dates Subject to Change...',
+                                'shipment_id' => $container['id'],
+                                'md5_container_number_and_date' => $md5CheckLFDValue
+                            );
+                        if (!$this->Calendar_Model->check_md5_if_event_exists($md5CheckLFDValue)) {
+                            $this->Calendar_Model->add_event($lfdEventData);
+                        } else {
+                            $existingEvent = $this->Calendar_Model->get_event_by_md5($md5CheckLFDValue);
+                            $this->Calendar_Model->update_event($existingEvent['ID'], $lfdEventData);
+                        }
                     }
                 }
+               
             }
             $data['title'] = "Active Shipments";
             echo "Start time: $starttime" . PHP_EOL;
@@ -421,15 +373,12 @@ class Shipments extends CI_Controller
                     if ($test) {
                         break;
                     }
-
                     $msgno = imap_msgno($inbox, $mail);
-
                     $headerInfo = imap_headerinfo($inbox, $msgno);
                     $msgBody = imap_body($inbox, $msgno);
                     /* get information specific to this email */
                     //echo "<br/>email_number: $email_number <br/> msgNo: $msgno<br/>";
                     $overview = imap_fetch_overview($inbox, $msgno, 0) or die("can't fetch overview: " . imap_last_error());
-
                     $pos = strpos($overview[0]->subject, 'Update : ETA Change at Final Destination');
                     $pos2 = strpos($overview[0]->from, 'coscon@coscon.com');
                     if ($pos !== false && $pos2 !== false) {
@@ -438,9 +387,9 @@ class Shipments extends CI_Controller
                         $dom->load($msgBody);
                         $title = $dom->getElementsbyTag('title')->text;
                         $htmlBoL = substr($title, 0, 10);
-                        echo "<hr/><h1>BoL</h1><br/>" . $htmlBoL . "<hr/>";
+                        //echo "<hr/><h1>BoL</h1><br/>" . $htmlBoL . "<hr/>";
                         $dateSpan = $dom->getElementsbyTag('strong')[10]->text;
-                        echo "<hr/><h1>DateSpan</h1><br/>" . $dateSpan . "<hr/>";
+                        //echo "<hr/><h1>DateSpan</h1><br/>" . $dateSpan . "<hr/>";
                         $newETAdate = date("Y-m-d", strtotime($dateSpan));
                         if (!empty($htmlBoL)) {
                             $this->ShipmentsModel->update_record(array('bill_of_lading' => $htmlBoL), array('eta' => $newETAdate));
@@ -589,7 +538,7 @@ class Shipments extends CI_Controller
                                     if ($fileExistsInDB) {
                                         break;
                                     }
-                                    $filename = $attachment['name'];
+                                    $filename = $attachment['filename'];
                                     if (empty($filename)) {
                                         $filename = $attachment['filename'];
                                     }
@@ -623,11 +572,9 @@ class Shipments extends CI_Controller
                                                         if (!is_null($paragraphs[86]) && !empty($paragraphs[86])) {
                                                             $documentCN = trim($paragraphs[86]);
                                                         }
-
                                                         if (!is_null($paragraphs[64]) && !empty($paragraphs[64])) {
                                                             $documentBL = trim($paragraphs[64]);
                                                         }
-
                                                         $associatedCargoData = $this->ShipmentsModel->update_record(array('container_number' => $documentCN), array('vendor_identifier' => $vendorIdLabelForDocuments));
                                                     }
                                                     break;
@@ -643,7 +590,7 @@ class Shipments extends CI_Controller
                                             break;
                                         default:
                                             //something i don't have a case for
-                                            $documentType = strtoupper($attachment['file_extension']);
+                                            $documentType = "Unassociated Document";
                                             break;
                                     }
                                     //generate the document storage directory structure name
@@ -652,21 +599,22 @@ class Shipments extends CI_Controller
                                         $dirDate = date("mdy");
                                         $directoryStructure .= "/UNASSOCIATED_FILES/$dirDate/" . strtoupper($attachment['file_extension']) . "/";
                                     } else {
-                                        $yearDigits = date('Y');
+                                        $yearDigits = date('y');
                                         $purchase_order_number = ((is_null($associatedCargoData['po']) || empty($associatedCargoData['po'])) ? ('000000') : ($associatedCargoData['po']));
                                         $associatedCargoData = $this->ShipmentsModel->update_record(array('container_number' => $documentCN), array('po' => $purchase_order_number));
-                                        $directoryStructure .= '/' . strtoupper($associatedVendorData['abbreviation']) .
+                                        /*$directoryStructure .= '/' . strtoupper($associatedVendorData['abbreviation']) .
                                         '/' . $yearDigits .
                                         '/' . $purchase_order_number .
                                         '/' . strtoupper($documentCN);
-                                        //$directoryStructure=$_SERVER['DOCUMENT_ROOT'] . "/vendor_documents";
-                                        //$directoryStructure .= '/' . $associatedCargoData[] . $yearDigits . '-' . $purchase_order_number . ' ' . $documentCN . '/';
+                                        *///$directoryStructure=$_SERVER['DOCUMENT_ROOT'] . "/vendor_documents";
+                                        $directoryStructure .= '/' . $associatedVendorData['document_initials'] . $yearDigits . '-' . $purchase_order_number . ' ' . $documentCN . '/';
                                         //a better way to do it would be to use directories for each data piece
                                         //  ie-> for a wanda invoice from 2018 with PO 123456 and CN ABCD123456
                                         //       $directoryName=$_SERVER['DOCUMENT_ROOT'] . "/vendor_documents" .
                                         //                       "/$vendor" . "/$current_year" . "/purchse_order_number" .
                                         //                       "/$container_number" . "/document_type" . "/$filename";
-                                        $directoryStructure .= '/' . strtoupper($documentType) . '/';
+                                        
+                                        //$directoryStructure .= '/' . strtoupper($documentType) . '/';
                                         $this->ShipmentsModel->set_has_documents($documentCN, true);
                                     }
                                     $fullPathAndFileName = $directoryStructure . $filename;
@@ -683,6 +631,7 @@ class Shipments extends CI_Controller
                                             'md5_hash' => $md5_hash,
                                             'identifying_label' => $vendorIdLabelForDocuments,
                                             'creation_timestamp' => date("Y-m-d H:i:s"),
+                                            'document_type' => $documentType
                                         );
                                         $newDocumentId = $this->Document_model->add_document($documentData);
                                     }
@@ -763,7 +712,7 @@ class Shipments extends CI_Controller
             return null;
         }
         curl_close($ch);
-        //echo $output;
+        //echo "OUTPUT:".PHP_EOL. $output . "ENDOUTPUT" . PHP_EOL;
         if (!$this->hasCookie) {
             echo $output;
         }
@@ -773,54 +722,54 @@ class Shipments extends CI_Controller
         $table = $DOM->getElementById('containerInfoByBlNum');
         $Header = $table->getElementsByTagName('th');
         $Detail = $table->getElementsByTagName('td');
-        $tableOBLstatus = $DOM->getElementById('orderBillInformation');
-        $TableRowOBLstatus = $tableOBLstatus->getElementsByTagName('tr');
-        $DetailOBLstatus = $tableOBLstatus->getElementsByTagName('td');
-        $DetailOBLstatus2 = $TableRowOBLstatus->getElementsByTagName('td');
-        $y = 0;
-        $z = 0;
-        $testStatus = '';
-        foreach ($TableRowOBLstatus as $tableStatusRow) {
-            $oblStatus[$y] = trim($tableStatusRow->textContent);
-            $y++;
+        $allTds = $DOM->getElementsByTagName('td');
+        $oblStatus =$allTds[163];
+        $count=0;
+        foreach($oblStatus as $status){
+            echo "oblStatus[$count]: " . $status->textContent . PHP_EOL;
+           // if (strpos($td->textContent,'OBL Release Status')>=0){
+               // echo "FOUND: labels[$count]: " . $td->textContent . PHP_EOL;
+                //$return['bl_status'] = $tds[$count+1]->textContent;
+                //break;
+           // }
+            $count++;
         }
-        foreach ($DetailOBLstatus as $detailStatus) {
-            $oblStatusTd[$z] = trim($detailStatus->textContent);
-            $z++;
+        foreach($allTds as $td){
+            echo "tds[$count]: " . $td->textContent . PHP_EOL;
+           // if (strpos($td->textContent,'OBL Release Status')>=0){
+               // echo "FOUND: labels[$count]: " . $td->textContent . PHP_EOL;
+                //$return['bl_status'] = $tds[$count+1]->textContent;
+                //break;
+           // }
+            $count++;
         }
-        echo '<hr/><hr/>';
-        print_r($oblStatus);
-        echo '<hr/><hr/>';
-        print_r($oblStatusTd);
-        echo '<hr/><hr/>';
-        $z = 0;
-        foreach ($oblStatusTd as $stats) {
-            if (strpos(trim($stats->textContent), 'OBL Release Status')) {
-                $testStatus = $oblStatusTd[$z + 2]->textContext;
+        //$labels = $oblStatus->getElementsByTagName('label');
+        $labels = $oblStatus->getElementsByTagName('label');
+        $count=0;
+        foreach($labels as $label){
+            echo "labels[$count]: " . $label->textContent . PHP_EOL;
+            if (strpos($label->textContent,'OBL Release Status')>=0){
+                echo "FOUND: labels[$count]: " . $label->textContent . PHP_EOL;
+                $return['bl_status'] = $labels[$count+1]->textContent;
+                break;
             }
-            $z++;
+            $count++;
         }
-        echo '<hr/><hr/>';
-        print_r($testStatus);
-        echo '<hr/><hr/>';
-        //$LabelOBLstatus = $DetailOBLstatus->getElementsByTagName('label');
+        unset($allTds);
+        unset($oblStatus);
+        unset($labels);
         //#Get header name of the table
         foreach ($Header as $NodeHeader) {
             $aDataTableHeaderHTML[] = trim($NodeHeader->textContent);
         }
-        /*    echo "<hr/>aDataTableHeaderHTML<hr/>";
-        print_r($aDataTableHeaderHTML);
-        echo "<hr/>";
-         *///#Get row data/detail table without header name as key
-        $i = 0;
-        $j = 0;
-        foreach ($Detail as $sNodeDetail) {
-            $aDataTableDetailHTML[$j][] = trim($sNodeDetail->textContent);
-            $i = $i + 1;
-            $j = $i % count($aDataTableHeaderHTML) == 0 ? $j + 1 : $j;
-        }
-        //print_r($aDataTableDetailHTML); die();
-        // print_r($aDataTableDetailHTML);
+         //#Get row data/detail table without header name as key
+         $i = 0;
+         $j = 0;
+         foreach ($Detail as $sNodeDetail) {
+             $aDataTableDetailHTML[$j][] = trim($sNodeDetail->textContent);
+             $i = $i + 1;
+             $j = $i % count($aDataTableHeaderHTML) == 0 ? $j + 1 : $j;
+         }
         //#Get row data/detail table with header name as key and outer array index as row number
         for ($i = 0; $i < count($aDataTableDetailHTML); $i++) {
             for ($j = 0; $j < count($aDataTableHeaderHTML); $j++) {
@@ -831,29 +780,18 @@ class Shipments extends CI_Controller
                 }
             }
         }
-        $aDataTableDetailHTML = $aTempData;unset($aTempData);
-        /* echo "<hr/>aDataTableDetailHTML[0]<hr/>";
-        print_r($aDataTableDetailHTML[0]);
-        echo "<hr/>";*/
+        $aDataTableDetailHTML = $aTempData;
+        unset($aTempData);
         $return = array('lfd' => null, 'pickup_number' => null);
         if (array_key_exists('Rail LFD', $aDataTableDetailHTML[0]) && isset($aDataTableDetailHTML[0]['Rail LFD'])) {
-            /*      echo "lfd<hr/>";
-            echo $aDataTableDetailHTML[0]['Rail LFD'];
-            echo "<hr/>";
-             */$return['lfd'] = $aDataTableDetailHTML[0]['Rail LFD'];
+            $return['lfd'] = $aDataTableDetailHTML[0]['Rail LFD'];
         } elseif (array_key_exists('Depot LFD', $aDataTableDetailHTML[0]) && isset($aDataTableDetailHTML[0]['Depot LFD'])) {
-            /*        echo "lfd<hr/>";
-            echo $aDataTableDetailHTML[0]['Depot LFD'];
-            echo "<hr/>";
-             */$return['lfd'] = $aDataTableDetailHTML[0]['Depot LFD'];
+            $return['lfd'] = $aDataTableDetailHTML[0]['Depot LFD'];
         } else {
             $return['lfd'] = false;
         }
         if (array_key_exists('Pickup#', $aDataTableDetailHTML[0]) && isset($aDataTableDetailHTML[0]['Pickup#'])) {
-            /*      echo "Pickup#<hr/>";
-            echo $aDataTableDetailHTML[0]['Pickup#'];
-            echo "<hr/>";
-             */$return['pickup_number'] = $aDataTableDetailHTML[0]['Pickup#'];
+            $return['pickup_number'] = $aDataTableDetailHTML[0]['Pickup#'];
         } else {
             $return['pickup_number'] = false;
         }

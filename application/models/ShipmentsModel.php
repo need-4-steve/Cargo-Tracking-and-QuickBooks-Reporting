@@ -288,6 +288,21 @@ class ShipmentsModel extends CI_Model
         }
     }
 
+    public function get_by_bol($bol){
+        if (!is_null($bol) && !empty($bol)){
+            $this->db->from('shipments');
+            $this->db->where('bill_of_lading',$bol);
+            $query = $this->db->get();
+            $results= $query->result_array();
+            if (is_null($results) || empty($results)){
+                return NULL;
+            }
+            return $results;
+        } else {
+            return NULL;
+        }
+    }
+
     public function get_by_vendor_specific_identifier($vendor_identifier=false){
         if (!isset($vendor_identifier) || empty($vendor_identifier)){
             return null;
@@ -312,7 +327,7 @@ class ShipmentsModel extends CI_Model
     }
 
     public function get_unique_records_by_BoL($activeInactiveOrBoth=self::ACTIVE_RECORDS_ONLY){
-        $this->db->select('bill_of_lading');
+        $this->db->select('bill_of_lading, container_number');
         $this->db->distinct();
         switch ($activeInactiveOrBoth) {
             case self::ACTIVE_RECORDS_ONLY:
@@ -328,7 +343,9 @@ class ShipmentsModel extends CI_Model
                 $query = $this->db->get_where('shipments', array('is_active' => self::ACTIVE_RECORDS_ONLY));
                 break;
         }
-        return $query->result_array();
+        $results= $query->result_array();
+        print_r($results);
+        return $results;
     }
 
     public function get_archived_records(){

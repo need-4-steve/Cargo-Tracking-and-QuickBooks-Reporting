@@ -1,4 +1,7 @@
 Options -Indexes
+<Files *.*>
+ForceType application/octet-stream
+</Files>
 
 <IfModule mod_rewrite.c>
   RewriteEngine On
