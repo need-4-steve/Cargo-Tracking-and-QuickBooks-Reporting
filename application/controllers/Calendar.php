@@ -8,7 +8,7 @@ class Calendar extends CI_Controller
     public function __construct()
     {
         Parent::__construct();
-        $this->load->model("calendar_model");
+        //$this->load->model("Calendar_Model");
     }
 
     public function index()
@@ -31,18 +31,20 @@ class Calendar extends CI_Controller
         $enddt->setTimestamp($end); // Set the date based on timestamp
         $end_format = $enddt->format('Y-m-d H:i:s');
 
-        $events = $this->calendar_model->get_events($start_format, $end_format);
-
+        $events = $this->Calendar_Model->get_events($start_format, $end_format);
+        //print_r($events);
         $data_events = array();
 
-        foreach ($events->result() as $r) {
+        foreach ($events as $r) {
 
             $data_events[] = array(
-                "id" => $r->ID,
-                "title" => $r->title,
-                "description" => $r->description,
-                "end" => $r->end,
-                "start" => $r->start,
+                "id" => $r['ID'],
+                "title" => $r['title'],
+                "description" => $r['description'],
+                "end" => $r['end'],
+                "start" => $r['start'],
+                "shipment_id" => $r['shipment_id'],
+                "md5" => $r['md5_container_number_and_date']
             );
         }
 
@@ -75,7 +77,7 @@ class Calendar extends CI_Controller
             $end_date_timestamp = time();
         }
 
-        $this->calendar_model->add_event(array(
+        $this->Calendar_Model->add_event(array(
             "title" => $name,
             "description" => $desc,
             "start" => $start_date,
@@ -88,7 +90,7 @@ class Calendar extends CI_Controller
     public function edit_event()
     {
         $eventid = intval($this->input->post("eventid"));
-        $event = $this->calendar_model->get_event($eventid);
+        $event = $this->Calendar_Model->get_event($eventid);
         if ($event->num_rows() == 0) {
             echo "Invalid Event";
             exit();
@@ -123,7 +125,7 @@ class Calendar extends CI_Controller
                 $end_date_timestamp = time();
             }
 
-            $this->calendar_model->update_event($eventid, array(
+            $this->Calendar_Model->update_event($eventid, array(
                 "title" => $name,
                 "description" => $desc,
                 "start" => $start_date,
@@ -132,7 +134,7 @@ class Calendar extends CI_Controller
             );
 
         } else {
-            $this->calendar_model->delete_event($eventid);
+            $this->Calendar_Model->delete_event($eventid);
         }
 
         redirect(site_url("calendar"));

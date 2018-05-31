@@ -723,28 +723,25 @@ class Shipments extends CI_Controller
         $Header = $table->getElementsByTagName('th');
         $Detail = $table->getElementsByTagName('td');
         $allTds = $DOM->getElementsByTagName('td');
-        $oblStatus =$allTds[163];
+        $oblStatus =$allTds[241];
         $count=0;
-        foreach($oblStatus as $status){
-            echo "oblStatus[$count]: " . $status->textContent . PHP_EOL;
-           // if (strpos($td->textContent,'OBL Release Status')>=0){
-               // echo "FOUND: labels[$count]: " . $td->textContent . PHP_EOL;
-                //$return['bl_status'] = $tds[$count+1]->textContent;
-                //break;
-           // }
-            $count++;
-        }
+
         foreach($allTds as $td){
-            echo "tds[$count]: " . $td->textContent . PHP_EOL;
-           // if (strpos($td->textContent,'OBL Release Status')>=0){
-               // echo "FOUND: labels[$count]: " . $td->textContent . PHP_EOL;
-                //$return['bl_status'] = $tds[$count+1]->textContent;
-                //break;
-           // }
+            $textContent = $td->textContent;
+           // echo "allTds[$count]: " . $textContent . PHP_EOL;
+            $oblTextPos=strpos($textContent,'OBL Release Status');
+            $oblTextLen=strlen($textContent);
+            if ($oblTextPos===1 && $oblTextLen===19) {
+                //echo "FOUND: allTds[$count]: " . $textContent .PHP_EOL. "strpos(OBL Release Status)=>" . $oblTextPos . PHP_EOL . "strlen(textContent)=>" . $oblTextLen . PHP_EOL;
+                $oblIdx = $count+2;
+                $oblStatusValue = $allTds[$oblIdx]->textContent;
+                $return['bl_status'] = $oblStatusValue;
+                //echo "RESULT: allTds[$oblIdx]: " . $oblStatusValue .PHP_EOL;
+                break;
+            }
             $count++;
         }
-        //$labels = $oblStatus->getElementsByTagName('label');
-        $labels = $oblStatus->getElementsByTagName('label');
+       /* $labels = $oblStatus->getElementsByTagName('label');
         $count=0;
         foreach($labels as $label){
             echo "labels[$count]: " . $label->textContent . PHP_EOL;
@@ -757,7 +754,8 @@ class Shipments extends CI_Controller
         }
         unset($allTds);
         unset($oblStatus);
-        unset($labels);
+        unset($labels);*/
+        unset($allTds);
         //#Get header name of the table
         foreach ($Header as $NodeHeader) {
             $aDataTableHeaderHTML[] = trim($NodeHeader->textContent);
