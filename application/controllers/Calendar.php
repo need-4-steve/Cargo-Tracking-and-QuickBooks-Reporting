@@ -40,6 +40,7 @@ class Calendar extends CI_Controller
             $data_events[] = array(
                 "id" => $r['ID'],
                 "title" => $r['title'],
+                "event_type" => $r['event_type'],
                 "description" => $r['description'],
                 "end" => $r['end'],
                 "start" => $r['start'],

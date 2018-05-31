@@ -28,7 +28,7 @@ class ShipmentsModel extends CI_Model
     public function archiveInactiveRecords() {
         $q = $this->db->get_where('shipments', array('is_active' => false))->result_array();
         foreach ($q as $r) { // loop over results
-            $query = $this->db->get_where('container_number', array('container_number' => $r['container_number']));
+            $query = $this->db->get_where('shipments', array('container_number' => $r['container_number']));
             $rows= $query->result_array();
             if (count($rows)<=0){
                 $this->db->insert('archived_shipments', $r); // insert each row to another table

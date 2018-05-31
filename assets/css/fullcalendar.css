@@ -1061,6 +1061,10 @@ NOTE: use percentage font sizes or else old IE chokes
     display: inline-block;
 }
 
+.fc-time {
+    display: none;
+}
+
 
 /* the things within each left/right/center section */
 
@@ -1126,7 +1130,7 @@ NOTE: use percentage font sizes or else old IE chokes
     -webkit-box-sizing: content-box;
     -moz-box-sizing: content-box;
     box-sizing: content-box;
-    color: #fff;
+    color: #000;
 }
 
 .fc-view,
@@ -1189,6 +1193,7 @@ NOTE: use percentage font sizes or else old IE chokes
 
 .fc-ltr .fc-basic-view .fc-day-top .fc-day-number {
     float: right;
+    color: #000;
 }
 
 .fc-rtl .fc-basic-view .fc-day-top .fc-day-number {

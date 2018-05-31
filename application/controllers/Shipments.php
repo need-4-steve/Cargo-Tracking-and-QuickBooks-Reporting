@@ -220,6 +220,10 @@ class Shipments extends CI_Controller
                     'is_complete' => false,
                     'do' => $data['newContainers'][$a]['do']
                 );
+                if (strpos($data['newContainers'][$a]['latest_event'], 'Empty Container Returned')){
+                    $updateData['is_active'] = false;
+                    $updateData['is_complete'] = true;
+                }
                 $tempObj = $this->ShipmentsModel->get_by_container_number($data['newContainers'][$a]['container_number']);
                 $tmpObj = json_decode(json_encode($tempObj), true);
                 if ($tmpObj !== null) {
@@ -295,6 +299,7 @@ class Shipments extends CI_Controller
                 $md5CheckValue = md5($data['newContainers'][$a]['container_number'] . '->ETA->' . $data['newContainers'][$a]['eta']);
                 $eventData = array(
                     'title' => $data['newContainers'][$a]['container_number'],
+                    'event_type' => 'ETA',
                     'start' => $etaStartDate->format('Y-m-d H:i:s'),
                     'end' => $etaEndDate->format('Y-m-d H:i:s'),
                     'description' => 'Estimated Time of Arrival for Container #: ' . $data['newContainers'][$a]['container_number'] . '.<br/> Times/Dates Subject to Change...',
@@ -321,6 +326,11 @@ class Shipments extends CI_Controller
                                                     array('lfd' => (empty($curlData['lfd']) ? null : date("Y-m-d", strtotime($curlData['lfd']))),
                                                           'pickup_number' => (empty($curlData['pickup_number']) ? null : $curlData['pickup_number']),
                                                           'bl_status' => (!array_key_exists('bl_status', $curlData) || is_null($curlData['bl_status']) || empty($curlData['bl_status']) ? null : $curlData['bl_status'])));
+                    if (!array_key_exists('bl_status', $curlData) || is_null($curlData['bl_status']) || empty($curlData['bl_status'])){
+                        echo PHP_EOL."BL_STATUS for ".$uniqueBoLs[$i]["bill_of_lading"]. " is null...". PHP_EOL;
+                    } else {
+                        echo PHP_EOL."storing BL_STATUS('".$curlData['bl_status']."') to ".$uniqueBoLs[$i]["bill_of_lading"] . PHP_EOL;
+                    }
                     if (!is_null($curlData['lfd']) && !empty($curlData['lfd'])){
                         $lfdStartDate = new DateTime($curlData['lfd']);
                         date_time_set($lfdStartDate, 00, 0);
@@ -329,6 +339,7 @@ class Shipments extends CI_Controller
                         $md5CheckLFDValue = md5($container['container_number'] . '->LFD->' . $curlData['lfd']);
                         $lfdEventData = array(
                                 'title' => $container['container_number'],
+                                'event_type' => 'LFD',
                                 'start' => $lfdStartDate->format('Y-m-d H:i:s'),
                                 'end' => $lfdEndDate->format('Y-m-d H:i:s'),
                                 'description' => 'Last Free Day for Container #: ' . $container['container_number'] . '.<br/> Times/Dates Subject to Change...',
@@ -725,7 +736,7 @@ class Shipments extends CI_Controller
         $allTds = $DOM->getElementsByTagName('td');
         $oblStatus =$allTds[241];
         $count=0;
-
+        $return = array('lfd' => null, 'pickup_number' => null, 'bl_status' => null);
         foreach($allTds as $td){
             $textContent = $td->textContent;
            // echo "allTds[$count]: " . $textContent . PHP_EOL;
@@ -735,8 +746,8 @@ class Shipments extends CI_Controller
                 //echo "FOUND: allTds[$count]: " . $textContent .PHP_EOL. "strpos(OBL Release Status)=>" . $oblTextPos . PHP_EOL . "strlen(textContent)=>" . $oblTextLen . PHP_EOL;
                 $oblIdx = $count+2;
                 $oblStatusValue = $allTds[$oblIdx]->textContent;
-                $return['bl_status'] = $oblStatusValue;
-                //echo "RESULT: allTds[$oblIdx]: " . $oblStatusValue .PHP_EOL;
+                $return['bl_status'] = trim($oblStatusValue);
+                echo "RESULT: allTds[$oblIdx]: " . $oblStatusValue .PHP_EOL;
                 break;
             }
             $count++;
@@ -780,7 +791,6 @@ class Shipments extends CI_Controller
         }
         $aDataTableDetailHTML = $aTempData;
         unset($aTempData);
-        $return = array('lfd' => null, 'pickup_number' => null);
         if (array_key_exists('Rail LFD', $aDataTableDetailHTML[0]) && isset($aDataTableDetailHTML[0]['Rail LFD'])) {
             $return['lfd'] = $aDataTableDetailHTML[0]['Rail LFD'];
         } elseif (array_key_exists('Depot LFD', $aDataTableDetailHTML[0]) && isset($aDataTableDetailHTML[0]['Depot LFD'])) {

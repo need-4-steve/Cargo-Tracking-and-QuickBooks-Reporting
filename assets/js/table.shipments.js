@@ -334,6 +334,11 @@
                 if (data.shipments.eta === '1970-01-01') {
                     data.shipments.eta = '';
                 }
+                if (data.shipments.bl_status === 'Hold') {
+                    $("td:nth-child(16)", row).addClass("red_background");
+                } else {
+                    $("td:nth-child(16)", row).removeClass("red_background");
+                }
                 $('#editor-freight', row).prop('checked', data.shipments.freight == 1);
                 $('#editor-isfrequired', row).prop('checked', data.shipments.isf_required == 1);
                 $('#editor-customs', row).prop('checked', data.shipments.customs == 1);

@@ -24,9 +24,15 @@
 			<div class="modal-body">
 				<?php echo form_open(site_url("calendar/add_event"), array("class" => "form-horizontal")) ?>
 				<div class="form-group">
-					<label for="p-in" class="col-md-4 label-heading">Event Name</label>
+					<label for="p-in" class="col-md-4 label-heading">Event Title</label>
 					<div class="col-md-8 ui-front">
-						<input type="text" class="form-control" name="name" value="">
+						<input type="text" class="form-control" name="title" value="">
+					</div>
+				</div>
+				<div class="form-group">
+					<label for="p-in" class="col-md-4 label-heading">Event Type</label>
+					<div class="col-md-8 ui-front">
+						<input type="text" class="form-control" name="event_type">
 					</div>
 				</div>
 				<div class="form-group">
@@ -38,13 +44,13 @@
 				<div class="form-group">
 					<label for="p-in" class="col-md-4 label-heading">Start Date</label>
 					<div class="col-md-8">
-						<input type="text" class="form-control" name="start_date">
+						<input type="datetime" class="form-control" name="start_date">
 					</div>
 				</div>
 				<div class="form-group">
 					<label for="p-in" class="col-md-4 label-heading">End Date</label>
 					<div class="col-md-8">
-						<input type="text" class="form-control" name="end_date">
+						<input type="datetime" class="form-control" name="end_date">
 					</div>
 				</div>
 			</div>
@@ -69,9 +75,15 @@
 			<div class="modal-body">
 				<?php echo form_open(site_url("calendar/edit_event"), array("class" => "form-horizontal")) ?>
 				<div class="form-group">
-					<label for="p-in" class="col-md-4 label-heading">Event Name</label>
+					<label for="p-in" class="col-md-4 label-heading">Event Title</label>
 					<div class="col-md-8 ui-front">
-						<input type="text" class="form-control" name="name" value="" id="name">
+						<input type="text" class="form-control" name="title" value="" id="title">
+					</div>
+				</div>
+				<div class="form-group">
+					<label for="p-in" class="col-md-4 label-heading">Event Type</label>
+					<div class="col-md-8 ui-front">
+						<input type="text" class="form-control" name="event_type" value="" id="event_type">
 					</div>
 				</div>
 				<div class="form-group">
@@ -83,13 +95,13 @@
 				<div class="form-group">
 					<label for="p-in" class="col-md-4 label-heading">Start Date</label>
 					<div class="col-md-8">
-						<input type="text" class="form-control" name="start_date" id="start_date">
+						<input type="datetime" class="form-control" name="start_date" id="start_date">
 					</div>
 				</div>
 				<div class="form-group">
 					<label for="p-in" class="col-md-4 label-heading">End Date</label>
 					<div class="col-md-8">
-						<input type="text" class="form-control" name="end_date" id="end_date">
+						<input type="datetime" class="form-control" name="end_date" id="end_date">
 					</div>
 				</div>
 				<div class="form-group">
@@ -132,14 +144,33 @@
 					});
 				}
 			}, ],
+			eventRender: function(event, element) {
+				element.find('.fc-title').html("<b>"+event.event_type+"</b> "+event.title); 
+                if(event.event_type == "LFD") {
+					/*background-color: #f2dede;
+					border-color: #ebcccc;
+					color: #a94442;*/
+                    element.css('background-color', '#f2dede');
+                    element.css('border-color', '#ebcccc');
+                    element.css('color', '#a94442');
+                } else if (event.event_type=='ETA'){
+					/*background-color: #d9edf7;
+					border-color: #bcdff1;
+					color: #31708f;*/
+					element.css('background-color', '#d9edf7');
+                    element.css('border-color', '#bcdff1');
+                    element.css('color', '#31708f');
+				}
+            },
 			dayClick: function (date, jsEvent, view) {
 				date_last_clicked = $(this);
 				$(this).css('background-color', '#bed7f3');
 				$('#addModal').modal();
 			},
 			eventClick: function (event, jsEvent, view) {
-				$('#name').val(event.title);
+				$('#title').val(event.title);
 				$('#description').val(event.description);
+				$('#event_type').val(event.event_type);
 				$('#start_date').val(moment(event.start).format('YYYY/MM/DD HH:mm'));
 				if (event.end) {
 					$('#end_date').val(moment(event.end).format('YYYY/MM/DD HH:mm'));

@@ -75,7 +75,7 @@ table.dataTable thead th.select-checkbox.sorting_desc_disabled:after {
 .status_red {
     color: firebrick !important;
     background-color: #ff7171 !important;
-    border: 1px solid #D14 !important;
+    /*border: 1px solid #D14 !important;*/
     /*    color: #D14;
     background-color: #fcf6f8;
     border: 1px solid #f7d6df;*/
@@ -88,7 +88,7 @@ table.dataTable thead th.select-checkbox.sorting_desc_disabled:after {
     white-space: nowrap;*/
     color: #c29f00 !important;
     background-color: #fff9d7 !important;
-    border: 1px solid #ffe700 !important;
+    /* border: 1px solid #ffe700 !important;*/
 }
 
 
@@ -101,7 +101,7 @@ table.dataTable thead th.select-checkbox.sorting_desc_disabled:after {
 
 .status_green {
     background-color: #d0e9c6 !important;
-    border-color: forestgreen !important;
+    /* border-color: forestgreen !important;*/
     color: #3c763d !important;
 }
 
@@ -112,12 +112,12 @@ table.dataTable thead th.select-checkbox.sorting_desc_disabled:after {
     white-space: nowrap;*/
     color: #0c199c !important;
     background-color: #c6cbe9 !important;
-    border: 1px solid #0c199c !important;
+    /* border: 1px solid #0c199c !important;*/
 }
 
 img.disabled_folder_icon {
-    opacity: 0.4;
-    filter: alpha(opacity=40);
+    opacity: 0.25;
+    filter: alpha(opacity=25);
     /* msie */
 }
 
@@ -128,6 +128,13 @@ color: #6e3d00;
     background-color: #f6e3cc;
     border-color: #f3d8b8;
 */
+
+td.red_background {
+    color: black !important;
+    background-color: #ff7171 !important;
+    font-weight: bold;
+    border: 2px solid #D14 !important;
+}
 
 input[type=checkbox].rowCB {
     -webkit-transition: all 0.30s ease-in-out;
