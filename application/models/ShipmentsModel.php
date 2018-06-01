@@ -28,13 +28,23 @@ class ShipmentsModel extends CI_Model
     public function archiveInactiveRecords() {
         $q = $this->db->get_where('shipments', array('is_active' => false))->result_array();
         foreach ($q as $r) { // loop over results
-            $query = $this->db->get_where('shipments', array('container_number' => $r['container_number']));
-            $rows= $query->result_array();
-            if (count($rows)<=0){
-                $this->db->insert('archived_shipments', $r); // insert each row to another table
-                $this -> db -> where('container_number', $r['container_number']) -> delete('shipments');
+            if ($this->exists_in_archive($r['container_number'])) {
+                $this->db->where('container_number', $r['container_number']);
+                $result=$this->db->update('archived_shipments', $r);
+            } else {
+                $query = $this->db->get_where('shipments', array('container_number' => $r['container_number']));
+                $row= $query->row_array();
+                $this->db->insert('archived_shipments', $row);
             }
+            $this->db->where('container_number', $r['container_number'])->delete('shipments');
         }
+    }
+
+    public function exists_in_archive($container_number){
+        if (is_null($container_number) || empty($container_number)) return false;
+        $q = $this->db->get_where('archived_shipments', array('container_number' => $container_number))->result_array();
+        if (count($q)<=0) return false;
+        return true;
     }
 
     public function getShipments($post)
@@ -173,8 +183,15 @@ class ShipmentsModel extends CI_Model
                         } )
                     ->setFormatter( function ( $val, $data, $opts ) {
                         return ! $val ? 0 : 1;
+                    } ),
+                Field::inst( 'shipments.is_complete' )
+                    ->getFormatter(
+                        function ( $val, $data ) {
+                            return $val ? 1  : 0;
+                        } )
+                    ->setFormatter( function ( $val, $data, $opts ) {
+                        return ! $val ? 0 : 1;
                     } )
-
             )
             ->leftJoin( 'products', 'products.id', '=', 'shipments.product_id' )
             ->leftJoin( 'truckers', 'truckers.id', '=', 'shipments.trucker_id' )
@@ -184,21 +201,11 @@ class ShipmentsModel extends CI_Model
     }
 
     public function get_product_id_by_vendor_id($vendor_id){
-        if (!isset($vendor_id) || empty($vendor_id)){
-            return NULL;
-        }
+        if (!isset($vendor_id) || empty($vendor_id)) return NULL;
         $query = $this->db->get_where('vendor_products', array('vendor_id' => $vendor_id));
         $result= $query->row_array();
-        if (!isset($result) || empty($result) || !array_key_exists('product_id',$result)) { 
-            return NULL;
-        }
+        if (!isset($result) || empty($result) || !array_key_exists('product_id',$result)) return NULL;
         return $result['product_id'];
-       /* $query2=$this->db->get_where('products', array('id' => $result['product_id']));
-        $result2=$query2->row_array();
-        if (!isset($result2) || empty($result2) || !array_key_exists('product_name',$result2)) { 
-            return NULL;
-        }
-        return $result2['product_name'];*/
     }
 
     public function mark_everything_inactive(){
@@ -209,9 +216,7 @@ class ShipmentsModel extends CI_Model
     }
 
     public function set_has_documents($container_number= false, $hasDocuments=true){
-        if (is_null($container_number) || empty($container_number) || $container_number === FALSE) {
-            return false;
-        }
+        if (is_null($container_number) || empty($container_number) || $container_number === FALSE) return false;
         $this->db->set('has_documents', $hasDocuments);
         $this->db->where('container_number', $container_number);
         $this->db->update('shipments');
@@ -220,18 +225,14 @@ class ShipmentsModel extends CI_Model
 
 
     public function get_vendor_id_by_name($vendorName=FALSE){
-        if ($vendorName === FALSE){
-            return false;
-        }
+        if ($vendorName === FALSE) return false;
         $query = $this->db->get_where('vendors', array('name' => $vendorName));
         $result= $query->row_array();
         return $result['id'];
     }
 
     public function get_vendor_email_list_by_shortname($vendor_abbreviation=FALSE){
-        if ($vendor_abbreviation === FALSE){
-            return false;
-        }
+        if ($vendor_abbreviation === FALSE) return false;
         $query = $this->db->get_where('vendors', array('abbreviation' => $vendor_abbreviation));
         $result= $query->row_array();
         return $result['email_addresses'];
@@ -243,14 +244,10 @@ class ShipmentsModel extends CI_Model
     }
     
     public function get_vendor_data_by_id($vendor_id){
-        if (!isset($vendor_id) || empty($vendor_id)){
-            return null;
-        }
+        if (!isset($vendor_id) || empty($vendor_id)) return null;
         $query = $this->db->get_where('vendors', array('id' => $vendor_id));
         $result= $query->row_array();
-        if (!isset($result) || empty($result) || !array_key_exists('product_id',$result)) { 
-            return NULL;
-        }
+        if (!isset($result) || empty($result) || !array_key_exists('product_id',$result)) return NULL;
         return $result;
     }
 
@@ -263,14 +260,22 @@ class ShipmentsModel extends CI_Model
     }
 
     public function getISFreq($port_of_discharge=FALSE){
-        if (!$port_of_discharge)return false;
+        if (!$port_of_discharge) return false;
         if (strpos($port_of_discharge, 'Prince Rupert') === false) return false;
         return true;
     }
     public function getDOvalue($destination=FALSE){
-        if (!$destination)return false;
+        if (!$destination) return false;
         if (strpos($destination, 'Memphis') === false) return false;
         return true;
+    }
+
+    public function get_by_id($id){
+        if (!isset($id) || $id < 0) return null;
+        $query = $this->db->get_where('shipments', array('id' => $id));
+        $result= $query->row_array();
+        if (!isset($result) || empty($result)) return NULL;
+        return $result;
     }
 
     public function get_by_container_number($container_number){
@@ -279,9 +284,7 @@ class ShipmentsModel extends CI_Model
             $this->db->where('container_number',$container_number);
             $query = $this->db->get();
             $row= $query->row();
-            if (!isset($row)){
-                return NULL;
-            }
+            if (!isset($row)) return NULL;
             return $row;
         } else {
             return NULL;
@@ -294,9 +297,7 @@ class ShipmentsModel extends CI_Model
             $this->db->where('bill_of_lading',$bol);
             $query = $this->db->get();
             $results= $query->result_array();
-            if (is_null($results) || empty($results)){
-                return NULL;
-            }
+            if (is_null($results) || empty($results)) return NULL;
             return $results;
         } else {
             return NULL;
@@ -304,14 +305,10 @@ class ShipmentsModel extends CI_Model
     }
 
     public function get_by_vendor_specific_identifier($vendor_identifier=false){
-        if (!isset($vendor_identifier) || empty($vendor_identifier)){
-            return null;
-        }
+        if (!isset($vendor_identifier) || empty($vendor_identifier)) return null;
         $query = $this->db->get_where('shipments', array('vendor_identifier' => $vendor_identifier));
         $result= $query->row_array();
-        if (!isset($result) || empty($result)) { 
-            return NULL;
-        }
+        if (!isset($result) || empty($result)) return NULL;
         return $result;
     }
 
@@ -327,7 +324,7 @@ class ShipmentsModel extends CI_Model
     }
 
     public function get_unique_records_by_BoL($activeInactiveOrBoth=self::ACTIVE_RECORDS_ONLY){
-        $this->db->select('bill_of_lading, container_number');
+        $this->db->select('bill_of_lading');
         $this->db->distinct();
         switch ($activeInactiveOrBoth) {
             case self::ACTIVE_RECORDS_ONLY:
@@ -344,7 +341,6 @@ class ShipmentsModel extends CI_Model
                 break;
         }
         $results= $query->result_array();
-        print_r($results);
         return $results;
     }
 
@@ -357,15 +353,10 @@ class ShipmentsModel extends CI_Model
     }
 
     public function record_exists($container_number=FALSE){
-        if ($container_number === FALSE) {
-            return FALSE;
-        }
+        if ($container_number === FALSE) return FALSE;
         $query = $this->db->get_where('shipments', array('container_number' => $container_number));
-        if(empty($query->row_array())){
-            return false;
-        } else {
-            return true;
-        }
+        if(empty($query->row_array())) return false;
+        else return true;
     }
 
 }

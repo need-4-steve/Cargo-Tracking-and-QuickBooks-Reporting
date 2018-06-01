@@ -136,9 +136,13 @@ class Shipments extends CI_Controller
                 }
                 imap_close($inbox);
             }
-            $columnNames = array("bill_of_lading", "container_number", "vendor_name", "discharge_port", "destination_city", "destination_state", "destination_country", "eta", "eta-timezone", "customs-clearance-datetime", "customs-clearance-timezone", "customs_status", "bl_status", "latest_event", "latest_event_timestamp", "latest_event_timestamp-timezone", "latest_event_location", "container_size");
+            $columnNames = array(   "bill_of_lading", "container_number", "vendor_name", "discharge_port", "destination_city", 
+                                    "destination_state", "destination_country", "eta", "eta-timezone", "customs-clearance-datetime", 
+                                    "customs-clearance-timezone", "customs_status", "bl_status", "latest_event", "latest_event_timestamp", 
+                                    "latest_event_timestamp-timezone", "latest_event_location", "container_size");
             $data['newContainers'] = array();
             $unassignedContainerCount = 0;
+            /*[START OF LOADING CSV DATA INTO data ARRAY]*/
             if (count($dataRows) > 0) {
                 $this->ShipmentsModel->mark_everything_inactive();
                 $num = count($dataRows);
@@ -171,23 +175,22 @@ class Shipments extends CI_Controller
                         $data['newContainers'][$c - 1]['eta'] = null;
                         $data['newContainers'][$c - 1]['status'] = null;
                     } else if (!is_null($data['newContainers'][$c - 1]['eta'])) {
-                        $start = strtotime($data['newContainers'][$c - 1]['eta']);
-                        $end = time(); //now
-                        $diff = ($end - $start) * -1;
-                        $daysDifference = floor($diff / (60 * 60 * 24));
-                        echo $data['newContainers'][$c - 1]['container_number'] . "= $end - $start =  $diff \n";
+                        $etaStrToTime = new DateTime($data['newContainers'][$c - 1]['eta']); //date_create($data['newContainers'][$c - 1]['eta']);
+                        $etaStrToTime->setTime(5, 00);
+                        $nowTime = new DateTime('now'); //now
+                        $nowTime->setTime(5, 00);
+                        $diff = $nowTime->diff($etaStrToTime);//date_diff($nowTime, $etaStrToTime);
+                        //echo $data['newContainers'][$c - 1]['container_number'] . "= ". $nowTime->format('Y-m-d')." - ". $etaStrToTime->format('Y-m-d') ." =  ". $nowTime->diff($etaStrToTime)->days . "days difference" . PHP_EOL;
                         $statusValue = -1;
-                        if ($diff < 0) {
-                            echo $data['newContainers'][$c - 1]['container_number'] . "status: \n";
-                            $statusValue = 0;
+                        if (intVal($diff->invert)===0) {
+                            if ($diff->days > 7) $statusValue=2;
+                            else if ($diff->days > 3) $statusValue=1;
+                            else if ($diff->days >= 0) $statusValue=0;
+                            //echo $data['newContainers'][$c - 1]['container_number'] . "[statusValue]= ". $statusValue. PHP_EOL;
+                            //echo $nowTime->format('m-d-y') . " to ". $etaStrToTime->format('m-d-y') . " = " . $nowTime->diff($etaStrToTime)->days . " days. statusValue=>" .$statusValue. PHP_EOL;
                         } else {
-                            if ($daysDifference >= 0 && $daysDifference < 3) {
-                                $statusValue = 0;
-                            } else if ($daysDifference >= 3 && $daysDifference <= 7) {
-                                $statusValue = 1;
-                            } else if ($daysDifference > 7) {
-                                $statusValue = 2;
-                            }
+                            $statusValue=-1;
+                            //echo $data['newContainers'][$c - 1]['container_number'] . "[statusValue]= ". $statusValue." <-NEGATIVE" . PHP_EOL;
                         }
                         $data['newContainers'][$c - 1]['status'] = $statusValue;
                     }
@@ -197,10 +200,16 @@ class Shipments extends CI_Controller
                     $data['newContainers'][$c - 1]['isf_required'] = $this->ShipmentsModel->getISFreq($data['newContainers'][$c - 1]['discharge_port']);
                     $data['newContainers'][$c - 1]['do'] = $this->ShipmentsModel->getDOvalue($data['newContainers'][$c - 1]['destination_city']);
                     $data['newContainers'][$c - 1]['latest_event_time_and_date'] = date("Y-m-d\TH:i:s", strtotime($data['newContainers'][$c - 1]['latest_event_timestamp']));
+                    $data['newContainers'][$c - 1]['is_complete'] = (strpos($data['newContainers'][$c - 1]['latest_event'],'Empty Container Returned')  !== false ? true : false);
                 }
             } else {
                 $data['newContainers'] = false;
             }
+            /*[END OF LOADING CSV DATA INTO data ARRAY] */
+            
+            /*
+            *   i may be able to do away with this section, gotta go back over business logic
+            */
             $numObjects = count($data['newContainers']);
             for ($a = 0; $a < $numObjects; $a++) {
                 $updateData = array(
@@ -217,71 +226,97 @@ class Shipments extends CI_Controller
                     'latest_event' => $data['newContainers'][$a]['latest_event'],
                     'latest_event_time_and_date' => date("Y-m-d\TH:i:s", strtotime($data['newContainers'][$a]['latest_event_timestamp'])),
                     'is_active' => true,
-                    'is_complete' => false,
+                    'is_complete' => $data['newContainers'][$a]['is_complete'],
                     'do' => $data['newContainers'][$a]['do']
                 );
-                if (strpos($data['newContainers'][$a]['latest_event'], 'Empty Container Returned')){
-                    $updateData['is_active'] = false;
-                    $updateData['is_complete'] = true;
-                }
                 $tempObj = $this->ShipmentsModel->get_by_container_number($data['newContainers'][$a]['container_number']);
                 $tmpObj = json_decode(json_encode($tempObj), true);
+                /*
+                *   if the container data already exists in the database,
+                *       -> check if the value already stored (tmpObj[X]) matches the value that was downloaded (data['newContainers][a][X])
+                *           -> if not, keep what was stored in the database, not what was downloaded
+                *   -> store the correct data in the updateData[X] object, then update the database using that data
+                *   else, add the container_number to the updateData and add new the container entry to the db
+                *       -> then set the tempObj to the newly added container data obj and json_encode/decode it to tmpObj
+                */
+                $allValuesTrue = true;
+                $quickbooksPaymentCounter = 0;
                 if ($tmpObj !== null) {
                     if (array_key_exists('isf_required', $tmpObj) && isset($tmpObj['isf_required'])) {
                         if (!isset($data['newContainers'][$a]['isf_required']) || $tmpObj['isf_required'] !== $data['newContainers'][$a]['isf_required']) {
                             $updateData['isf_required'] = $tmpObj['isf_required'];
+                            if ($allValuesTrue) $allValuesTrue = $updateData['isf_required'];
                         } else {
                             $updateData['isf_required'] = false;
+                            $allValuesTrue = false;
                         }
                     }
                     if (array_key_exists('customs', $tmpObj) && isset($tmpObj['customs'])) {
                         if (!isset($data['newContainers'][$a]['customs']) || $tmpObj['customs'] !== $data['newContainers'][$a]['customs']) {
                             $updateData['customs'] = $tmpObj['customs'];
+                            if ($allValuesTrue) $allValuesTrue = $updateData['customs'];
                         } else {
                             $updateData['customs'] = false;
+                            $allValuesTrue = false;
                         }
                     }
                     if (array_key_exists('po_boolean', $tmpObj) && isset($tmpObj['po_boolean'])) {
                         if (!isset($data['newContainers'][$a]['po_boolean']) || $tmpObj['po_boolean'] !== $data['newContainers'][$a]['po_boolean']) {
                             $updateData['po_boolean'] = $tmpObj['po_boolean'];
+                            if ($allValuesTrue) $allValuesTrue = $updateData['po_boolean'];
                         } else {
                             $updateData['po_boolean'] = false;
+                            $allValuesTrue = false;
                         }
                     }
                     if (array_key_exists('qb_rt', $tmpObj) && isset($tmpObj['qb_rt'])) {
                         if (!isset($data['newContainers'][$a]['qb_rt']) || $tmpObj['qb_rt'] !== $data['newContainers'][$a]['qb_rt']) {
                             $updateData['qb_rt'] = $tmpObj['qb_rt'];
+                            if ($allValuesTrue) $allValuesTrue = $updateData['qb_rt'];
+                            if ($updateData['qb_rt']===true) $quickbooksPaymentCounter++;
                         } else {
                             $updateData['qb_rt'] = false;
+                            $allValuesTrue = false;
                         }
                     }
                     if (array_key_exists('qb_ws', $tmpObj) && isset($tmpObj['qb_ws'])) {
                         if (!isset($data['newContainers'][$a]['qb_ws']) || $tmpObj['qb_ws'] !== $data['newContainers'][$a]['qb_ws']) {
                             $updateData['qb_ws'] = $tmpObj['qb_ws'];
+                            if ($allValuesTrue) $allValuesTrue = $updateData['qb_ws'];
+                            if ($updateData['qb_ws']===true) $quickbooksPaymentCounter++;
                         } else {
                             $updateData['qb_ws'] = false;
+                            $allValuesTrue = false;
                         }
                     }
                     if (array_key_exists('requires_payment', $tmpObj) && isset($tmpObj['requires_payment'])) {
                         if (!isset($data['newContainers'][$a]['requires_payment']) || $tmpObj['requires_payment'] !== $data['newContainers'][$a]['requires_payment']) {
                             $updateData['requires_payment'] = $tmpObj['requires_payment'];
+                            if ($allValuesTrue) $allValuesTrue = $updateData['requires_payment'];
                         } else {
                             $updateData['requires_payment'] = false;
+                            $allValuesTrue = false;
+                        }
+                    }
+                    if (array_key_exists('do', $tmpObj) && isset($tmpObj['do'])) {
+                        if (!isset($data['newContainers'][$a]['do']) || $tmpObj['do'] !== $data['newContainers'][$a]['do']) {
+                            $updateData['do'] = $tmpObj['do'];
+                            if ($allValuesTrue) $allValuesTrue = $updateData['do'];
+                        } else {
+                            $updateData['do'] = false;
+                            $allValuesTrue = false;
                         }
                     }
                     if (array_key_exists('is_complete', $tmpObj) && isset($tmpObj['is_complete'])) {
                         if (!isset($data['newContainers'][$a]['is_complete']) || $tmpObj['is_complete'] !== $data['newContainers'][$a]['is_complete']) {
                             $updateData['is_complete'] = $tmpObj['is_complete'];
                         } else {
-                            $updateData['is_complete'] = false;
+                            $updateData['is_complete'] = !isset($data['newContainers'][$a]['is_complete']) ? false : $data['newContainers'][$a]['is_complete'];
                         }
+                        if ($allValuesTrue || $quickbooksPaymentCounter >= 2 ) $updateData['is_complete'] = true;
                     }
-                    if (array_key_exists('do', $tmpObj) && isset($tmpObj['do'])) {
-                        if (!isset($data['newContainers'][$a]['do']) || $tmpObj['do'] !== $data['newContainers'][$a]['do']) {
-                            $updateData['do'] = $tmpObj['do'];
-                        } else {
-                            $updateData['do'] = false;
-                        }
+                    if (array_key_exists('status', $tmpObj) && isset($tmpObj['status'])) {
+                        if ($updateData['is_complete']===true)  $updateData['status'] = -1;
                     }
                     $this->ShipmentsModel->update_record(array('container_number' => $data['newContainers'][$a]['container_number']), $updateData);
                 } else {
@@ -289,20 +324,20 @@ class Shipments extends CI_Controller
                         $updateData['container_number'] = $data['newContainers'][$a]['container_number'];
                         $this->ShipmentsModel->add_record($updateData);
                         $tempObj = $this->ShipmentsModel->get_by_container_number($data['newContainers'][$a]['container_number']);
+                        $tmpObj = json_decode(json_encode($tempObj), true);
                     }
                 }
-                $tmpObj = json_decode(json_encode($tempObj), true);
-                $etaStartDate = new DateTime($data['newContainers'][$a]['eta']);
+                $etaStartDate = new DateTime($tmpObj['eta']);
                 date_time_set($etaStartDate, 00, 0);
-                $etaEndDate = new DateTime($data['newContainers'][$a]['eta']);
+                $etaEndDate = new DateTime($tmpObj['eta']);
                 date_time_set($etaEndDate, 23, 59);
-                $md5CheckValue = md5($data['newContainers'][$a]['container_number'] . '->ETA->' . $data['newContainers'][$a]['eta']);
+                $md5CheckValue = md5($tmpObj['container_number'] . '->ETA->' . $tmpObj['eta']);
                 $eventData = array(
-                    'title' => $data['newContainers'][$a]['container_number'],
+                    'title' => $tmpObj['container_number'],
                     'event_type' => 'ETA',
                     'start' => $etaStartDate->format('Y-m-d H:i:s'),
                     'end' => $etaEndDate->format('Y-m-d H:i:s'),
-                    'description' => 'Estimated Time of Arrival for Container #: ' . $data['newContainers'][$a]['container_number'] . '.<br/> Times/Dates Subject to Change...',
+                    'description' => 'Estimated Time of Arrival for Container #: ' . $tmpObj['container_number'] . '.<br/> Times/Dates Subject to Change...',
                     'shipment_id' => $tmpObj['id'],
                     'md5_container_number_and_date' => $md5CheckValue
                 );
@@ -313,7 +348,6 @@ class Shipments extends CI_Controller
                     $this->Calendar_Model->update_event($existingEvent['ID'], $eventData);
                 }
             }
-            $this->ShipmentsModel->archiveInactiveRecords();
             $curlData = array();
             $uniqueBoLs = $this->ShipmentsModel->get_unique_records_by_BoL(1);
             for ($i = 0; $i < count($uniqueBoLs); $i++) {
@@ -322,15 +356,10 @@ class Shipments extends CI_Controller
                 $containers = $this->ShipmentsModel->get_by_bol($bol);
                 foreach($containers as $container){
                     $this->ShipmentsModel
-                            ->update_record( array('bill_of_lading' => $uniqueBoLs[$i]["bill_of_lading"]),
+                            ->update_record( array('bill_of_lading' => $bol),
                                                     array('lfd' => (empty($curlData['lfd']) ? null : date("Y-m-d", strtotime($curlData['lfd']))),
                                                           'pickup_number' => (empty($curlData['pickup_number']) ? null : $curlData['pickup_number']),
                                                           'bl_status' => (!array_key_exists('bl_status', $curlData) || is_null($curlData['bl_status']) || empty($curlData['bl_status']) ? null : $curlData['bl_status'])));
-                    if (!array_key_exists('bl_status', $curlData) || is_null($curlData['bl_status']) || empty($curlData['bl_status'])){
-                        echo PHP_EOL."BL_STATUS for ".$uniqueBoLs[$i]["bill_of_lading"]. " is null...". PHP_EOL;
-                    } else {
-                        echo PHP_EOL."storing BL_STATUS('".$curlData['bl_status']."') to ".$uniqueBoLs[$i]["bill_of_lading"] . PHP_EOL;
-                    }
                     if (!is_null($curlData['lfd']) && !empty($curlData['lfd'])){
                         $lfdStartDate = new DateTime($curlData['lfd']);
                         date_time_set($lfdStartDate, 00, 0);
@@ -356,6 +385,7 @@ class Shipments extends CI_Controller
                 }
                
             }
+            $this->ShipmentsModel->archiveInactiveRecords();
             $data['title'] = "Active Shipments";
             echo "Start time: $starttime" . PHP_EOL;
             $endtime = microtime(true);
@@ -381,9 +411,7 @@ class Shipments extends CI_Controller
                 rsort($emails);
                 $test = false;
                 foreach ($emails as $mail) {
-                    if ($test) {
-                        break;
-                    }
+                    if ($test) break;
                     $msgno = imap_msgno($inbox, $mail);
                     $headerInfo = imap_headerinfo($inbox, $msgno);
                     $msgBody = imap_body($inbox, $msgno);
@@ -402,9 +430,7 @@ class Shipments extends CI_Controller
                         $dateSpan = $dom->getElementsbyTag('strong')[10]->text;
                         //echo "<hr/><h1>DateSpan</h1><br/>" . $dateSpan . "<hr/>";
                         $newETAdate = date("Y-m-d", strtotime($dateSpan));
-                        if (!empty($htmlBoL)) {
-                            $this->ShipmentsModel->update_record(array('bill_of_lading' => $htmlBoL), array('eta' => $newETAdate));
-                        }
+                        if (!empty($htmlBoL)) $this->ShipmentsModel->update_record(array('bill_of_lading' => $htmlBoL), array('eta' => $newETAdate));
                     }
                 }
             }
@@ -665,8 +691,7 @@ class Shipments extends CI_Controller
     public $hasCookie = false;
     public $cookies = array();
 
-    public function get_lfd_and_pickup_number_from_bol($bol)
-    {
+    public function get_lfd_and_pickup_number_from_bol($bol) {
         if (!$this->hasCookie) {
             $ch = curl_init('http://elines.coscoshipping.com/NewEBWeb/');
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -719,14 +744,10 @@ class Shipments extends CI_Controller
             "Cookie: $cookieString"));
 
         $output = curl_exec($ch);
-        if (curl_error($ch)) {
-            return null;
-        }
+        if (curl_error($ch)) return null;
         curl_close($ch);
         //echo "OUTPUT:".PHP_EOL. $output . "ENDOUTPUT" . PHP_EOL;
-        if (!$this->hasCookie) {
-            echo $output;
-        }
+        if (!$this->hasCookie) echo $output;
         $DOM = new DOMDocument();
         libxml_use_internal_errors(true);
         $DOM->loadHTML($output);
@@ -737,7 +758,7 @@ class Shipments extends CI_Controller
         $oblStatus =$allTds[241];
         $count=0;
         $return = array('lfd' => null, 'pickup_number' => null, 'bl_status' => null);
-        foreach($allTds as $td){
+        foreach($allTds as $td) {
             $textContent = $td->textContent;
            // echo "allTds[$count]: " . $textContent . PHP_EOL;
             $oblTextPos=strpos($textContent,'OBL Release Status');
@@ -747,30 +768,14 @@ class Shipments extends CI_Controller
                 $oblIdx = $count+2;
                 $oblStatusValue = $allTds[$oblIdx]->textContent;
                 $return['bl_status'] = trim($oblStatusValue);
-                echo "RESULT: allTds[$oblIdx]: " . $oblStatusValue .PHP_EOL;
+                //echo "RESULT: allTds[$oblIdx]: " . $oblStatusValue .PHP_EOL;
                 break;
             }
             $count++;
         }
-       /* $labels = $oblStatus->getElementsByTagName('label');
-        $count=0;
-        foreach($labels as $label){
-            echo "labels[$count]: " . $label->textContent . PHP_EOL;
-            if (strpos($label->textContent,'OBL Release Status')>=0){
-                echo "FOUND: labels[$count]: " . $label->textContent . PHP_EOL;
-                $return['bl_status'] = $labels[$count+1]->textContent;
-                break;
-            }
-            $count++;
-        }
-        unset($allTds);
-        unset($oblStatus);
-        unset($labels);*/
         unset($allTds);
         //#Get header name of the table
-        foreach ($Header as $NodeHeader) {
-            $aDataTableHeaderHTML[] = trim($NodeHeader->textContent);
-        }
+        foreach ($Header as $NodeHeader) $aDataTableHeaderHTML[] = trim($NodeHeader->textContent);
          //#Get row data/detail table without header name as key
          $i = 0;
          $j = 0;
@@ -782,27 +787,17 @@ class Shipments extends CI_Controller
         //#Get row data/detail table with header name as key and outer array index as row number
         for ($i = 0; $i < count($aDataTableDetailHTML); $i++) {
             for ($j = 0; $j < count($aDataTableHeaderHTML); $j++) {
-                if (array_key_exists($j, $aDataTableDetailHTML[$i])) {
-                    $aTempData[$i][$aDataTableHeaderHTML[$j]] = $aDataTableDetailHTML[$i][$j];
-                } else {
-                    break;
-                }
+                if (array_key_exists($j, $aDataTableDetailHTML[$i]))    $aTempData[$i][$aDataTableHeaderHTML[$j]] = $aDataTableDetailHTML[$i][$j];
+                else                                                    break;
             }
         }
         $aDataTableDetailHTML = $aTempData;
         unset($aTempData);
-        if (array_key_exists('Rail LFD', $aDataTableDetailHTML[0]) && isset($aDataTableDetailHTML[0]['Rail LFD'])) {
-            $return['lfd'] = $aDataTableDetailHTML[0]['Rail LFD'];
-        } elseif (array_key_exists('Depot LFD', $aDataTableDetailHTML[0]) && isset($aDataTableDetailHTML[0]['Depot LFD'])) {
-            $return['lfd'] = $aDataTableDetailHTML[0]['Depot LFD'];
-        } else {
-            $return['lfd'] = false;
-        }
-        if (array_key_exists('Pickup#', $aDataTableDetailHTML[0]) && isset($aDataTableDetailHTML[0]['Pickup#'])) {
-            $return['pickup_number'] = $aDataTableDetailHTML[0]['Pickup#'];
-        } else {
-            $return['pickup_number'] = false;
-        }
+        if (array_key_exists('Rail LFD', $aDataTableDetailHTML[0]) && isset($aDataTableDetailHTML[0]['Rail LFD']))              $return['lfd'] = $aDataTableDetailHTML[0]['Rail LFD'];
+            elseif (array_key_exists('Depot LFD', $aDataTableDetailHTML[0]) && isset($aDataTableDetailHTML[0]['Depot LFD']))    $return['lfd'] = $aDataTableDetailHTML[0]['Depot LFD'];
+            else                                                                                                                $return['lfd'] = false; 
+        if (array_key_exists('Pickup#', $aDataTableDetailHTML[0]) && isset($aDataTableDetailHTML[0]['Pickup#']))    $return['pickup_number'] = $aDataTableDetailHTML[0]['Pickup#'];
+        else                                                                                                        $return['pickup_number'] = false;
         unset($aDataTableDetailHTML);
         unset($aDataTableHeaderHTML);
         return $return;

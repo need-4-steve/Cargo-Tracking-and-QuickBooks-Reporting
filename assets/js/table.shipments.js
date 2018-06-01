@@ -1,12 +1,9 @@
 (function($) {
 
     $(document).ready(function() {
-        /*       var simple_checkbox = function ( data, type, full, meta ) {
-                   var is_checked = data === "TRUE" ? "checked" : "";
-                   return '<input type="checkbox" class="checkbox" ' +
-                       is_checked + ' />';
-               }
-       */
+        var originalDataArray = [];
+
+        /*[START] editor declaration section*/
         var editor = new $.fn.dataTable.Editor({
             ajax: '/Ajax/Shipments',
             table: '#shipments',
@@ -178,7 +175,9 @@
                 }
             ]
         });
+        /*[END] editor declaration section*/
 
+        /*[START] datatable declaration section*/
         var table = $('#shipments').DataTable({
             ajax: '/Ajax/Shipments',
             //responsive: 'true',
@@ -202,13 +201,20 @@
                     data: "shipments.status",
                     render: function(data, type, row) {
                         var color = '';
+                        var rowData = table.row(row).data();
                         if (type === 'display') {
-                            if (data === '0') {
-                                color = 'circle_red';
-                            } else if (data === '1') {
-                                color = 'circle_yellow';
-                            } else if (data === '2') {
-                                color = 'circle_green';
+                            if (rowData.is_complete == 1) {
+                                color = 'circle_disabled';
+                            } else {
+                                if (data === '0') {
+                                    color = 'circle_red';
+                                } else if (data === '1') {
+                                    color = 'circle_yellow';
+                                } else if (data === '2') {
+                                    color = 'circle_green';
+                                } else if (data === '-1') {
+                                    color = 'circle_disabled';
+                                }
                             }
                             return '<div id="status_div" class = \"' + color + '\"><p></p></div>';
                         }
@@ -331,6 +337,19 @@
                 [2, 'asc']
             ],
             rowCallback: function(row, data) {
+                if (!data.shipments.container_number in originalDataArray) {
+                    originalDataArray[data.shipments.container_number] = data.shipments;
+                }
+                if (data.shipments.is_complete == 1) {
+                    //row_disabled
+                    if (!$(row).hasClass("row_disabled")) {
+                        $(row).addClass("row_disabled");
+                    }
+                } else {
+                    if ($(row).hasClass("row_disabled")) {
+                        $(row).removeClass("row_disabled");
+                    }
+                }
                 if (data.shipments.eta === '1970-01-01') {
                     data.shipments.eta = '';
                 }
@@ -403,30 +422,47 @@
                     $("td:nth-child(24)", row).removeClass("status_blue");
                     $("td:nth-child(24)", row).addClass("status_red");
                 }
-                if (data.shipments.qb_rt == 1 && data.shipments.qb_ws == 1) {
-                    $(row).css("font-style", "italic");
-                    $(row).css("background-color", "#d1d1d1c2");
-                    $(row).css("color", "#aaaaaa");
-                } else {
-                    $(row).css("font-weight", "normal");
-                    /* $(row).filter(function(index) {
-                         return index % 2 === 1;
-                     }).css("background-color", "white"); //"#f5f5f5");
-                     $(row).filter(function(index) {
-                         return index % 2 === 0;
-                     }).css("background-color", "#f5f5f5");*/
-                }
-                if (data.shipments.freight == 1 && data.shipments.isf_required == 1 &&
-                    data.shipments.customs == 1 && data.shipments.po_boolean == 1 &&
-                    data.shipments.qb_rt == 1 && data.shipments.qb_ws == 1 &&
-                    data.shipments.requires_payment == 1 && data.shipments.do == 1) {
-                    //data.shipments.status = 2;
-                }
+
+                /*  if ((data.shipments.is_complete == false) && (data.shipments.freight == true && data.shipments.isf_required == true &&
+                          data.shipments.customs == true && data.shipments.po_boolean == true &&
+                          data.shipments.qb_rt == true && data.shipments.qb_ws == true &&
+                          data.shipments.requires_payment == true && data.shipments.do == true)) {
+                      data.shipments.status = -1;
+                      data.shipments.is_complete = 1;
+                      $(row).addClass("row_disabled");
+                      previousStatusDivClass = $("td:nth-child(2)", row).attr('class');
+                      $("td:nth-child(2)", row).removeClass('circle_red');
+                      $("td:nth-child(2)", row).removeClass('circle_green');
+                      $("td:nth-child(2)", row).removeClass('circle_yellow');
+                      $("td:nth-child(2)", row).addClass('circle_disabled');
+                  } else {
+                      data.shipments.status = 0;
+                      data.shipments.is_complete = 0;
+                      $("td:nth-child(2)", row).removeClass('circle_disabled');
+                      $("td:nth-child(2)", row).addClass(previousStatusDivClass);
+                      $(row).removeClass("row_disabled");
+                  }*/
             }
         });
+        /*[END] datatable declaration section*/
+        /* var $div = $("#status_div");
+         var previousStatusDivClass;
+         var observer = new MutationObserver(function(mutations) {
+             mutations.forEach(function(mutation) {
+                 if (mutation.attributeName === "class") {
+                     var attributeValue = $(mutation.target).prop(mutation.attributeName);
+                     console.log("Class attribute changed to:", attributeValue);
+                     editor.edit($(mutation.target).closest('tr'), false, { submit: 'changed' })
+                         .set('shipments.status', ($(mutation.target).hasClass('circle_disabled') ? 1 : 0))
+                         .submit();
+                 }
+             });
+         });
+         observer.observe($div[0], {
+             attributes: true
+         });*/
 
-
-
+        /*[START checkbox class change section]*/
         $('#shipments')
             .on('change', '#editor-freight',
                 function() {
@@ -435,6 +471,23 @@
                         .submit();
                     $(this).closest('td').removeClass($(this).prop('checked') ? 'status_red' : "status_blue");
                     $(this).closest('td').addClass(($(this).prop('checked')) ? 'status_blue' : "status_red");
+                    var data = table.row($(this).parents('tr')).data();
+                    if ((data.freight == 1 && data.isf_required == 1 &&
+                            data.customs == 1 && data.po_boolean == 1 &&
+                            data.qb_rt == 1 && data.qb_ws == 1 &&
+                            data.requires_payment == 1 && data.do == 1) || (data.qb_rt == 1 && data.qb_ws == 1)) {
+                        data.is_complete = 1;
+                        data.status = '-1';
+                    } else {
+                        data.is_complete = 0;
+                        if (data.container_number in originalDataArray) {
+                            data.status = originalDataArray[data.container_number]['status'];
+                        } else {
+                            data.status = '1';
+                        }
+                    }
+                    //table.row($(this).parents('tr')).data(data).draw();
+                    table.row($(this).parents('tr')).invalidate().draw();
                 }
             )
             .on('change', '#editor-isfrequired',
@@ -444,6 +497,23 @@
                         .submit();
                     $(this).closest('td').removeClass($(this).prop('checked') ? 'status_red' : "status_blue");
                     $(this).closest('td').addClass(($(this).prop('checked')) ? 'status_blue' : "status_red");
+                    var data = table.row($(this).parents('tr')).data();
+                    if ((data.freight == 1 && data.isf_required == 1 &&
+                            data.customs == 1 && data.po_boolean == 1 &&
+                            data.qb_rt == 1 && data.qb_ws == 1 &&
+                            data.requires_payment == 1 && data.do == 1) || (data.qb_rt == 1 && data.qb_ws == 1)) {
+                        data.is_complete = 1;
+                        data.status = '-1';
+                    } else {
+                        data.is_complete = 0;
+                        if (data.container_number in originalDataArray) {
+                            data.status = originalDataArray[data.container_number]['status'];
+                        } else {
+                            data.status = '1';
+                        }
+                    }
+                    //table.row($(this).parents('tr')).data(data).draw();
+                    table.row($(this).parents('tr')).invalidate().draw();
                 }
             )
             .on('change', '#editor-customs',
@@ -453,6 +523,23 @@
                         .submit();
                     $(this).closest('td').removeClass($(this).prop('checked') ? 'status_red' : "status_blue");
                     $(this).closest('td').addClass(($(this).prop('checked')) ? 'status_blue' : "status_red");
+                    var data = table.row($(this).parents('tr')).data();
+                    if ((data.freight == 1 && data.isf_required == 1 &&
+                            data.customs == 1 && data.po_boolean == 1 &&
+                            data.qb_rt == 1 && data.qb_ws == 1 &&
+                            data.requires_payment == 1 && data.do == 1) || (data.qb_rt == 1 && data.qb_ws == 1)) {
+                        data.is_complete = 1;
+                        data.status = '-1';
+                    } else {
+                        data.is_complete = 0;
+                        if (data.container_number in originalDataArray) {
+                            data.status = originalDataArray[data.container_number]['status'];
+                        } else {
+                            data.status = '1';
+                        }
+                    }
+                    //table.row($(this).parents('tr')).data(data).draw();
+                    table.row($(this).parents('tr')).invalidate().draw();
                 }
             )
             .on('change', '#editor-po_boolean',
@@ -462,6 +549,23 @@
                         .submit();
                     $(this).closest('td').removeClass($(this).prop('checked') ? 'status_red' : "status_blue");
                     $(this).closest('td').addClass(($(this).prop('checked')) ? 'status_blue' : "status_red");
+                    var data = table.row($(this).parents('tr')).data();
+                    if ((data.freight == 1 && data.isf_required == 1 &&
+                            data.customs == 1 && data.po_boolean == 1 &&
+                            data.qb_rt == 1 && data.qb_ws == 1 &&
+                            data.requires_payment == 1 && data.do == 1) || (data.qb_rt == 1 && data.qb_ws == 1)) {
+                        data.is_complete = 1;
+                        data.status = '-1';
+                    } else {
+                        data.is_complete = 0;
+                        if (data.container_number in originalDataArray) {
+                            data.status = originalDataArray[data.container_number]['status'];
+                        } else {
+                            data.status = '1';
+                        }
+                    }
+                    //table.row($(this).parents('tr')).data(data).draw();
+                    table.row($(this).parents('tr')).invalidate().draw();
                 }
             )
             .on('change', '#editor-qb_rt',
@@ -471,6 +575,23 @@
                         .submit();
                     $(this).closest('td').removeClass($(this).prop('checked') ? 'status_red' : "status_blue");
                     $(this).closest('td').addClass(($(this).prop('checked')) ? 'status_blue' : "status_red");
+                    var data = table.row($(this).parents('tr')).data();
+                    if ((data.freight == 1 && data.isf_required == 1 &&
+                            data.customs == 1 && data.po_boolean == 1 &&
+                            data.qb_rt == 1 && data.qb_ws == 1 &&
+                            data.requires_payment == 1 && data.do == 1) || (data.qb_rt == 1 && data.qb_ws == 1)) {
+                        data.is_complete = 1;
+                        data.status = '-1';
+                    } else {
+                        data.is_complete = 0;
+                        if (data.container_number in originalDataArray) {
+                            data.status = originalDataArray[data.container_number]['status'];
+                        } else {
+                            data.status = '1';
+                        }
+                    }
+                    //table.row($(this).parents('tr')).data(data).draw();
+                    table.row($(this).parents('tr')).invalidate().draw();
                 }
             )
             .on('change', '#editor-qb_ws',
@@ -480,6 +601,23 @@
                         .submit();
                     $(this).closest('td').removeClass($(this).prop('checked') ? 'status_red' : "status_blue");
                     $(this).closest('td').addClass(($(this).prop('checked')) ? 'status_blue' : "status_red");
+                    var data = table.row($(this).parents('tr')).data();
+                    if ((data.freight == 1 && data.isf_required == 1 &&
+                            data.customs == 1 && data.po_boolean == 1 &&
+                            data.qb_rt == 1 && data.qb_ws == 1 &&
+                            data.requires_payment == 1 && data.do == 1) || (data.qb_rt == 1 && data.qb_ws == 1)) {
+                        data.is_complete = 1;
+                        data.status = '-1';
+                    } else {
+                        data.is_complete = 0;
+                        if (data.container_number in originalDataArray) {
+                            data.status = originalDataArray[data.container_number]['status'];
+                        } else {
+                            data.status = '1';
+                        }
+                    }
+                    //table.row($(this).parents('tr')).data(data).draw();
+                    table.row($(this).parents('tr')).invalidate().draw();
                 }
             )
             .on('change', '#editor-requires_payment',
@@ -489,6 +627,23 @@
                         .submit();
                     $(this).closest('td').removeClass($(this).prop('checked') ? 'status_red' : "status_blue");
                     $(this).closest('td').addClass(($(this).prop('checked')) ? 'status_blue' : "status_red");
+                    var data = table.row($(this).parents('tr')).data();
+                    if ((data.freight == 1 && data.isf_required == 1 &&
+                            data.customs == 1 && data.po_boolean == 1 &&
+                            data.qb_rt == 1 && data.qb_ws == 1 &&
+                            data.requires_payment == 1 && data.do == 1) || (data.qb_rt == 1 && data.qb_ws == 1)) {
+                        data.is_complete = 1;
+                        data.status = '-1';
+                    } else {
+                        data.is_complete = 0;
+                        if (data.container_number in originalDataArray) {
+                            data.status = originalDataArray[data.container_number]['status'];
+                        } else {
+                            data.status = '1';
+                        }
+                    }
+                    //table.row($(this).parents('tr')).data(data).draw();
+                    table.row($(this).parents('tr')).invalidate().draw();
                 }
             )
             .on('change', '#editor-do',
@@ -498,9 +653,26 @@
                         .submit();
                     $(this).closest('td').removeClass($(this).prop('checked') ? 'status_red' : "status_blue");
                     $(this).closest('td').addClass(($(this).prop('checked')) ? 'status_blue' : "status_red");
+                    var data = table.row($(this).parents('tr')).data();
+                    if ((data.freight == 1 && data.isf_required == 1 &&
+                            data.customs == 1 && data.po_boolean == 1 &&
+                            data.qb_rt == 1 && data.qb_ws == 1 &&
+                            data.requires_payment == 1 && data.do == 1) || (data.qb_rt == 1 && data.qb_ws == 1)) {
+                        data.is_complete = 1;
+                        data.status = '-1';
+                    } else {
+                        data.is_complete = 0;
+                        if (data.container_number in originalDataArray) {
+                            data.status = originalDataArray[data.container_number]['status'];
+                        } else {
+                            data.status = '1';
+                        }
+                    }
+                    //table.row($(this).parents('tr')).data(data).draw();
+                    table.row($(this).parents('tr')).invalidate().draw();
                 }
             );
-
+        /*[END checkbox class change section]*/
 
         // Activate an inline edit on click of a table cell
         // or a DataTables Responsive data cell 
@@ -511,11 +683,18 @@
                     onBlur: 'submit'
                 });
             }
-            /*  $("#shipments tbody tr").removeClass('selected');		
-                 $(this).addClass('selected');*/
+        });
+        $('#dataOutputDiv').on('click', function(e) {
+            var vPool = "";
+            jQuery.each(dataArray, function(i, val) {
+                vPool += JSON.stringify(val) + "<hr />";
+            });
+
+            //We add vPool HTML content to #myDIV
+            $('#dataOutputDiv').html(vPool);
         });
 
-        /* $('#shipments tbody')
+        /*$('#shipments tbody')
             .on('mouseenter','tr', function(){
                 if ( !$(this).hasClass('highlight') ) {
                     $(this).addClass('highlight');

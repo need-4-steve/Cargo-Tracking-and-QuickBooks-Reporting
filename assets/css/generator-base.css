@@ -91,13 +91,12 @@ table.dataTable thead th.select-checkbox.sorting_desc_disabled:after {
     /* border: 1px solid #ffe700 !important;*/
 }
 
-
-/* PINK
+.status_pink {
     color: #d119cf;
     background-color: #faebfa;
     border: 1px solid #f3aef2;
     white-space: nowrap;
-    */
+}
 
 .status_green {
     background-color: #d0e9c6 !important;
@@ -120,14 +119,6 @@ img.disabled_folder_icon {
     filter: alpha(opacity=25);
     /* msie */
 }
-
-
-/*
-warning
-color: #6e3d00;
-    background-color: #f6e3cc;
-    border-color: #f3d8b8;
-*/
 
 td.red_background {
     color: black !important;
@@ -223,3 +214,171 @@ input[type=checkbox].rowCB:hover:after {
     margin: auto;
     /* margin-top: -16px;*/
 }
+
+.circle_disabled {
+    transition: .25s all ease-in-out;
+    width: 30px;
+    height: 30px;
+    background: #d3d3d3;
+    border: 1px solid #7e7e7e;
+    -moz-border-radius: 30px;
+    -webkit-border-radius: 30px;
+    border-radius: 30px;
+    box-shadow: 0 0 2px #545454;
+    margin: auto;
+    /*color: #464e50;
+    background-color: #f2f7f9;
+    border: 1px solid #b8c3c5;*/
+    /* margin-top: -16px;*/
+}
+
+tr.row_disabled {
+    font-style: italic !important;
+    background-color: #d1d1d1c2 !important;
+    color: #aaaaaa !important;
+}
+
+
+/*"font-style", "italic");
+$(row).css("background-color", "#d1d1d1c2");
+$(row).css("color", "#aaaaaa");*/
+
+
+/*
+code {
+    font-family: "Source Code Pro", Consolas, Menlo, Monaco, "Courier New", monospace;
+    padding: 1px 4px;
+    font-size: 0.8em;
+    color: #444;
+    background-color: #fcfcfc;
+    border: 1px solid #e0e0e0;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px
+}
+
+code:after {
+    display: inline-block;
+    border-left: 1px solid rgba(0,0,0,0.2);
+    margin-left: 4px;
+    padding-left: 4px;
+    opacity: 0.5
+}
+
+a code {
+    text-decoration: underline
+}
+
+// red button colors 
+code.option {
+    color: #D14;
+    background-color: #fcf6f8;
+    border: 1px solid #f7d6df;
+    white-space: nowrap
+}
+
+code.option:after {
+    content: 'Option'
+}
+
+// green button colors 
+code.path {
+    color: #095c05;
+    background-color: #eef7ed;
+    border: 1px solid #8ccb89;
+    white-space: nowrap
+}
+
+code.path:after {
+    content: 'Path'
+}
+
+// yellow button colors 
+code.tag {
+    color: #c29f00;
+    background-color: #fff9d7;
+    border: 1px solid #ffe700;
+    white-space: nowrap
+}
+
+code.tag:after {
+    content: 'Tag'
+}
+
+// blue button colors
+code.api {
+    color: #0c199c;
+    background-color: #f4f5fc;
+    border: 1px solid #c6cbe9;
+    white-space: nowrap
+}
+
+code.api:after {
+    content: 'API'
+}
+
+// pink button colors 
+code.type {
+    color: #d119cf;
+    background-color: #faebfa;
+    border: 1px solid #f3aef2;
+    white-space: nowrap
+}
+
+code.type:after {
+    content: 'Type'
+}
+
+// green button colors 
+code.event {
+    color: #2a839e;
+    background-color: #f5fafb;
+    border: 1px solid #a8ddec;
+    white-space: nowrap
+}
+
+code.event:after {
+    content: 'Event'
+}
+
+// brown button colors 
+code.string {
+    color: #c05f1d;
+    background-color: #f5eee9;
+    border: 1px solid #dfc4b2;
+    white-space: nowrap
+}
+
+code.string:after {
+    content: 'String'
+}
+
+// purple button colors 
+code.field {
+    color: #ad1ee8;
+    background-color: #f9f1fc;
+    border: 1px solid #ebc9f7;
+    white-space: nowrap
+}
+
+code.field:after {
+    content: 'Field'
+}
+
+// gray button colors 
+code.button {
+    color: #464e50;
+    background-color: #f2f7f9;
+    border: 1px solid #b8c3c5;
+    white-space: nowrap
+}
+
+code.button:after {
+    content: 'Button'
+}
+
+code.multiline {
+    display: inline-block;
+    width: 95%
+}
+*/

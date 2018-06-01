@@ -383,6 +383,7 @@ temporary rendered events).
     background: none;
     /* in case <td>s are globally styled */
     border-color: transparent;
+    padding: 3px;
 }
 
 .fc-row .fc-content-skeleton td,
@@ -796,7 +797,12 @@ TODO: more distinction between this file and common.css
 }
 
 .fc-unthemed td.fc-today {
-    background: #fcf8e3;
+    /*background: #fcf8e3;
+    background-color: rgba(190, 215, 243, 0.37);
+    border: 1px solid rgba(190, 215, 243, 0.75);*/
+    color: rgb(42, 131, 158);
+    background-color: rgb(245, 250, 251);
+    border: 1px double rgb(168, 221, 236);
 }
 
 .fc-unthemed .fc-disabled-day {
@@ -1130,7 +1136,27 @@ NOTE: use percentage font sizes or else old IE chokes
     -webkit-box-sizing: content-box;
     -moz-box-sizing: content-box;
     box-sizing: content-box;
-    color: #000;
+    /*color: #000;*/
+}
+
+span.fc-title>b {
+    text-align: left !important;
+    display: inherit;
+    padding-left: 10px;
+}
+
+span.fc-title {
+    margin-top: 5px;
+    margin-bottom: 5px;
+    line-height: 3px;
+    text-align: center;
+    display: block;
+    vertical-align: middle;
+}
+
+span.fc-title>hr {
+    margin-top: 5px !important;
+    margin-bottom: 5px !important;
 }
 
 .fc-view,

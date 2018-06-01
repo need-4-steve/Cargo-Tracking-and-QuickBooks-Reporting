@@ -145,23 +145,66 @@
 				}
 			}, ],
 			eventRender: function(event, element) {
-				element.find('.fc-title').html("<b>"+event.event_type+"</b> "+event.title); 
-                if(event.event_type == "LFD") {
-					/*background-color: #f2dede;
-					border-color: #ebcccc;
-					color: #a94442;*/
-                    element.css('background-color', '#f2dede');
-                    element.css('border-color', '#ebcccc');
-                    element.css('color', '#a94442');
-                } else if (event.event_type=='ETA'){
-					/*background-color: #d9edf7;
-					border-color: #bcdff1;
-					color: #31708f;*/
-					element.css('background-color', '#d9edf7');
-                    element.css('border-color', '#bcdff1');
-                    element.css('color', '#31708f');
+				element.find('.fc-title').html("<b>"+event.event_type+"</b><hr/> "+event.title); 
+				element.css('display', 'block');
+				element.css('text-align', 'center');
+                if(event.event_type == "ETA") {
+					/*DARKER RED
+						background-color: #f2dede;
+						border-color: #ebcccc;
+						color: #a94442;*/
+					/*RED
+						color: #D14;
+						background-color: #fcf6f8;
+						border-color: #f7d6df;
+					/*PINK
+						color: #d119cf;
+						background-color: #faebfa;
+						border: 1px solid #f3aef2;
+					*/
+                    element.css('color', '#D14');
+					element.css('background-color', '#fcf6f8');
+                    element.css('border-color', '#f7d6df');
+                } else if (event.event_type=='LFD'){
+					/*BLUES
+						background-color: #d9edf7;
+						border-color: #bcdff1;
+						color: #31708f;
+					*/
+					/* PURPLE
+						color: #ad1ee8;
+						background-color: #f9f1fc;
+						border: 1px solid #ebc9f7;
+					*/
+					/* YELLOW
+						color: #c29f00;
+						background-color: #fff9d7;
+						border: 1px solid #ffe700;
+					*/
+                    element.css('color', '#c29f00');
+					element.css('background-color', '#fff9d7');
+                    element.css('border-color', '#ffe700');
+				} else if (event.event_type='N/A') {
+					/*color: #c29f00;
+					background-color: #fff9d7;
+					border-color: #ffe700;*/
+                    element.css('color', '#2a839e');
+					element.css('background-color', '#f5fafb');
+                    element.css('border-color', '#a8ddec');
+				} else {
+					/*color: #2a839e;
+					background-color: #f5fafb;
+					border: 1px solid #a8ddec;*/
+                    element.css('color', '#c29f00');
+					element.css('background-color', '#fff9d7');
+                    element.css('border-color', '#ffe700');
 				}
-            },
+			},
+			dayRender: function(date, cell){
+				if (moment(date).format('YYYY/MM/DD HH:mm') < moment().subtract(1,'days').format('YYYY/MM/DD HH:mm')){
+					$(cell).addClass('disabled');
+				}
+			},
 			dayClick: function (date, jsEvent, view) {
 				date_last_clicked = $(this);
 				$(this).css('background-color', '#bed7f3');
@@ -181,6 +224,7 @@
 				$('#editModal').modal();
 			},
 		});
+		
 	});
 
 </script>
