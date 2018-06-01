@@ -278,6 +278,14 @@ class ShipmentsModel extends CI_Model
         return $result;
     }
 
+    public function get_fields_to_update($selectString,$whereArray){
+        $this->db->select( is_null($selectString || empty($selectString)) ? '*' : $selectString );
+        $query = $this->db->get_where('shipments', $whereArray);
+        $result= $query->row_array();
+        if (!isset($result) || empty($result)) return NULL;
+        return $result;
+    }
+
     public function get_by_container_number($container_number){
         if (!strpos($container_number,'Unassigned')){
             $this->db->from('shipments');

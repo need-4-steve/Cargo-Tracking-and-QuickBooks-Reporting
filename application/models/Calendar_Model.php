@@ -26,7 +26,7 @@ class Calendar_Model extends CI_Model
     {
         if (is_null($md5) || empty($md5)) return false;
         $row = $this->db->where("md5_container_number_and_date", $md5)->get("calendar_events")->row_array();
-        print_r($row);
+        /*print_r($row);*/
         return $row;
     }
     
