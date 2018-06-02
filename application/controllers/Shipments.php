@@ -152,16 +152,19 @@ class Shipments extends CI_Controller
                     echo "[c]->".$c.PHP_EOL;
                     $valueCount = count($dataRows[$c]);
                     $dataRow_bol = trim(substr($dataRows[$c][0], 2, 10));
+                    echo "[dataRow_bol]->".$dataRow_bol.PHP_EOL;
                     $dataRow_CN = $dataRows[$c][1];
                     if ($dataRow_CN === 'Unassigned') {
-                        $dataRow_CN= "Unassigned->[".$dataRow_bol."]";
+                        $dataRow_CN= "Unassigned [".$dataRow_bol."]";
                     } else {
                         $lengthOfCN = strpos($dataRow_CN, '-');
                         $tempCNval = substr($dataRow_CN, 0, (($lengthOfCN > 4) ? $lengthOfCN : strlen($dataRow_CN)));
                         $dataRow_CN = $tempCNval;
                     }
+                    echo "[dataRow_CN]->".$dataRow_CN.PHP_EOL;
                     $data['newContainers'][$c - 1]['bill_of_lading']=$dataRow_bol;
                     $data['newContainers'][$c - 1]['container_number']=$dataRow_CN;
+                    $data['newContainers'][$c - 1]['latest_event']=$dataRows[$c][13];
                     echo "[bill_of_lading]->".$dataRow_bol. PHP_EOL;
                     echo "[container_number]->".$dataRow_CN . PHP_EOL;
                     $containerDataExists=$this->ShipmentsModel->record_exists($dataRow_CN);
@@ -178,17 +181,24 @@ class Shipments extends CI_Controller
                             $latestContainerEventTimestamp = trim(substr($latestContainerEventTimestamp, 0, strpos($latestContainerEventTimestamp,'(')));
                             $updateValues['latest_event_time_and_date'] = DateTime::createFromFormat('m/d/Y G:i', $latestContainerEventTimestamp);
                             if ($updateValues['latest_event_time_and_date'] < new DateTime('2017-01-01 12:00')) $updateValues['latest_event_time_and_date'] = null;
+                            if (!is_null($updateValues['latest_event_time_and_date'])){
+                                $updateValues['latest_event_time_and_date'] = $updateValues['latest_event_time_and_date']->format("Y-m-d\TH:i:s");
+                            }
                         } else {
                             $updateValues['latest_event_time_and_date']=null;
                         }
                         if (!is_null($etaDataRowString) && strlen($etaDataRowString) >= 15){
                             $etaDataRowString = trim(substr($etaDataRowString, 0, strpos($etaDataRowString,'(')));
                             $etaDataRowDate = DateTime::createFromFormat('m/d/Y G:i', $etaDataRowString);
+                            echo "[ETA DATA ROW STRING]->".$etaDataRowString . PHP_EOL;
                             if ($etaDataRowDate < new DateTime('2017-01-01 12:00')) $etaDataRowDate = null;
                             $etaDataRowDate->setTime(5, 00);
                             $nowTime = new DateTime('now'); //now
                             $nowTime->setTime(5, 00);
+                            echo "[ETA DATA ROW DATE]->".$etaDataRowDate->format('m-d-Y G:i') . PHP_EOL;
                             $diff = $nowTime->diff($etaDataRowDate);//date_diff($nowTime, $etaStrToTime);
+                            echo "[NOW TIME]->".$nowTime->format('m-d-Y G:i') . PHP_EOL;
+                            echo "[DIFF]->".$diff->days . " days." . PHP_EOL;
                             $updateValues['eta']=$etaDataRowDate->format('Y-m-d');
                             if (intVal($diff->invert)===0) {
                                 if ($diff->days > 7) $updateValues['status']=2;
@@ -198,26 +208,29 @@ class Shipments extends CI_Controller
                                 $updateValues['status']=-1;
                             }
                         } else {
-                            $$updateValues['eta'] = null;
+                            $updateValues['eta'] = null;
                         }
+                        echo "[STATUS]->".$updateValues['status'] . PHP_EOL;
                         $booleanValues = $this->ShipmentsModel->get_fields_to_update('freight,isf_required,customs,po_boolean,qb_rt,qb_ws,requires_payment,do,is_complete,is_active',array('container_number'=>$updateValues['container_number']));
                         $allTrue=true;
                         foreach($booleanValues as $boolKey=>$boolValue) {
                             if (strpos($boolKey,'is_complete') === false && strpos($boolKey,'is_active')===false){
-                                if (!$booleanValue) {
+                                if (!$boolValue) {
                                     $allTrue = false;
                                     break;
                                 }
                             }
                         }
                         $updateValues['is_complete'] = (strpos($data['newContainers'][$c - 1]['latest_event'],'Empty Container Returned')  !== false ? true : $allTrue);
+                        echo "[is_complete]-> ". (int) $updateValues['is_complete'] . PHP_EOL;
                         $updateValues['is_active'] = (strpos($data['newContainers'][$c - 1]['latest_event'],'Empty Container Returned')  !== false ? true : false);
+                        echo "[is_active]-> ". (int) $updateValues['is_active'] . PHP_EOL;
                         $data['newContainers'][$c - 1] = $this->ShipmentsModel->update_record(array('container_number' => $updateValues['container_number']),
-                                                                                        array('latest_event_time_and_date'=>$updateValues['latest_event_time_and_date']->format("Y-m-d\TH:i:s"),
+                                                                                        array('latest_event_time_and_date'=> (is_null($updateValues['latest_event_time_and_date']) || empty($updateValues['latest_event_time_and_date'])) ? null : $updateValues['latest_event_time_and_date'],
                                                                                                 'eta' => $updateValues['eta'],
                                                                                                 'status' => $updateValues['status'],
                                                                                                 'is_complete' => $updateValues['is_complete'],
-                                                                                                'is_active' => $updateValues['is_active']
+                                                                                                'is_active' => true     //$updateValues['is_active']
                                                                                         )
                                                                                 );
                     } else {
@@ -245,11 +258,14 @@ class Shipments extends CI_Controller
                         } else if (!is_null($data['newContainers'][$c - 1]['eta'])) {
                             $etaStrToTime = new DateTime($data['newContainers'][$c - 1]['eta']); //date_create($data['newContainers'][$c - 1]['eta']);
                             $etaStrToTime->setTime(5, 00);
+                            echo "[NEW ENTRY etaStrToTime]-> ".$etaStrToTime->format("Y-m-d\TH:i:s") . PHP_EOL;
                             $nowTime = new DateTime('now'); //now
                             $nowTime->setTime(5, 00);
                             $diff = $nowTime->diff($etaStrToTime);//date_diff($nowTime, $etaStrToTime);
+                            echo "[NEW ENTRY nowTime]-> ".$nowTime->format("Y-m-d\TH:i:s") . PHP_EOL;
                             //echo $data['newContainers'][$c - 1]['container_number'] . "= ". $nowTime->format('Y-m-d')." - ". $etaStrToTime->format('Y-m-d') ." =  ". $nowTime->diff($etaStrToTime)->days . "days difference" . PHP_EOL;
                             $statusValue = -1;
+                            echo "[NEW ENTRY diff]-> ".$diff->days . " days." . PHP_EOL;
                             if (intVal($diff->invert)===0) {
                                 if ($diff->days > 7) $statusValue=2;
                                 else if ($diff->days > 3) $statusValue=1;
@@ -260,6 +276,7 @@ class Shipments extends CI_Controller
                                 $statusValue=-1;
                                 //echo $data['newContainers'][$c - 1]['container_number'] . "[statusValue]= ". $statusValue." <-NEGATIVE" . PHP_EOL;
                             }
+                            echo "[NEW ENTRY statusValue]-> ".$statusValue . PHP_EOL;
                             $data['newContainers'][$c - 1]['status'] = $statusValue;
                         }
                         $data['newContainers'][$c - 1]['final_destination'] = $data['newContainers'][$c - 1]['destination_city'] . ', ' . $data['newContainers'][$c - 1]['destination_state'];
@@ -270,9 +287,9 @@ class Shipments extends CI_Controller
                         $data['newContainers'][$c - 1]['latest_event_time_and_date'] = date("Y-m-d\TH:i:s", strtotime($data['newContainers'][$c - 1]['latest_event_timestamp']));
                         $data['newContainers'][$c - 1]['is_complete'] = (strpos($data['newContainers'][$c - 1]['latest_event'],'Empty Container Returned')  !== false ? true : false);
                         $updateData = array(
-                            'status' => (array_key_exists('status',$data['newContainers'][$c - 1]) && !is_null($data['newContainers'][$c - 1]['status']) && !empty($data['newContainers'][$c - 1]['status']) ? $data['newContainers'][$c - 1]['status'] : 2),
-                            'bill_of_lading' => $data['newContainers'][$c - 1]['bill_of_lading'],
-                            'container_number' => $data['newContainers'][$c - 1]['container_number'],
+                            'status' => $statusValue,
+                            'bill_of_lading' => $dataRow_bol,
+                            'container_number' => $dataRow_CN,
                             'vendor_id' => $data['newContainers'][$c - 1]['vendor_id'],
                             'product_id' => $data['newContainers'][$c - 1]['product_id'],
                             'discharge_port' => $data['newContainers'][$c - 1]['discharge_port'],
@@ -287,7 +304,8 @@ class Shipments extends CI_Controller
                             'is_complete' => $data['newContainers'][$c - 1]['is_complete'],
                             'do' => $data['newContainers'][$c - 1]['do']);
                         $newId = $this->ShipmentsModel->add_record($updateData);
-                        if (!is_null($data['newContainers'][$c - 1]['eta']) && isset($data['newContainers'][$c - 1]['eta']) && !empty($data['newContainers'][$c - 1]['eta'])){
+                        echo "[NEW ENTRY ADDED newId]-> ".$newId . PHP_EOL;
+                        if (!is_null($data['newContainers'][$c - 1]['eta']) && !empty($data['newContainers'][$c - 1]['eta'])){
                             $etaStartDate =$etaStrToTime;
                             echo "[eta]".$data['newContainers'][$c - 1]['eta'] .PHP_EOL;
                             echo "[etaStart]".$etaStartDate->format('Y-m-d') .PHP_EOL;

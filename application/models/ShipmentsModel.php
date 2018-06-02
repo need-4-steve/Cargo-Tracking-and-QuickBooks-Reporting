@@ -162,9 +162,9 @@ class ShipmentsModel extends CI_Model
                     } ),
                 /*Field::inst( 'shipments.latest_event' ),
                 Field::inst( 'shipments.latest_event_time_and_date' )
-                    ->validator( Validate::dateFormat( 'Y-m-d H:i:s' ) )
-                    ->getFormatter( Format::datetime( 'Y-m-d H:i:s', 'Y-m-d H:i:s' ) )
-                    ->setFormatter( Format::datetime( 'Y-m-d H:i:s', 'Y-m-d H:i:s' ) ),*/
+                    ->validator( Validate::dateFormat( 'Y-m/d H:i:s' ) )
+                    ->getFormatter( Format::datetime( 'Y-m/d H:i:s', 'Y-m/d H:i:s' ) )
+                    ->setFormatter( Format::datetime( 'Y-m/d H:i:s', 'Y-m/d H:i:s' ) ),*/
                 Field::inst( 'shipments.container_size' )
                     ->validator( Validate::numeric() )
                     ->setFormatter( Format::ifEmpty( null ) ),
@@ -191,13 +191,40 @@ class ShipmentsModel extends CI_Model
                         } )
                     ->setFormatter( function ( $val, $data, $opts ) {
                         return ! $val ? 0 : 1;
-                    } )
+                    } ),
+                Field::inst( 'shipments.latest_event' )
             )
             ->leftJoin( 'products', 'products.id', '=', 'shipments.product_id' )
             ->leftJoin( 'truckers', 'truckers.id', '=', 'shipments.trucker_id' )
             ->leftJoin( 'vendors', 'vendors.id', '=', 'shipments.vendor_id' )
             ->process( $_POST )
             ->json();
+    }
+
+    public function mysql_db_result_query($query) {
+        $query = $this->db->query($query);
+        return $query->result_array();
+    }
+
+    public function mysql_db_row_query($query) {
+        $query = $this->db->query($query);
+        return $query->row_array();
+    }
+
+    public function generic_crud_db_function($action, $table, $conditions, $data ){
+        //INSERT SQL Query | SELECT | UPDATE | DELETE
+        /*switch (strtoupper($action)) {
+            case "INSERT":
+                break;
+            case "SELECT":
+                break;
+            case "UPDATE":
+                break;
+            case "DELETE":
+                break;
+        }*/
+        $this->db->order_by('id', 'desc');
+        return $this->db->get('vendors')->result_array();
     }
 
     public function get_product_id_by_vendor_id($vendor_id){

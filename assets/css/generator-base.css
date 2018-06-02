@@ -220,7 +220,7 @@ input[type=checkbox].rowCB:hover:after {
     width: 30px;
     height: 30px;
     background: #d3d3d3;
-    border: 1px solid #7e7e7e;
+    border: 1px solid #7e7e7e8c;
     -moz-border-radius: 30px;
     -webkit-border-radius: 30px;
     border-radius: 30px;
