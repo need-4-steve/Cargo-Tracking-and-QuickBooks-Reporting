@@ -424,10 +424,17 @@ class Shipments extends CI_Controller
                         $newETAdate = date("Y-m-d", strtotime($dateSpan));
                         if (!empty($htmlBoL)) $this->ShipmentsModel->update_record(array('bill_of_lading' => $htmlBoL), array('eta' => $newETAdate));
                     }
+                    // Mark as Read
+                    $setflagSEENresult = imap_setflag_full($inbox, $msgno, "\\Seen", ST_UID);
+                    if ($setflagSEENresult === false) {
+                        echo "error occurred while setting UNSEEN flag to SEEN<br/>";
+                    }
+
                 }
             }
             // colse the connection
             imap_expunge($inbox);
+            
             imap_close($inbox);
             $this->check_for_vendor_emails();
             echo "Start time: $starttime" . PHP_EOL;
