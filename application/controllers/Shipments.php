@@ -287,7 +287,7 @@ class Shipments extends CI_Controller
                         $data['newContainers'][$c - 1]['latest_event_time_and_date'] = date("Y-m-d\TH:i:s", strtotime($data['newContainers'][$c - 1]['latest_event_timestamp']));
                         $data['newContainers'][$c - 1]['is_complete'] = (strpos($data['newContainers'][$c - 1]['latest_event'],'Empty Container Returned')  !== false ? true : false);
                         $updateData = array(
-                            'status' => $statusValue,
+                            'status' => $data['newContainers'][$c - 1]['status'],
                             'bill_of_lading' => $dataRow_bol,
                             'container_number' => $dataRow_CN,
                             'vendor_id' => $data['newContainers'][$c - 1]['vendor_id'],

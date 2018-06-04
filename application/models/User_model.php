@@ -15,6 +15,9 @@ class User_model extends CI_Model{
         return $this->db->insert('users', $data);
     }
 
+    public function __construct() {
+        $this->load->database();
+    }
     // Log user in
     public function login($username, $password){
         // Validate
@@ -33,20 +36,22 @@ class User_model extends CI_Model{
     // Check username exists
     public function check_username_exists($username){
         $query = $this->db->get_where('users', array('username' => $username));
-        if(empty($query->row_array())){
+        /*if(empty($query->row_array())){
             return false;
         } else {
             return true;
-        }
+        }*/
+        return false;
     }
 
     // Check email exists
     public function check_email_exists($email){
         $query = $this->db->get_where('users', array('email' => $email));
-        if(empty($query->row_array())){
+       /*if(empty($query->row_array())){
             return false;
         } else {
             return true;
-        }
+        }*/
+        return false;
     }
 }

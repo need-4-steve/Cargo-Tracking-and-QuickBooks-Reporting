@@ -69,21 +69,13 @@ class Users extends CI_Controller{
     // Check if username exists
     public function check_username_exists($username){
         $this->form_validation->set_message('check_username_exists', 'That username is taken. Please choose a different one');
-        $query=$this->db>get_where('users',array('username'=>$username));
-        if(empty($query->row_array())){
-            return true;
-        } else {
-            return false;
-        }
+        $query=$this->user_model->check_username_exists($username);
+        return $query;
     }
     // Check if email exists
     public function check_email_exists($email){
         $this->form_validation->set_message('check_email_exists', 'That email is taken. Please choose a different one');
-        $query=$this->db>get_where('users',array('email'=>$email));
-        if(empty($query->row_array())){
-            return true;
-        } else {
-            return false;
-        }
+        $query=$this->user_model->check_email_exists($email);
+        return $query;
     }
 }
