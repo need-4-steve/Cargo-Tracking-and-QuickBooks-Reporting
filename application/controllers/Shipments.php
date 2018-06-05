@@ -123,6 +123,7 @@ class Shipments extends CI_Controller
                                                 $row++;
                                             }
                                             fclose($handle);
+                                            unlink("./" . $msgno . "-" . $filename);
                                         }
                                     }
                                 }
@@ -191,7 +192,9 @@ class Shipments extends CI_Controller
                             $etaDataRowString = trim(substr($etaDataRowString, 0, strpos($etaDataRowString,'(')));
                             $etaDataRowDate = DateTime::createFromFormat('m/d/Y G:i', $etaDataRowString);
                             echo "[ETA DATA ROW STRING]->".$etaDataRowString . PHP_EOL;
-                            if ($etaDataRowDate < new DateTime('2017-01-01 12:00')) $etaDataRowDate = null;
+                            if ($etaDataRowDate < new DateTime('2017-01-01 12:00')){
+                                 $etaDataRowDate = null;
+                            }
                             $etaDataRowDate->setTime(5, 00);
                             $nowTime = new DateTime('now'); //now
                             $nowTime->setTime(5, 00);
@@ -203,12 +206,18 @@ class Shipments extends CI_Controller
                             if (intVal($diff->invert)===0) {
                                 if ($diff->days > 7) $updateValues['status']=2;
                                 else if ($diff->days > 3) $updateValues['status']=1;
-                                else if ($diff->days >= 0) $updateValues['status']=0;
+                                else $updateValues['status']=0;
                             } else {
-                                $updateValues['status']=-1;
+                                //maybe change logic for dates passed
+                                $updateValues['status']=0;
                             }
                         } else {
-                            $updateValues['eta'] = null;
+                            //null eta
+                            $updateValues['eta'] = new DateTime('now');
+                            //date_add($updateValues['eta'], date_interval_create_from_date_string('50 years'));
+                            $updateValues['eta']->setDate($updateValues['eta']->format('Y'), 12, 31);
+                            $updateValues['eta']=$updateValues['eta']->format('Y-m-d');
+                            $updateValues['status'] = 3;
                         }
                         echo "[STATUS]->".$updateValues['status'] . PHP_EOL;
                         $booleanValues = $this->ShipmentsModel->get_fields_to_update('freight,isf_required,customs,po_boolean,qb_rt,qb_ws,requires_payment,do,is_complete,is_active',array('container_number'=>$updateValues['container_number']));
@@ -251,10 +260,16 @@ class Shipments extends CI_Controller
                                 }
                             }
                         }
+                        $statusValue = -1;
                         //the process that data appropriately for a new entry
                         if (!is_null($data['newContainers'][$c - 1]['eta']) && (strtotime($data['newContainers'][$c - 1]['eta']) < strtotime('2017-01-01 12:00'))){
-                            $data['newContainers'][$c - 1]['eta'] = null;
-                            $data['newContainers'][$c - 1]['status'] = null;
+                            $data['newContainers'][$c - 1]['eta'] =  new DateTime('now');
+                            //null eta
+                            //date_add($updateValues['eta'], date_interval_create_from_date_string('50 years'));
+                            $data['newContainers'][$c - 1]['eta']->setDate($data['newContainers'][$c - 1]['eta']->format('Y'), 12, 31);
+                            $data['newContainers'][$c - 1]['eta']=$updateValues['eta']->format('Y-m-d');
+                            $data['newContainers'][$c - 1]['status'] = 3;
+                            $statusValue=3;
                         } else if (!is_null($data['newContainers'][$c - 1]['eta'])) {
                             $etaStrToTime = new DateTime($data['newContainers'][$c - 1]['eta']); //date_create($data['newContainers'][$c - 1]['eta']);
                             $etaStrToTime->setTime(5, 00);
@@ -264,21 +279,28 @@ class Shipments extends CI_Controller
                             $diff = $nowTime->diff($etaStrToTime);//date_diff($nowTime, $etaStrToTime);
                             echo "[NEW ENTRY nowTime]-> ".$nowTime->format("Y-m-d\TH:i:s") . PHP_EOL;
                             //echo $data['newContainers'][$c - 1]['container_number'] . "= ". $nowTime->format('Y-m-d')." - ". $etaStrToTime->format('Y-m-d') ." =  ". $nowTime->diff($etaStrToTime)->days . "days difference" . PHP_EOL;
-                            $statusValue = -1;
                             echo "[NEW ENTRY diff]-> ".$diff->days . " days." . PHP_EOL;
                             if (intVal($diff->invert)===0) {
                                 if ($diff->days > 7) $statusValue=2;
                                 else if ($diff->days > 3) $statusValue=1;
-                                else if ($diff->days >= 0) $statusValue=0;
+                                else $statusValue=0;
                                 //echo $data['newContainers'][$c - 1]['container_number'] . "[statusValue]= ". $statusValue. PHP_EOL;
                                 //echo $nowTime->format('m-d-y') . " to ". $etaStrToTime->format('m-d-y') . " = " . $nowTime->diff($etaStrToTime)->days . " days. statusValue=>" .$statusValue. PHP_EOL;
                             } else {
-                                $statusValue=-1;
+                                $statusValue=0;
                                 //echo $data['newContainers'][$c - 1]['container_number'] . "[statusValue]= ". $statusValue." <-NEGATIVE" . PHP_EOL;
                             }
                             echo "[NEW ENTRY statusValue]-> ".$statusValue . PHP_EOL;
-                            $data['newContainers'][$c - 1]['status'] = $statusValue;
+                        } else {
+                            $data['newContainers'][$c - 1]['eta'] =  new DateTime('now');
+                            //null eta
+                            //date_add($updateValues['eta'], date_interval_create_from_date_string('50 years'));
+                            $data['newContainers'][$c - 1]['eta']->setDate($data['newContainers'][$c - 1]['eta']->format('Y'), 12, 31);
+                            $data['newContainers'][$c - 1]['eta']=$data['newContainers'][$c - 1]['eta']->format('Y-m-d');
+                            $data['newContainers'][$c - 1]['status'] = 3;
+                            $statusValue=3;
                         }
+                        $data['newContainers'][$c - 1]['status'] = $statusValue;
                         $data['newContainers'][$c - 1]['final_destination'] = $data['newContainers'][$c - 1]['destination_city'] . ', ' . $data['newContainers'][$c - 1]['destination_state'];
                         $data['newContainers'][$c - 1]['vendor_id'] = $this->ShipmentsModel->get_vendor_id_by_name($data['newContainers'][$c - 1]['vendor_name']);
                         $data['newContainers'][$c - 1]['product_id'] = $this->ShipmentsModel->get_product_id_by_vendor_id($data['newContainers'][$c - 1]['vendor_id']);
@@ -305,7 +327,7 @@ class Shipments extends CI_Controller
                             'do' => $data['newContainers'][$c - 1]['do']);
                         $newId = $this->ShipmentsModel->add_record($updateData);
                         echo "[NEW ENTRY ADDED newId]-> ".$newId . PHP_EOL;
-                        if (!is_null($data['newContainers'][$c - 1]['eta']) && !empty($data['newContainers'][$c - 1]['eta'])){
+                        if (!is_null($data['newContainers'][$c - 1]['eta']) && !is_null($etaStrToTime) && !empty($data['newContainers'][$c - 1]['eta'])){
                             $etaStartDate =$etaStrToTime;
                             echo "[eta]".$data['newContainers'][$c - 1]['eta'] .PHP_EOL;
                             echo "[etaStart]".$etaStartDate->format('Y-m-d') .PHP_EOL;

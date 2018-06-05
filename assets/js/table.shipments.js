@@ -242,6 +242,7 @@
                 //responsive: 'true',
                 columnDefs: [{
                         "defaultContent": " ",
+                        "type": "non-empty-string",
                         "targets": "_all"
                     },
                     {
@@ -360,7 +361,7 @@
                                         color = 'circle_yellow';
                                     } else if (data === '2') {
                                         color = 'circle_green';
-                                    } else if (data === '-1') {
+                                    } else if (data === '3') {
                                         color = 'circle_disabled';
                                     }
                                 }
@@ -694,7 +695,23 @@
             function updateStatus(row) {
 
             }
+            jQuery.extend(jQuery.fn.dataTableExt.oSort, {
+                "non-empty-string-asc": function(str1, str2) {
+                    if (str1 == null || str1 == "")
+                        return 1;
+                    if (str2 == null || str2 == "")
+                        return -1;
+                    return ((str1 < str2) ? -1 : ((str1 > str2) ? 1 : 0));
+                },
 
+                "non-empty-string-desc": function(str1, str2) {
+                    if (str1 == null || str1 == "")
+                        return 1;
+                    if (str2 == null || str2 == "")
+                        return -1;
+                    return ((str1 < str2) ? 1 : ((str1 > str2) ? -1 : 0));
+                }
+            });
             /*[START checkbox class change section]*/
             $('#shipments')
                 .on('change', '#editor-freight',
@@ -788,14 +805,6 @@
                 }
             });
 
-            $('#dataOutputDiv').on('click', function(e) {
-                var vPool = "";
-                jQuery.each(dataArray, function(i, val) {
-                    vPool += JSON.stringify(val) + "<hr />";
-                });
-                //We add vPool HTML content to #myDIV
-                $('#dataOutputDiv').html(vPool);
-            });
             new $.fn.dataTable.Buttons(
                 table, [
                     /* { extend: "create", editor: editor },*/
