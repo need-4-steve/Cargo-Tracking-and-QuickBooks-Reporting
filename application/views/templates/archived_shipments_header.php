@@ -17,7 +17,7 @@
 	<script type="text/javascript" charset="utf-8" src="<?php echo base_url(); ?>assets/js/editor.bootstrap4.min.js"></script>
 	<script type="text/javascript" charset="utf-8" src="<?php echo base_url(); ?>assets/js/moment.min.js"></script>
 	<script type="text/javascript" charset="utf-8" src="<?php echo base_url(); ?>assets/js/fullcalendar.js"></script>
-	<script type="text/javascript" charset="utf-8" src="<?php echo base_url(); ?>assets/js/table.shipments.js"></script>
+	<script type="text/javascript" charset="utf-8" src="<?php echo base_url(); ?>assets/js/table.archived_shipments.js"></script>
 	<script src="<?php echo base_url() ?>assets/js/gcal.js"></script>
 	<script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
 	<script src="<?php echo base_url(); ?>assets/js/custom.js"></script>

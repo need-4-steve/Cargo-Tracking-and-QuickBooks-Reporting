@@ -9,7 +9,11 @@ class Shipments extends CI_Controller
         if (!$this->session->userdata('logged_in')) {
             redirect('users/login');
         }
-        redirect('shipments/getcurrent');
+        //redirect('shipments/getcurrent');
+        $data['title'] = "Active Shipments";
+        $this->load->view('templates/header', $data);
+        $this->load->view('shipments/index', $data);
+        $this->load->view('templates/footer');
     }
 
     public function autoupdate($uname, $pw) {
