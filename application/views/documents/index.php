@@ -22,7 +22,7 @@
 			ciFileBrowser.input.listfiles.create({
 				name: 'files',
 				path: function () {
-					return ciFileBrowser.filemanager.getCurrent();
+					return ciFileBrowser.filemanager.getCurrent() + '/<?php echo $_GET['directory']?>/';
 				},
 				btnSend: $('#btn_upload_files'),
 				done: function () {
@@ -55,7 +55,7 @@
 
 	</div>
 	<div>
-		<b class="btn" id="btn_create_forder" onclick="ciFileBrowser.filemanager.createFolderOnServer()">Create forder</b>
+		<b class="btn" id="btn_create_forder" onclick="ciFileBrowser.filemanager.createFolderOnServer()">Create folder</b>
 	</div>
 </body>
 

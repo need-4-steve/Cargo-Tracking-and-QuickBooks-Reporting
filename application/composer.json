@@ -1,19 +1,20 @@
 {
-	"description": "The CodeIgniter framework",
-	"name": "codeigniter/framework",
-	"type": "project",
-	"homepage": "https://codeigniter.com",
-	"license": "MIT",
-	"support": {
-		"forum": "http://forum.codeigniter.com/",
-		"wiki": "https://github.com/bcit-ci/CodeIgniter/wiki",
-		"slack": "https://codeigniterchat.slack.com",
-		"source": "https://github.com/bcit-ci/CodeIgniter"
-	},
-	"require": {
-		"paquettg/php-html-parser": "^1.7",
-		"gufy/pdftohtml-php": "~2",
-		"smalot/pdfparser": "^0.12.0",
-		"tonchik-tm/pdf-to-html": "~1"
-	}
+    "description": "The CodeIgniter framework",
+    "name": "codeigniter/framework",
+    "type": "project",
+    "homepage": "https://codeigniter.com",
+    "license": "MIT",
+    "support": {
+        "forum": "http://forum.codeigniter.com/",
+        "wiki": "https://github.com/bcit-ci/CodeIgniter/wiki",
+        "slack": "https://codeigniterchat.slack.com",
+        "source": "https://github.com/bcit-ci/CodeIgniter"
+    },
+    "require": {
+        "paquettg/php-html-parser": "^1.7",
+        "gufy/pdftohtml-php": "~2",
+        "smalot/pdfparser": "^0.12.0",
+        "tonchik-tm/pdf-to-html": "~1",
+        "servocoder/richfilemanager-php": "^1.2"
+    }
 }

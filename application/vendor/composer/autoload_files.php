@@ -8,4 +8,5 @@ $baseDir = dirname($vendorDir);
 return array(
     '0e6d7bf4a5811bfa5cf40c5ccd6fae6a' => $vendorDir . '/symfony/polyfill-mbstring/bootstrap.php',
     '72579e7bd17821bb1321b87411366eae' => $vendorDir . '/illuminate/support/helpers.php',
+    '5817bbcd8f2360e78d31057b221f8ef7' => $vendorDir . '/servocoder/richfilemanager-php/src/helpers.php',
 );

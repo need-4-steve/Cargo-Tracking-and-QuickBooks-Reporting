@@ -192,7 +192,8 @@ class ShipmentsModel extends CI_Model
                     ->setFormatter( function ( $val, $data, $opts ) {
                         return ! $val ? 0 : 1;
                     } ),
-                Field::inst( 'shipments.latest_event' )
+                    Field::inst( 'shipments.directory_name' ),
+                    Field::inst( 'shipments.latest_event' )
             )
             ->leftJoin( 'products', 'products.id', '=', 'shipments.product_id' )
             ->leftJoin( 'truckers', 'truckers.id', '=', 'shipments.trucker_id' )
@@ -274,7 +275,7 @@ class ShipmentsModel extends CI_Model
         if (!isset($vendor_id) || empty($vendor_id)) return null;
         $query = $this->db->get_where('vendors', array('id' => $vendor_id));
         $result= $query->row_array();
-        if (!isset($result) || empty($result) || !array_key_exists('product_id',$result)) return NULL;
+        if (!isset($result) || empty($result)) return NULL;
         return $result;
     }
 
@@ -324,6 +325,16 @@ class ShipmentsModel extends CI_Model
         } else {
             return NULL;
         }
+    }
+    
+    
+    public function get_by_po_number($po_number){
+        $this->db->from('shipments');
+        $this->db->where('po',$po_number);
+        $query = $this->db->get();
+        $row= $query->row();
+        if (!isset($row)) return NULL;
+        return $row;
     }
 
     public function get_by_bol($bol){

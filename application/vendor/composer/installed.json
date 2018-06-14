@@ -116,8 +116,8 @@
     },
     {
         "name": "illuminate/config",
-        "version": "v5.6.23",
-        "version_normalized": "5.6.23.0",
+        "version": "v5.6.25",
+        "version_normalized": "5.6.25.0",
         "source": {
             "type": "git",
             "url": "https://github.com/illuminate/config.git",
@@ -161,9 +161,55 @@
         "homepage": "https://laravel.com"
     },
     {
+        "name": "illuminate/container",
+        "version": "v5.6.25",
+        "version_normalized": "5.6.25.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/illuminate/container.git",
+            "reference": "1f0757cae8749400aeda730f6438a081fc3c082d"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/illuminate/container/zipball/1f0757cae8749400aeda730f6438a081fc3c082d",
+            "reference": "1f0757cae8749400aeda730f6438a081fc3c082d",
+            "shasum": ""
+        },
+        "require": {
+            "illuminate/contracts": "5.6.*",
+            "php": "^7.1.3",
+            "psr/container": "~1.0"
+        },
+        "time": "2018-05-24T13:16:56+00:00",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "5.6-dev"
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "Illuminate\\Container\\": ""
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Taylor Otwell",
+                "email": "taylor@laravel.com"
+            }
+        ],
+        "description": "The Illuminate Container package.",
+        "homepage": "https://laravel.com"
+    },
+    {
         "name": "illuminate/contracts",
-        "version": "v5.6.23",
-        "version_normalized": "5.6.23.0",
+        "version": "v5.6.25",
+        "version_normalized": "5.6.25.0",
         "source": {
             "type": "git",
             "url": "https://github.com/illuminate/contracts.git",
@@ -208,17 +254,17 @@
     },
     {
         "name": "illuminate/support",
-        "version": "v5.6.23",
-        "version_normalized": "5.6.23.0",
+        "version": "v5.6.25",
+        "version_normalized": "5.6.25.0",
         "source": {
             "type": "git",
             "url": "https://github.com/illuminate/support.git",
-            "reference": "7ba15bb00ac57c621e8291ce737ae7ea497ba02b"
+            "reference": "192a3c3690a90467974f547ff648899679a4243c"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/illuminate/support/zipball/7ba15bb00ac57c621e8291ce737ae7ea497ba02b",
-            "reference": "7ba15bb00ac57c621e8291ce737ae7ea497ba02b",
+            "url": "https://api.github.com/repos/illuminate/support/zipball/192a3c3690a90467974f547ff648899679a4243c",
+            "reference": "192a3c3690a90467974f547ff648899679a4243c",
             "shasum": ""
         },
         "require": {
@@ -233,10 +279,11 @@
         },
         "suggest": {
             "illuminate/filesystem": "Required to use the composer class (5.6.*).",
+            "ramsey/uuid": "Required to use Str::uuid() (^3.7).",
             "symfony/process": "Required to use the composer class (~4.0).",
             "symfony/var-dumper": "Required to use the dd function (~4.0)."
         },
-        "time": "2018-05-18T13:51:23+00:00",
+        "time": "2018-06-12T14:37:15+00:00",
         "type": "library",
         "extra": {
             "branch-alias": {
@@ -267,17 +314,17 @@
     },
     {
         "name": "nesbot/carbon",
-        "version": "1.28.0",
-        "version_normalized": "1.28.0.0",
+        "version": "1.29.2",
+        "version_normalized": "1.29.2.0",
         "source": {
             "type": "git",
             "url": "https://github.com/briannesbitt/Carbon.git",
-            "reference": "00149d95fc91ef10f19d3a66889bc3bb7500fa7b"
+            "reference": "ed6aa898982f441ccc9b2acdec51490f2bc5d337"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/briannesbitt/Carbon/zipball/00149d95fc91ef10f19d3a66889bc3bb7500fa7b",
-            "reference": "00149d95fc91ef10f19d3a66889bc3bb7500fa7b",
+            "url": "https://api.github.com/repos/briannesbitt/Carbon/zipball/ed6aa898982f441ccc9b2acdec51490f2bc5d337",
+            "reference": "ed6aa898982f441ccc9b2acdec51490f2bc5d337",
             "shasum": ""
         },
         "require": {
@@ -288,7 +335,7 @@
             "friendsofphp/php-cs-fixer": "~2",
             "phpunit/phpunit": "^4.8.35 || ^5.7"
         },
-        "time": "2018-05-18T15:26:18+00:00",
+        "time": "2018-05-29T15:23:46+00:00",
         "type": "library",
         "installation-source": "dist",
         "autoload": {
@@ -587,6 +634,60 @@
         ]
     },
     {
+        "name": "servocoder/richfilemanager-php",
+        "version": "v1.2.4",
+        "version_normalized": "1.2.4.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/servocoder/RichFilemanager-PHP.git",
+            "reference": "f16e159140083390e6820f85105210c6aab6c694"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/servocoder/RichFilemanager-PHP/zipball/f16e159140083390e6820f85105210c6aab6c694",
+            "reference": "f16e159140083390e6820f85105210c6aab6c694",
+            "shasum": ""
+        },
+        "require": {
+            "illuminate/config": "5.4.*|5.5.*|5.6.*",
+            "illuminate/container": "5.4.*|5.5.*|5.6.*",
+            "php": ">= 5.6.4",
+            "symfony/event-dispatcher": "~3.4|~4.0",
+            "symfony/http-foundation": "~3.4|~4.0"
+        },
+        "time": "2018-04-01T07:21:59+00:00",
+        "type": "project",
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "RFM\\": "src/"
+            },
+            "files": [
+                "src/helpers.php"
+            ]
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Pavel Solomienko",
+                "email": "servocoder@gmail.com",
+                "homepage": "http://fm.devale.pro",
+                "role": "Developer"
+            }
+        ],
+        "description": "PHP connector for RichFilemanager",
+        "keywords": [
+            "connector",
+            "filemanager",
+            "php",
+            "plugin",
+            "richfilemanager"
+        ]
+    },
+    {
         "name": "smalot/pdfparser",
         "version": "v0.12.0",
         "version_normalized": "0.12.0.0",
@@ -636,6 +737,127 @@
             "pdf",
             "text"
         ]
+    },
+    {
+        "name": "symfony/event-dispatcher",
+        "version": "v4.1.0",
+        "version_normalized": "4.1.0.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/symfony/event-dispatcher.git",
+            "reference": "2391ed210a239868e7256eb6921b1bd83f3087b5"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/symfony/event-dispatcher/zipball/2391ed210a239868e7256eb6921b1bd83f3087b5",
+            "reference": "2391ed210a239868e7256eb6921b1bd83f3087b5",
+            "shasum": ""
+        },
+        "require": {
+            "php": "^7.1.3"
+        },
+        "conflict": {
+            "symfony/dependency-injection": "<3.4"
+        },
+        "require-dev": {
+            "psr/log": "~1.0",
+            "symfony/config": "~3.4|~4.0",
+            "symfony/dependency-injection": "~3.4|~4.0",
+            "symfony/expression-language": "~3.4|~4.0",
+            "symfony/stopwatch": "~3.4|~4.0"
+        },
+        "suggest": {
+            "symfony/dependency-injection": "",
+            "symfony/http-kernel": ""
+        },
+        "time": "2018-04-06T07:35:57+00:00",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "4.1-dev"
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "Symfony\\Component\\EventDispatcher\\": ""
+            },
+            "exclude-from-classmap": [
+                "/Tests/"
+            ]
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Fabien Potencier",
+                "email": "fabien@symfony.com"
+            },
+            {
+                "name": "Symfony Community",
+                "homepage": "https://symfony.com/contributors"
+            }
+        ],
+        "description": "Symfony EventDispatcher Component",
+        "homepage": "https://symfony.com"
+    },
+    {
+        "name": "symfony/http-foundation",
+        "version": "v4.1.0",
+        "version_normalized": "4.1.0.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/symfony/http-foundation.git",
+            "reference": "a916c88390fb861ee21f12a92b107d51bb68af99"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/symfony/http-foundation/zipball/a916c88390fb861ee21f12a92b107d51bb68af99",
+            "reference": "a916c88390fb861ee21f12a92b107d51bb68af99",
+            "shasum": ""
+        },
+        "require": {
+            "php": "^7.1.3",
+            "symfony/polyfill-mbstring": "~1.1"
+        },
+        "require-dev": {
+            "predis/predis": "~1.0",
+            "symfony/expression-language": "~3.4|~4.0"
+        },
+        "time": "2018-05-25T14:55:38+00:00",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "4.1-dev"
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "Symfony\\Component\\HttpFoundation\\": ""
+            },
+            "exclude-from-classmap": [
+                "/Tests/"
+            ]
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Fabien Potencier",
+                "email": "fabien@symfony.com"
+            },
+            {
+                "name": "Symfony Community",
+                "homepage": "https://symfony.com/contributors"
+            }
+        ],
+        "description": "Symfony HttpFoundation Component",
+        "homepage": "https://symfony.com"
     },
     {
         "name": "symfony/polyfill-mbstring",
@@ -700,17 +922,17 @@
     },
     {
         "name": "symfony/translation",
-        "version": "v4.0.10",
-        "version_normalized": "4.0.10.0",
+        "version": "v4.1.0",
+        "version_normalized": "4.1.0.0",
         "source": {
             "type": "git",
             "url": "https://github.com/symfony/translation.git",
-            "reference": "e1f5863d0a9e79cfec7f031421ced3fe1d403e66"
+            "reference": "16328f5b217cebc8dd4adfe4aeeaa8c377581f5a"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/symfony/translation/zipball/e1f5863d0a9e79cfec7f031421ced3fe1d403e66",
-            "reference": "e1f5863d0a9e79cfec7f031421ced3fe1d403e66",
+            "url": "https://api.github.com/repos/symfony/translation/zipball/16328f5b217cebc8dd4adfe4aeeaa8c377581f5a",
+            "reference": "16328f5b217cebc8dd4adfe4aeeaa8c377581f5a",
             "shasum": ""
         },
         "require": {
@@ -725,6 +947,7 @@
         "require-dev": {
             "psr/log": "~1.0",
             "symfony/config": "~3.4|~4.0",
+            "symfony/console": "~3.4|~4.0",
             "symfony/dependency-injection": "~3.4|~4.0",
             "symfony/finder": "~2.8|~3.0|~4.0",
             "symfony/intl": "~3.4|~4.0",
@@ -735,11 +958,11 @@
             "symfony/config": "",
             "symfony/yaml": ""
         },
-        "time": "2018-05-21T10:09:47+00:00",
+        "time": "2018-05-30T07:26:09+00:00",
         "type": "library",
         "extra": {
             "branch-alias": {
-                "dev-master": "4.0-dev"
+                "dev-master": "4.1-dev"
             }
         },
         "installation-source": "dist",

@@ -9,6 +9,7 @@ class ComposerStaticInitb10d9616e87fb2c59a272bfd1d6d7387
     public static $files = array (
         '0e6d7bf4a5811bfa5cf40c5ccd6fae6a' => __DIR__ . '/..' . '/symfony/polyfill-mbstring/bootstrap.php',
         '72579e7bd17821bb1321b87411366eae' => __DIR__ . '/..' . '/illuminate/support/helpers.php',
+        '5817bbcd8f2360e78d31057b221f8ef7' => __DIR__ . '/..' . '/servocoder/richfilemanager-php/src/helpers.php',
     );
 
     public static $prefixLengthsPsr4 = array (
@@ -20,6 +21,12 @@ class ComposerStaticInitb10d9616e87fb2c59a272bfd1d6d7387
         array (
             'Symfony\\Polyfill\\Mbstring\\' => 26,
             'Symfony\\Component\\Translation\\' => 30,
+            'Symfony\\Component\\HttpFoundation\\' => 33,
+            'Symfony\\Component\\EventDispatcher\\' => 34,
+        ),
+        'R' => 
+        array (
+            'RFM\\' => 4,
         ),
         'P' => 
         array (
@@ -31,6 +38,7 @@ class ComposerStaticInitb10d9616e87fb2c59a272bfd1d6d7387
         array (
             'Illuminate\\Support\\' => 19,
             'Illuminate\\Contracts\\' => 21,
+            'Illuminate\\Container\\' => 21,
             'Illuminate\\Config\\' => 18,
         ),
         'G' => 
@@ -56,6 +64,18 @@ class ComposerStaticInitb10d9616e87fb2c59a272bfd1d6d7387
         array (
             0 => __DIR__ . '/..' . '/symfony/translation',
         ),
+        'Symfony\\Component\\HttpFoundation\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/symfony/http-foundation',
+        ),
+        'Symfony\\Component\\EventDispatcher\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/symfony/event-dispatcher',
+        ),
+        'RFM\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/servocoder/richfilemanager-php/src',
+        ),
         'Psr\\SimpleCache\\' => 
         array (
             0 => __DIR__ . '/..' . '/psr/simple-cache/src',
@@ -75,6 +95,10 @@ class ComposerStaticInitb10d9616e87fb2c59a272bfd1d6d7387
         'Illuminate\\Contracts\\' => 
         array (
             0 => __DIR__ . '/..' . '/illuminate/contracts',
+        ),
+        'Illuminate\\Container\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/illuminate/container',
         ),
         'Illuminate\\Config\\' => 
         array (

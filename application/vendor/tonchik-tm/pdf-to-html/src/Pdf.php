@@ -81,7 +81,11 @@ class Pdf extends Base
         if($this->info == null)
             $this->setInfoObject();
             
-        return $this->info['pages'];
+        if (array_key_exists('pages',$this->info)){
+            return $this->info['pages'];
+        }else{
+            return 0;
+        }
     }
 
     /**
@@ -165,6 +169,39 @@ class Pdf extends Base
 
         if ($this->getOptions('clearAfter'))
             $this->clearOutputDir($this->getOptions('removeOutputDir'));
+    }
+    public function getHtmlContent()
+    {
+        $outputDir = $this->getOptions('outputDir') ? $this->getOptions('outputDir') : dirname(__FILE__) . '/../output/' . uniqid();
+        if (!file_exists($outputDir)) mkdir($outputDir, 0777, true);
+
+        $this->setOutputDir($outputDir)->generate();
+
+        $fileinfo = pathinfo($this->file);
+        $base_path = $this->getOutputDir() . '/' . $fileinfo['filename'];
+
+        $countPages = $this->countPages();
+        if ($countPages) {
+            if ($countPages > 1)
+                for ($i = 1; $i <= $countPages; $i++) {
+                    $content = file_get_contents($base_path . '-' . $i . '.html');
+                    $this->html->addPage($i, $content);
+                    if ($this->getOptions('clearAfter'))
+                    $this->clearOutputDir($this->getOptions('removeOutputDir'));
+                    return $content;
+                }
+            else {
+                $content = file_get_contents($base_path . '.html');
+                $this->html->addPage(1, $content);
+                if ($this->getOptions('clearAfter'))
+            $this->clearOutputDir($this->getOptions('removeOutputDir'));
+                return $content;
+            }
+        }
+
+        if ($this->getOptions('clearAfter'))
+            $this->clearOutputDir($this->getOptions('removeOutputDir'));
+        return null;
     }
 
     /**

@@ -6,15 +6,15 @@
         <h1 class="text-center"><?= $title; ?></h1>
         <div class="form-group">
             <label>Name</label>
-            <input type="text" class="form-control" name="name" placeholder="Name">
+            <input type="text" class="form-control" name="name" placeholder="Name" value="<?php echo set_value('name'); ?>">
         </div>
         <div class="form-group">
             <label>Email</label>
-            <input type="email" class="form-control" name="email" placeholder="Email">
+            <input type="email" class="form-control" name="email" placeholder="Email" value="<?php echo set_value('email'); ?>">
         </div>
         <div class="form-group">
             <label>Username</label>
-            <input type="text" class="form-control" name="username" placeholder="Username">
+            <input type="text" class="form-control" name="username" placeholder="Username" value="<?php echo set_value('username'); ?>">
         </div>
         <div class="form-group">
             <label>Password</label>

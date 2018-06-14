@@ -1,80 +1,72 @@
+
 @import url(https://fonts.googleapis.com/css?family=Raleway:100);
-.container {
-    margin-left: 0px;
-}
 
 body.dataTables,
 body.jqueryui {
-    font: 90%/1.45em "Helvetica Neue", HelveticaNeue, Arial, Helvetica, sans-serif;
-    margin: 0;
-    padding: 0;
-    color: #333;
-    background-color: #fff;
+	font: 75%/1.25em "Helvetica Neue", HelveticaNeue, Arial, Helvetica, sans-serif;
+	margin: 0;
+	padding: 0;
+	color: #333;
+	background-color: #fff;
 }
 
 body.dataTables div.container,
 body.jqueryui div.container {
-    max-width: 980px;
-    margin: 0 auto;
+	max-width: 980px;
+	margin: 0 auto;
 }
 
 body.dataTables h1,
 body.jqueryui h1 {
-    font-family: 'HelveticaNeue-UltraLight', 'Helvetica Neue UltraLight', 'Raleway', 'Helvetica Neue', Arial, Helvetica, sans-serif;
-    font-weight: 100;
-    letter-spacing: 1px;
-    font-size: 3em;
-    line-height: 1em;
+	font-family: 'HelveticaNeue-UltraLight', 'Helvetica Neue UltraLight', 'Raleway', 'Helvetica Neue', Arial, Helvetica, sans-serif;
+	font-weight: 100;
+	letter-spacing: 1px;
+	font-size: 3em;
+	line-height: 1em;
 }
 
 h1 span {
-    font-size: 0.5em;
-    line-height: 1em;
+	font-size: 0.5em;
+	line-height: 1em;
 }
-
-.highlight {
-    background-color: whitesmoke !important;
+/*
+tr:nth-child(odd){
+	background: #fff2dd;
+}*/
+table.dataTable thead .sorting {
+     background-image: none !important;
 }
-
-.highlight-lighter {
-    background-color: #fafafa !important;
+table.dataTable thead .sorting_asc {
+    background-image: none !important;
 }
-
-table.dataTable.display tbody>tr.odd>.selected,
-table.dataTable.order-column.stripe tbody>tr.odd>.selected {
-    background-color: #a6b4cd;
+table.dataTable thead .sorting_desc {
+    background-image: none !important;
 }
-
-table.dataTable tbody tr.selected,
-table.dataTable tbody th.selected,
-table.dataTable tbody td.selected {
-    color: black;
+table.dataTable th{
+	background: #333334;
+    color: white;
+	padding: 0px !important;
+	margin: 0px !important;
 }
-
-table.table-bordered.dataTable tbody th,
-table.table-bordered.dataTable tbody td {
-    vertical-align: middle;
-    position: relative;
-    bottom: 1px;
+table.dataTable td {
+	/*border: 1px solid #ccc;*/
+	text-align: center;
+	border: 1px solid white;
+	padding-left: 0px !important;
+	padding-right: 0px !important;
+	padding-top: 5px !important;
+	margin: 0px !important;
+	vertical-align: middle !important;
 }
-
-table.dataTable thead th.select-checkbox.sorting_asc:before,
-table.dataTable thead th.sorting_desc:before,
-table.dataTable thead th.select-checkbox.sorting_asc_disabled:before,
-table.dataTable thead th.select-checkbox.sorting_desc_disabled:before {
-    content: "\2191";
+/*
+tr:nth-child(even) {*/
+/*    background-color: #f2f2f2*/
+	/*background-color: #fffaf2;
 }
-
-table.dataTable thead th.select-checkbox.sorting_asc:after,
-table.dataTable thead th.sorting_desc:after,
-table.dataTable thead th.select-checkbox.sorting_asc_disabled:after,
-table.dataTable thead th.select-checkbox.sorting_desc_disabled:after {
-    content: "\2193";
-}
-
+*/
 .status_red {
-    color: firebrick !important;
-    background-color: #ff7171 !important;
+    color: red !important;
+    background-color: #ffd2d2 !important;
     /*border: 1px solid #D14 !important;*/
     /*    color: #D14;
     background-color: #fcf6f8;
@@ -105,12 +97,12 @@ table.dataTable thead th.select-checkbox.sorting_desc_disabled:after {
 }
 
 .status_blue {
-    /*    color: #0c199c;
+    /*    color: #0c199c;ackground: #d5fcc2;
     background-color: #f4f5fc;
     border: 1px solid #c6cbe9; 
     white-space: nowrap;*/
     color: #0c199c !important;
-    background-color: #c6cbe9 !important;
+    background-color: #d5fcc2 !important;
     /* border: 1px solid #0c199c !important;*/
 }
 
@@ -121,7 +113,7 @@ td.red_background {
     border: 2px solid #D14 !important;
 }
 
-@media only screen and (min-width: 1201px) {
+@media only screen and (min-width: 2101px) {
     img.disabled_folder_icon {
         opacity: 0.25;
         filter: alpha(opacity=25);
@@ -226,9 +218,9 @@ td.red_background {
     }
 }
 
-@media only screen and (max-width: 1200px) {
+@media only screen and (max-width: 2100px) {
     #status_div>p {
-        margin-left: -20 !important;
+        margin-left: -14px !important;
         margin-top: -7;
     }
     img.disabled_folder_icon {
@@ -342,148 +334,3 @@ tr.row_disabled {
     background-color: #d1d1d1c2 !important;
     color: #aaaaaa !important;
 }
-
-
-/*"font-style", "italic");
-$(row).css("background-color", "#d1d1d1c2");
-$(row).css("color", "#aaaaaa");*/
-
-
-/*
-code {
-    font-family: "Source Code Pro", Consolas, Menlo, Monaco, "Courier New", monospace;
-    padding: 1px 4px;
-    font-size: 0.8em;
-    color: #444;
-    background-color: #fcfcfc;
-    border: 1px solid #e0e0e0;
-    -webkit-border-radius: 3px;
-    -moz-border-radius: 3px;
-    border-radius: 3px
-}
-
-code:after {
-    display: inline-block;
-    border-left: 1px solid rgba(0,0,0,0.2);
-    margin-left: 4px;
-    padding-left: 4px;
-    opacity: 0.5
-}
-
-a code {
-    text-decoration: underline
-}
-
-// red button colors 
-code.option {
-    color: #D14;
-    background-color: #fcf6f8;
-    border: 1px solid #f7d6df;
-    white-space: nowrap
-}
-
-code.option:after {
-    content: 'Option'
-}
-
-// green button colors 
-code.path {
-    color: #095c05;
-    background-color: #eef7ed;
-    border: 1px solid #8ccb89;
-    white-space: nowrap
-}
-
-code.path:after {
-    content: 'Path'
-}
-
-// yellow button colors 
-code.tag {
-    color: #c29f00;
-    background-color: #fff9d7;
-    border: 1px solid #ffe700;
-    white-space: nowrap
-}
-
-code.tag:after {
-    content: 'Tag'
-}
-
-// blue button colors
-code.api {
-    color: #0c199c;
-    background-color: #f4f5fc;
-    border: 1px solid #c6cbe9;
-    white-space: nowrap
-}
-
-code.api:after {
-    content: 'API'
-}
-
-// pink button colors 
-code.type {
-    color: #d119cf;
-    background-color: #faebfa;
-    border: 1px solid #f3aef2;
-    white-space: nowrap
-}
-
-code.type:after {
-    content: 'Type'
-}
-
-// green button colors 
-code.event {
-    color: #2a839e;
-    background-color: #f5fafb;
-    border: 1px solid #a8ddec;
-    white-space: nowrap
-}
-
-code.event:after {
-    content: 'Event'
-}
-
-// brown button colors 
-code.string {
-    color: #c05f1d;
-    background-color: #f5eee9;
-    border: 1px solid #dfc4b2;
-    white-space: nowrap
-}
-
-code.string:after {
-    content: 'String'
-}
-
-// purple button colors 
-code.field {
-    color: #ad1ee8;
-    background-color: #f9f1fc;
-    border: 1px solid #ebc9f7;
-    white-space: nowrap
-}
-
-code.field:after {
-    content: 'Field'
-}
-
-// gray button colors 
-code.button {
-    color: #464e50;
-    background-color: #f2f7f9;
-    border: 1px solid #b8c3c5;
-    white-space: nowrap
-}
-
-code.button:after {
-    content: 'Button'
-}
-
-code.multiline {
-    display: inline-block;
-    width: 95%
-}
-*/

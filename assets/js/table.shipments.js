@@ -179,10 +179,6 @@
                     { //24
                         label: "Docs",
                         name: "shipments.has_documents"
-                    },
-                    { //25
-                        type: "hidden",
-                        name: "shipments.is_complete"
                     }
                 ]
             });
@@ -230,10 +226,12 @@
                 /* fixedHeader: {
                      header: true,
                      footer: true
-                 },*/
+                 },
+				 responsive: true,*/
                 keys: true,
-                /*fixedHeader: true,
-                orderCellsTop: true,*/
+                fixedHeader: true,
+                orderCellsTop: true,
+                deferRender: true,
                 lengthMenu: [
                     [5, 10, 25, 50, 100, -1],
                     [5, 10, 25, 50, 100, "All"]
@@ -246,7 +244,7 @@
                         "targets": "_all"
                     },
                     {
-                        "targets": [25],
+                        "targets": [24],
                         "visible": false,
                         "searchable": false
                     }
@@ -287,14 +285,17 @@
                     },
                     {
                         extend: 'pdfHtml5',
-                        text: 'Save as PDF on Libra Letterhead',
+                        text: 'Save as PDF',
+                        orientation: 'landscape',
+                        title: 'Cargo Data',
                         exportOptions: {
                             modifier: {
                                 page: 'current'
                             }
                         },
+                        //download: 'open',
                         customize: function(doc) {
-                            var cols = [];
+                            /*var cols = [];
                             cols[0] = {
                                 text: 'Left part',
                                 alignment: 'left',
@@ -307,7 +308,7 @@
                             };
                             var objFooter = {};
                             objFooter['columns'] = cols;
-                            doc['footer'] = objFooter;
+                            doc['footer'] = objFooter;*/
                             doc.content.splice(1, 0, {
                                 margin: [0, 0, 0, 12],
                                 alignment: 'center',
@@ -317,7 +318,8 @@
                     },
                     {
                         extend: 'excelHtml5',
-                        customize: function(xlsx) {
+                        title: 'Cargo Data',
+                        /*customize: function(xlsx) {
                             var sheet = xlsx.xl.worksheets['sheet1.xml'];
                             var lastCol = sheet.getElementsByTagName('col').length - 1;
                             var colRange = createCellPos(lastCol) + '1';
@@ -331,7 +333,7 @@
                             filterAttr.value = 'A1:' + colRange;
                             xlsxFilter.setAttributeNode(filterAttr);
                             sheet.getElementsByTagName('worksheet')[0].appendChild(xlsxFilter);
-                        },
+                        },*/
                         text: 'Save as Excel Spreadsheet',
                         exportOptions: {
                             modifier: {
@@ -340,12 +342,13 @@
                         }
                     }
                 ],
-                columns: [{ // Checkbox select column
-                        data: null,
-                        defaultContent: '',
-                        className: 'select-checkbox',
-                        orderable: false
-                    },
+                columns: [
+                    /*{ // Checkbox select column
+                                            data: null,
+                                            defaultContent: '',
+                                            className: 'select-checkbox',
+                                            orderable: false
+                                        },*/
                     {
                         data: "shipments.status",
                         render: function(data, type, row) {
@@ -501,23 +504,21 @@
                         data: "shipments.has_documents",
                         render: function(data, type, row) {
                             if (type === 'display') {
+                                var rowData = table.row(row).data();
                                 if (data == true) {
-                                    return '<a href="/documents/' + data.RowID + '"><img src="/assets/folder_icon.png"></a>';
+                                    return '<a href="/richfilemanager?expandedFolder=' + rowData.directory_name + '/' + '"><img src="/assets/folder_icon.png"></a>';
                                 } else {
                                     //disabled_folder_icon
                                     return '<img src="/assets/folder_icon.png" class="disabled_folder_icon">';
                                 }
                             }
                         }
-                    },
-                    {
-                        data: "shipments.is_complete"
                     }
                 ],
                 order: [
-                    [9, 'asc'],
-                    [6, 'asc'],
-                    [2, 'asc']
+                    [8, 'asc'],
+                    [5, 'asc'],
+                    [1, 'asc']
                 ],
                 /*stateSaveCallback: function(settings, data) {
                     // Send an Ajax request to the server with the state object
@@ -549,14 +550,14 @@
                         data.shipments.eta = '';
                     }
                     if (data.shipments.bl_status === 'Hold') {
-                        $("td:nth-child(16)", row).addClass("red_background");
+                        $("td:nth-child(15)", row).addClass("red_background");
                     } else {
-                        $("td:nth-child(16)", row).removeClass("red_background");
+                        $("td:nth-child(15)", row).removeClass("red_background");
                     }
 
                 },
                 rowCallback: function(row, data, displayNum, displayIndex, dataIndex) {
-                    if (data.shipments.qb_rt == 1 && data.shipments.qb_ws == 1) {
+                    if ((data.shipments.qb_rt == 1 && data.shipments.qb_ws == 1) || data.shipments.is_complete == 1) {
                         if (!$(row).hasClass("row_disabled")) $(row).addClass("row_disabled");
                         /*var currentData = table.row(this).data();
                         console.log(currentData);*/
@@ -564,7 +565,7 @@
                         if ($(row).hasClass("row_disabled")) $(row).removeClass("row_disabled");
                     }
                     if (data.shipments.latest_event.includes('Empty Container Returned')) {
-                        $("td:nth-child(2)", row).html('<div id="status_div" class = "circle_disabled"><p style="font-style:italic;margin-left: -10;font-size:10px;text-align:center;display:block;color:#000000f7;font-weight:bolder;">Container Returned...</p></div>');
+                        $("td:nth-child(1)", row).html('<div id="status_div" class = "circle_disabled"><p style="font-style:italic;margin-left: -11 !important;font-size:8px;text-align:center;display:block;color:#000000b5;">Empty Container Returned...</p></div>');
                         /*table.row(row)
                             .data(data)
                             .draw();*/
@@ -595,16 +596,21 @@
                             if (mm < 10) { mm = '0' + mm; }
                             if (ddEta < 10) { ddEta = '0' + ddEta; }
                             if (mmEta < 10) { mmEta = '0' + mmEta; }
-                            if (data.shipments.eta === null) daysDifference = -1;
-                            var daysDifference = datediff(parseDate(today), parseDate(data.shipments.eta));
-                            var statusTranslation = -1;
+                            today = mm + '-' + dd + '-' + yyyy;
+                            etaDate = mmEta + '-' + ddEta + '-' + yyyyEta;
+                            var daysDifference = 0;
+                            if (data.shipments.eta === null) {
+                                daysDifference = -1;
+                            } else {
+                                daysDifference = datediff(parseDate(today), parseDate(data.shipments.eta));
+                            }
+                            var statusTranslation = 3;
                             if (daysDifference > 7) statusTranslation = 2;
                             else if (daysDifference > 3) statusTranslation = 1;
                             else if (daysDifference >= 0) statusTranslation = 0;
-                            else statusTranslation = -1;
+                            else statusTranslation = 3;
                             console.log("status: " + statusTranslation);
-                            today = mm + '-' + dd + '-' + yyyy;
-                            etaDate = mmEta + '-' + ddEta + '-' + yyyyEta;
+                            
                            
                     //                        console.log("DaysDifference: " + daysDifference);
                     editor.edit($(this).closest('tr'), false, { submit: 'changed' })
@@ -620,60 +626,97 @@
                     $('#editor-requires_payment', row).prop('checked', data.shipments.requires_payment == 1);
                     $('#editor-do', row).prop('checked', data.shipments.do == 1);
                     if (data.shipments.freight == 1) {
+                        $("td:nth-child(16)", row).addClass("status_blue");
+                        $("td:nth-child(16)", row).removeClass("status_red");
+                    } else {
+                        $("td:nth-child(16)", row).removeClass("status_blue");
+                        $("td:nth-child(16)", row).addClass("status_red");
+                    }
+                    if (data.shipments.isf_required == 1) {
                         $("td:nth-child(17)", row).addClass("status_blue");
                         $("td:nth-child(17)", row).removeClass("status_red");
                     } else {
                         $("td:nth-child(17)", row).removeClass("status_blue");
                         $("td:nth-child(17)", row).addClass("status_red");
                     }
-                    if (data.shipments.isf_required == 1) {
+                    if (data.shipments.customs == 1) {
                         $("td:nth-child(18)", row).addClass("status_blue");
                         $("td:nth-child(18)", row).removeClass("status_red");
                     } else {
                         $("td:nth-child(18)", row).removeClass("status_blue");
                         $("td:nth-child(18)", row).addClass("status_red");
                     }
-                    if (data.shipments.customs == 1) {
+                    if (data.shipments.po_boolean == 1) {
                         $("td:nth-child(19)", row).addClass("status_blue");
                         $("td:nth-child(19)", row).removeClass("status_red");
                     } else {
                         $("td:nth-child(19)", row).removeClass("status_blue");
                         $("td:nth-child(19)", row).addClass("status_red");
                     }
-                    if (data.shipments.po_boolean == 1) {
+                    if (data.shipments.qb_rt == 1) {
                         $("td:nth-child(20)", row).addClass("status_blue");
                         $("td:nth-child(20)", row).removeClass("status_red");
                     } else {
                         $("td:nth-child(20)", row).removeClass("status_blue");
                         $("td:nth-child(20)", row).addClass("status_red");
                     }
-                    if (data.shipments.qb_rt == 1) {
+                    if (data.shipments.qb_ws == 1) {
                         $("td:nth-child(21)", row).addClass("status_blue");
                         $("td:nth-child(21)", row).removeClass("status_red");
                     } else {
                         $("td:nth-child(21)", row).removeClass("status_blue");
                         $("td:nth-child(21)", row).addClass("status_red");
                     }
-                    if (data.shipments.qb_ws == 1) {
+                    if (data.shipments.qb_ws == 1 && data.shipments.qb_rt == 1) {
+                        $("td:first-child > div#status_div", row).removeClass("circle_green");
+                        $("td:first-child > div#status_div", row).removeClass("circle_yellow");
+                        $("td:first-child > div#status_div", row).removeClass("circle_red");
+                        $("td:first-child > div#status_div", row).addClass("circle_disabled");
+                    } else {
+                        $("td:first-child > div#status_div", row).removeClass("circle_green");
+                        $("td:first-child > div#status_div", row).removeClass("circle_yellow");
+                        $("td:first-child > div#status_div", row).removeClass("circle_red");
+                        $("td:first-child > div#status_div", row).removeClass("circle_disabled");
+                        var today = new Date();
+                        var dd = today.getDate();
+                        var mm = today.getMonth() + 1; //January is 0!
+                        var yyyy = today.getFullYear();
+                        var etaDate = new Date();
+                        var ddEta = today.getDate();
+                        var mmEta = today.getMonth() + 1; //January is 0!
+                        var yyyyEta = today.getFullYear();
+                        if (dd < 10) { dd = '0' + dd; }
+                        if (mm < 10) { mm = '0' + mm; }
+                        if (ddEta < 10) { ddEta = '0' + ddEta; }
+                        if (mmEta < 10) { mmEta = '0' + mmEta; }
+                        today = mm + '-' + dd + '-' + yyyy;
+                        etaDate = mmEta + '-' + ddEta + '-' + yyyyEta;
+                        var daysDifference = 0;
+                        if (data.shipments.eta === null) {
+                            daysDifference = -1;
+                        } else {
+                            daysDifference = datediff(parseDate(today), parseDate(data.shipments.eta));
+                        }
+                        var statusTranslation = "circle_disabled";
+                        if (daysDifference > 7) statusTranslation = "circle_green";
+                        else if (daysDifference < 7 && daysDifference > 3) statusTranslation = "circle_yellow";
+                        else if (daysDifference < 3 && daysDifference >= 0) statusTranslation = "circle_red";
+                        else statusTranslation = "circle_disabled";
+                        $("td:first-child > div#status_div", row).addClass(statusTranslation);
+                    }
+                    if (data.shipments.requires_payment == 1) {
                         $("td:nth-child(22)", row).addClass("status_blue");
                         $("td:nth-child(22)", row).removeClass("status_red");
                     } else {
                         $("td:nth-child(22)", row).removeClass("status_blue");
                         $("td:nth-child(22)", row).addClass("status_red");
                     }
-                    if (data.shipments.requires_payment == 1) {
+                    if (data.shipments.do == 1) {
                         $("td:nth-child(23)", row).addClass("status_blue");
                         $("td:nth-child(23)", row).removeClass("status_red");
                     } else {
                         $("td:nth-child(23)", row).removeClass("status_blue");
                         $("td:nth-child(23)", row).addClass("status_red");
-                    }
-                    if (data.shipments.do == 1) {
-                        $("td:nth-child(24)", row).addClass("status_blue");
-                        $("td:nth-child(24)", row).removeClass("status_red");
-                    } else {
-                        $("td:nth-child(24)", row).removeClass("status_blue");
-                        $("td:nth-child(24)", row).addClass("status_red");
                     }
                 }
             });
@@ -798,7 +841,7 @@
             $('#shipments').on('click', 'tbody td:not(:first-child)', function(e) {
                 var colIdx = table.cell(this).index().column;
                 var rowData = table.row(this.parentNode).data();
-                if (colIdx >= 2 && colIdx < 15) {
+                if (colIdx >= 1 && colIdx < 14) {
                     editor.inline(this, {
                         onBlur: 'submit'
                     });

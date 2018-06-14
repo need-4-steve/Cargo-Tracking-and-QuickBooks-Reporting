@@ -10023,7 +10023,7 @@ table.dataTable tr[role=row]:first-child {
 }
 
 #shipments>thead>tr:nth-child(1)>th:nth-child(3) {
-    border-radius: 0px 6px 0px 0px !important;
+   /* border-radius: 0px 6px 0px 0px !important;*/
 }
 
 table.dataTable tbody tr:last-child {
@@ -10034,7 +10034,7 @@ table.dataTable tbody tr:last-child>td:nth-child(1) {
     border-radius: 0px 0px 0px 6px !important;
 }
 
-table.dataTable tbody tr:last-child>td:nth-child(25) {
+table.dataTable tbody tr:last-child>td:nth-child(24) {
     border-radius: 0px 0px 6px 0px !important;
 }
 
@@ -10060,7 +10060,7 @@ table.dataTable th {
 
 @media only screen and (min-width: 1201px) {
     table.dataTable tbody td {
-        font-size: 13px;
+        font-size: 14px;
         color: #666666;
         /*  !important  */
     }
@@ -10074,7 +10074,7 @@ table.dataTable th {
 
 @media only screen and (max-width: 1200px) {
     table.dataTable tbody td {
-        font-size: 10px;
+        font-size: 12px;
         color: #666666;
         /*  !important  */
     }
@@ -10732,12 +10732,21 @@ div.DTFC_Blocker {
 table.dataTable.table-striped.DTFC_Cloned tbody {
     background-color: white
 }
-
+@media (max-width: 991px){
 table.dataTable.fixedHeader-floating,
 table.dataTable.fixedHeader-locked {
     background-color: white;
-    margin-top: 0 !important;
+    margin-top: 57px !important;
     margin-bottom: 0 !important
+}
+}
+@media (min-width: 992px){
+table.dataTable.fixedHeader-floating,
+table.dataTable.fixedHeader-locked {
+    background-color: white;
+    margin-top: 48px !important;
+    margin-bottom: 0 !important
+}
 }
 
 table.dataTable.fixedHeader-floating {
