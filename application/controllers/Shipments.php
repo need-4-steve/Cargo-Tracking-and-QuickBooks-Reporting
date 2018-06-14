@@ -778,7 +778,7 @@ class Shipments extends CI_Controller
                                     if (is_null($associatedCargoData) || empty($associatedCargoData)) {
                                         //save to folder for unassociated files...or maybe do a manual save or something? idk yet but i'll figure it out...
                                         $dirDate = date("mdy");
-                                        $directoryStructure = $_SERVER['DOCUMENT_ROOT'] . "/"."vendor_documents/UNASSOCIATED_FILES/$dirDate/".strtoupper($associatedVendorData['abbreviation'])."/$poPlaceholder/" . strlen(strtoupper($attachment['file_extension']))<50 ? strtoupper($attachment['file_extension']): ''. "/";
+                                        $directoryStructure = $_SERVER['DOCUMENT_ROOT'] . "/"."vendor_documents/UNASSOCIATED_FILES/$dirDate/".strtoupper($associatedVendorData['abbreviation'])."/". "$poPlaceholder/" . $attachment['file_extension']."/";
                                     } else {
                                         $yearDigits = date('y');
                                         $associatedCargoData = $this->ShipmentsModel->update_record(array('container_number' => $documentCN), array('po' => $purchase_order_number, 'directory_name' => $associatedVendorData['document_initials'] . $yearDigits . '-' . $poPlaceholder . ' ' . $documentCN . '/'));
