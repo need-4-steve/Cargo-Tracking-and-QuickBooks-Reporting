@@ -540,30 +540,38 @@ class Shipments extends CI_Controller
                         //wanda...@tjwanda.com
                         //test...@gmail.com
                         $vendors = $this->ShipmentsModel->get_all_vendor_data();
-                      /*  echo '$overview[0]->subject'. $overview[0]->subject . PHP_EOL;
-                        echo '$overview[0]->from'. $overview[0]->from . PHP_EOL;
-                      */  foreach ($vendors as $vendor) {
+                        //print_r($vendors);
+                        //echo '$overview[0]->subject->'. $overview[0]->subject . PHP_EOL;
+                        //echo '$overview[0]->from->'. $overview[0]->from . PHP_EOL;
+                        foreach ($vendors as $vendor) {
+                            //echo $vendor['name']. "->".PHP_EOL;
+                            //echo "vendor[email_addresses]->".PHP_EOL;
+                            //print_r($vendor['email_addresses']);
                             if (!$vendorMatched){
                                 if (is_null($vendor['email_addresses']) || empty($vendor['email_addresses'])){
                                     continue;
                                 }
                                 $emailHosts = explode('|', $vendor['email_addresses']);
                                 foreach ($emailHosts as $vendorEmailHost) {
-                                    $pos = strpos($overview[0]->from, $vendorEmailHost);
-                           //         echo "strpos(overview[0]->from:'". htmlspecialchars($overview[0]->from) ."', vendorEmailHost:'$vendorEmailHost')==pos:$pos" . PHP_EOL;
-                                    if ($pos>=0) {
+                                    if (empty($vendorEmailHost)) break;
+                                    $emailPos = strpos($overview[0]->from, $vendorEmailHost);
+                                    //echo "emailPos=>".PHP_EOL;
+                                   // var_dump($emailPos);
+                                    //echo "strpos(overview[0]->from: '". $overview[0]->from ."', vendorEmailHost:'$vendorEmailHost')==emailPos => $emailPos" . PHP_EOL;
+                                    if (!$emailPos === false) {
                                         $vendorMatched = true;
                                         $associatedVendorData = $this->ShipmentsModel->get_vendor_data_by_id($vendor['id']);
-                           //             echo 'vendorMatched=>true'. PHP_EOL;
-                           //             var_dump($vendor);
-                                        break;
+                                      //  echo 'vendorMatched=>true'. PHP_EOL;
+                                       // var_dump($vendor);
+                                        break 2;
                                     }
                                 }
-                            } else { break; }
+                            }
                         }
                         if (!$vendorMatched) {
                             continue;
                         } else {
+                            echo 'Into part 2';
                             print_r($associatedVendorData);
                             // Mark as Read
                             $setflagSEENresult = imap_setflag_full($inbox, $email_number, "\\Seen", ST_UID);
@@ -612,16 +620,31 @@ class Shipments extends CI_Controller
                             } else {
                                 continue;
                             }
-                            $documentBL = '';
-                            $documentCN = '';
-                            $documentType = '';
-                            $associatedCargoData = null;
-                            $filename = '';
-                            $fullPathAndFileName = '';
-                            $vendorIdLabelForDocuments = '';
+                            echo 'attachments dopwnloaded...'. PHP_EOL;
+                            $tmpAttachments = array();
+                            $newAttachments = array();
+                            /*foreach ($attachments as $attachment) {
+                                if (strtoupper($attachment['file_extension'])==='OCTET-STREAM' || strtoupper($attachment['file_extension'])==='XLS'){
+                                    $tmpAttachments[]=$attachment;
+                                } else {
+                                    $newAttachments[]=$attachment;
+                                }
+                            }*/ 
+                           /* foreach ($tmpAttachments as $tmpAttachment){
+                                $newAttachments[]=$tmpAttachment;
+                            }*/
+                            unset($tmpAttachments);
                             foreach ($attachments as $attachment) {
+                                $documentBL = '';
+                                $documentCN = '';
+                                $documentType = '';
+                                $associatedCargoData = null;
+                                $filename = '';
+                                $fullPathAndFileName = '';
+                                 $vendorIdLabelForDocuments = '';
                                 $directoryStructure = $_SERVER['DOCUMENT_ROOT'] . "/vendor_documents";
                                 $poPlaceholder='00000';
+                                //print_r($attachment);
                                 if ($attachment['is_attachment'] == 1) {
                                     $md5_test = md5($attachment['attachment']);
                                     $fileExistsInDB = $this->Document_model->md5_file_exists($md5_test);
@@ -640,18 +663,25 @@ class Shipments extends CI_Controller
                                         mkdir(dirname($tmpFileDir), 0777, true);
                                     }
                                     file_put_contents($tmpFileDir, $attachment['attachment']);
-                                   // echo "$tmpFileDir=>strtoupper(associatedVendorData['abbreviation'])=>".strtoupper($associatedVendorData['abbreviation']). PHP_EOL;
+                                    echo "$tmpFileDir=>strtoupper(associatedVendorData['abbreviation'])=>".strtoupper($associatedVendorData['abbreviation']). PHP_EOL;
+                                    if (strtoupper(trim($attachment['file_extension']))==='OCTET-STREAM') $attachment['file_extension'] = substr($filename,strlen($filename)-3,strlen($filename));
                                     switch (strtoupper($associatedVendorData['abbreviation'])) {
                                         case "WANDA":
-                                            if (preg_match('/LB\d{2}/', $filename, $match)) {$vendorIdLabelForDocuments = trim($match[0]);} else if (preg_match('/LB\d{3}/', $filename, $match)) {$vendorIdLabelForDocuments = trim($match[0]);} else {
+                                            echo 'attachment[file_extension]=>'.strtoupper($attachment['file_extension']).PHP_EOL;
+                                            if (preg_match('/LB\d{2}/', $filename, $match)) {
+                                                $vendorIdLabelForDocuments = trim($match[0]);
+                                            } else if (preg_match('/LB\d{3}/', $filename, $match)) {
+                                                $vendorIdLabelForDocuments = trim($match[0]);
+                                            } else {
                                                 if (strpos(strtoupper($filename), strtoupper($attachment['file_extension']))) {
                                                     $vendorIdLabelForDocuments = trim(substr($filename, strripos($filename, ' ') + 1,
                                                         ((strpos(strtoupper($filename), strtoupper($attachment['file_extension'])) - 1) - (strripos($filename, ' ') + 1))));
                                                 }
                                             }
+                                            echo "vendorIdLabelForDocuments => ".$vendorIdLabelForDocuments . PHP_EOL;
                                             switch (strtoupper($attachment['file_extension'])) {
                                                 case "PDF":
-                                                //echo 'wanda pdf=>'.PHP_EOL;
+                                                    echo 'wanda pdf=>'.PHP_EOL;
                                                     $documentType = "Bill_of_Lading";
                                                     $pdf = new \TonchikTm\PdfToHtml\Pdf($tmpFileDir, [
                                                         'pdftohtml_path' => 'F:/xampp/htdocs/assets/poppler0.51/bin/pdftohtml.exe',
@@ -673,27 +703,20 @@ class Shipments extends CI_Controller
                                                         $count=0;
                                                         foreach($paragraphs as $p) {
                                                             $textContent = $p->textContent;
-                                                         //   echo "paragraphs[$count]: " . $textContent . PHP_EOL;
-                                                        /* if ($oblTextPos===1 && $oblTextLen===19) {
-                                                                //echo "FOUND: allTds[$count]: " . $textContent .PHP_EOL. "strpos(OBL Release Status)=>" . $oblTextPos . PHP_EOL . "strlen(textContent)=>" . $oblTextLen . PHP_EOL;
-                                                                $oblIdx = $count+2;
-                                                                $oblStatusValue = $allTds[$oblIdx]->textContent;
-                                                                $return['bl_status'] = trim($oblStatusValue);
-                                                                //echo "RESULT: allTds[$oblIdx]: " . $oblStatusValue .PHP_EOL;
-                                                                break;
-                                                            }*/
+                                                            echo "paragraphs[$count]: " . $textContent . PHP_EOL;
+                                                            if (preg_match('/'.'\d{10}/',$textContent, $match)) {
+                                                                if (strpos(trim($textContent),$match[0])===0 && strlen(trim($textContent)===10)){
+                                                                    $documentBL = trim($match[0]);
+                                                                    echo "documentBL => ".$documentBL.PHP_EOL;
+                                                                }
+                                                            } else if (preg_match('/'.'--[A-Z]{4}[0-9]{7}/',$textContent, $match)){
+                                                                $documentCN = substr(trim($match[0]),strpos($textContent,$match[0])+2,strlen($match[0]));
+                                                                echo "documentCN => ".$documentCN.PHP_EOL;
+                                                            }
                                                             $count++;
                                                         }
-                                                        if (count($paragraphs) > 86) {
-                                                            if (!is_null($paragraphs[86]) && !empty($paragraphs[86])) {
-                                                                $documentCN = trim($paragraphs[86]);
-                                                            }
-                                                            if (!is_null($paragraphs[64]) && !empty($paragraphs[64])) {
-                                                                $documentBL = trim($paragraphs[64]);
-                                                            }
-                                                            $associatedCargoData = $this->ShipmentsModel->update_record(array('container_number' => $documentCN), array('vendor_identifier' => $associatedVendorData['document_initials'] . $vendorIdLabelForDocuments, 'hasDocuments' => true));
-                                                            $poPlaceholder = $associatedCargoData['po'];
-                                                        }
+                                                        $associatedCargoData = $this->ShipmentsModel->update_record(array('container_number' => $documentCN), array('vendor_identifier' => $associatedVendorData['document_initials'] . $vendorIdLabelForDocuments, 'has_documents' => true));
+                                                        $poPlaceholder = $associatedCargoData['po'];
                                                         $returnData[$attachmentCounter] = $html;
                                                         break;
                                                     } else {
@@ -701,11 +724,12 @@ class Shipments extends CI_Controller
                                                     }
                                                     break;
                                                 case "XLS":
-                                                echo 'wanda xls=>'.PHP_EOL;
+                                                    echo 'wanda xls=>'.PHP_EOL;
                                                     $documentType = "Parts_List";
                                                     $associatedCargoData = $this->ShipmentsModel->get_by_vendor_specific_identifier($associatedVendorData['document_initials'] . $vendorIdLabelForDocuments);
+                                                    if (is_null($associatedCargoData)|| empty($associatedCargoData) ) break;
                                                     $poPlaceholder = $associatedCargoData['po'];
-                                                    $associatedCargoData = $this->ShipmentsModel->update_record(array('container_number' => $associatedCargoData['container_number'], 'hasDocuments' => true));
+                                                    $associatedCargoData = $this->ShipmentsModel->update_record(array('container_number' => $associatedCargoData['container_number'], 'has_documents' => true));
                                                     break;
                                                 default:
                                                     //otherwise, store in 'Other' documents folder
@@ -778,16 +802,19 @@ class Shipments extends CI_Controller
                                     if (is_null($associatedCargoData) || empty($associatedCargoData)) {
                                         //save to folder for unassociated files...or maybe do a manual save or something? idk yet but i'll figure it out...
                                         $dirDate = date("mdy");
+                                        if ($attachment['file_extension']==='OCTET-STREAM') $attachment['file_extension']='XLS';
                                         $directoryStructure = $_SERVER['DOCUMENT_ROOT'] . "/"."vendor_documents/UNASSOCIATED_FILES/$dirDate/".strtoupper($associatedVendorData['abbreviation'])."/". "$poPlaceholder/" . $attachment['file_extension']."/";
                                     } else {
                                         $yearDigits = date('y');
-                                        $associatedCargoData = $this->ShipmentsModel->update_record(array('container_number' => $documentCN), array('po' => $purchase_order_number, 'directory_name' => $associatedVendorData['document_initials'] . $yearDigits . '-' . $poPlaceholder . ' ' . $documentCN . '/'));
+                                        echo "LAST SECTION =>  ". PHP_EOL;
+                                        $associatedCargoData = $this->ShipmentsModel->update_record(array('container_number' => $documentCN), array('po' => $poPlaceholder, 'directory_name' => $associatedVendorData['document_initials'] . $yearDigits . '-' . $poPlaceholder . ' ' . $documentCN . '/'));
                                         /*$directoryStructure .= '/' . strtoupper($associatedVendorData['abbreviation']) .
                                         '/' . $yearDigits .
                                         '/' . $purchase_order_number .
                                         '/' . strtoupper($documentCN);
                                         *///$directoryStructure=$_SERVER['DOCUMENT_ROOT'] . "/vendor_documents";
-                                        $directoryStructure = $_SERVER['DOCUMENT_ROOT'] . "/"."vendor_documents/" . $associatedVendorData['document_initials'] . $yearDigits . '-' . $poPlaceholder . ' ' . $documentCN . '/';
+                                        $poFolderName=$associatedVendorData['document_initials'] . $yearDigits . '-' . $poPlaceholder . ' ' . $documentCN;
+                                        $directoryStructure = $_SERVER['DOCUMENT_ROOT'] . "/"."vendor_documents/" . trim($poFolderName) . '/';
                                         //a better way to do it would be to use directories for each data piece
                                         //  ie-> for a wanda invoice from 2018 with PO 123456 and CN ABCD123456
                                         //       $directoryName=$_SERVER['DOCUMENT_ROOT'] . "/vendor_documents" .

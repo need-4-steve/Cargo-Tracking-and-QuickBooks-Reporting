@@ -249,10 +249,7 @@
                         "searchable": false
                     }
                 ],
-                select: {
-                    style: 'true',
-                    blurable: true
-                },
+                select: "false",
                 buttons: [
                     /*{
                                             extend: 'collection',
@@ -862,8 +859,7 @@
                 ]
             );
 
-            table.buttons().container()
-                .appendTo($('.col-md-6:eq(0)', table.table().container()));
+
         });
 
     }

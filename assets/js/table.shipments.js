@@ -249,10 +249,7 @@
                         "searchable": false
                     }
                 ],
-                select: {
-                    style: 'true',
-                    blurable: true
-                },
+                select: "false",
                 buttons: [
                     /*{
                                             extend: 'collection',
@@ -685,10 +682,18 @@
                         var ddEta = today.getDate();
                         var mmEta = today.getMonth() + 1; //January is 0!
                         var yyyyEta = today.getFullYear();
-                        if (dd < 10) { dd = '0' + dd; }
-                        if (mm < 10) { mm = '0' + mm; }
-                        if (ddEta < 10) { ddEta = '0' + ddEta; }
-                        if (mmEta < 10) { mmEta = '0' + mmEta; }
+                        if (dd < 10) {
+                            dd = '0' + dd;
+                        }
+                        if (mm < 10) {
+                            mm = '0' + mm;
+                        }
+                        if (ddEta < 10) {
+                            ddEta = '0' + ddEta;
+                        }
+                        if (mmEta < 10) {
+                            mmEta = '0' + mmEta;
+                        }
                         today = mm + '-' + dd + '-' + yyyy;
                         etaDate = mmEta + '-' + ddEta + '-' + yyyyEta;
                         var daysDifference = 0;
@@ -759,7 +764,9 @@
             $('#shipments')
                 .on('change', '#editor-freight',
                     function() {
-                        editor.edit($(this).closest('tr'), false, { submit: 'changed' })
+                        editor.edit($(this).closest('tr'), false, {
+                                submit: 'changed'
+                            })
                             .set('shipments.freight', $(this).prop('checked') ? 1 : 0)
                             .submit();
                         $(this).closest('td').removeClass($(this).prop('checked') ? 'status_red' : "status_blue");
@@ -770,7 +777,9 @@
                 )
                 .on('change', '#editor-isfrequired',
                     function() {
-                        editor.edit($(this).closest('tr'), false, { submit: 'changed' })
+                        editor.edit($(this).closest('tr'), false, {
+                                submit: 'changed'
+                            })
                             .set('shipments.isf_required', $(this).prop('checked') ? 1 : 0)
                             .submit();
                         $(this).closest('td').removeClass($(this).prop('checked') ? 'status_red' : "status_blue");
@@ -780,7 +789,9 @@
                 )
                 .on('change', '#editor-customs',
                     function() {
-                        editor.edit($(this).closest('tr'), false, { submit: 'changed' })
+                        editor.edit($(this).closest('tr'), false, {
+                                submit: 'changed'
+                            })
                             .set('shipments.customs', $(this).prop('checked') ? 1 : 0)
                             .submit();
                         $(this).closest('td').removeClass($(this).prop('checked') ? 'status_red' : "status_blue");
@@ -789,7 +800,9 @@
                 )
                 .on('change', '#editor-po_boolean',
                     function() {
-                        editor.edit($(this).closest('tr'), false, { submit: 'changed' })
+                        editor.edit($(this).closest('tr'), false, {
+                                submit: 'changed'
+                            })
                             .set('shipments.po_boolean', $(this).prop('checked') ? 1 : 0)
                             .submit();
                         $(this).closest('td').removeClass($(this).prop('checked') ? 'status_red' : "status_blue");
@@ -798,7 +811,9 @@
                 )
                 .on('change', '#editor-qb_rt',
                     function() {
-                        editor.edit($(this).closest('tr'), false, { submit: 'changed' })
+                        editor.edit($(this).closest('tr'), false, {
+                                submit: 'changed'
+                            })
                             .set('shipments.qb_rt', $(this).prop('checked') ? 1 : 0)
                             .submit();
                         $(this).closest('td').removeClass($(this).prop('checked') ? 'status_red' : "status_blue");
@@ -808,7 +823,9 @@
                 )
                 .on('change', '#editor-qb_ws',
                     function() {
-                        editor.edit($(this).closest('tr'), false, { submit: 'changed' })
+                        editor.edit($(this).closest('tr'), false, {
+                                submit: 'changed'
+                            })
                             .set('shipments.qb_ws', $(this).prop('checked') ? 1 : 0)
                             .submit();
                         $(this).closest('td').removeClass($(this).prop('checked') ? 'status_red' : "status_blue");
@@ -817,7 +834,9 @@
                 )
                 .on('change', '#editor-requires_payment',
                     function() {
-                        editor.edit($(this).closest('tr'), false, { submit: 'changed' })
+                        editor.edit($(this).closest('tr'), false, {
+                                submit: 'changed'
+                            })
                             .set('shipments.requires_payment', $(this).prop('checked') ? 1 : 0)
                             .submit();
                         $(this).closest('td').removeClass($(this).prop('checked') ? 'status_red' : "status_blue");
@@ -826,7 +845,9 @@
                 )
                 .on('change', '#editor-do',
                     function() {
-                        editor.edit($(this).closest('tr'), false, { submit: 'changed' })
+                        editor.edit($(this).closest('tr'), false, {
+                                submit: 'changed'
+                            })
                             .set('shipments.do', $(this).prop('checked') ? 1 : 0)
                             .submit();
                         $(this).closest('td').removeClass($(this).prop('checked') ? 'status_red' : "status_blue");
@@ -862,8 +883,6 @@
                 ]
             );
 
-            table.buttons().container()
-                .appendTo($('.col-md-6:eq(0)', table.table().container()));
         });
 
     }
