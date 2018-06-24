@@ -119,7 +119,7 @@ class Shipments extends CI_Controller
                                         fclose($fp);
                                         $row = 1;
                                         if (($handle = fopen("./" . $msgno . "-" . $filename, "r")) !== false) {
-                                            while (($recordData = fgetcsv($handle, 1000, ",")) !== false) {
+                                            while (($recordData = fgetcsv($handle, 1000, ";")) !== false) {
                                                 $num = count($recordData);
                                                 $dataRows[$row - 1] = array();
                                                 for ($c = 0; $c < $num; $c++) {
@@ -151,10 +151,19 @@ class Shipments extends CI_Controller
             /*[START OF LOADING CSV DATA INTO data ARRAY]*/
             if ($num = count($dataRows) > 0) {
                 $this->ShipmentsModel->mark_everything_inactive();
-                echo "[START]". PHP_EOL;
-                echo "[num]->".$num.PHP_EOL;
-
-                for ($c = 1; $c < count($dataRows); $c++) {
+             /*   echo "[START]". PHP_EOL;
+                echo "[num]->".$num.PHP_EOL;*/
+                $start = 1;
+              /*  echo "dataRows[0][0]=>".$dataRows[0][0].PHP_EOL;*/
+                if (strpos($dataRows[0][0],'sep=')!==false) $start=2;
+              /*  foreach ($dataRows as $key=>$value){
+                    echo $key.'=>';
+                    print_r($value);
+                    if ($key > 2) {break;}
+                }
+                echo 'start=>'.$start;
+                return;*/
+                for ($c = $start; $c < count($dataRows); $c++) {
                     echo "[c]->".$c.PHP_EOL;
                     $valueCount = count($dataRows[$c]);
                     $dataRow_bol = trim(substr($dataRows[$c][0], 2, 10));
