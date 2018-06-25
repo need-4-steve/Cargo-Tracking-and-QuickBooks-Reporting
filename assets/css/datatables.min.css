@@ -599,8 +599,8 @@ pre code {
     width: 100%;
     padding-right: 15px;
     padding-left: 15px;
-    margin-right: auto;
-    margin-left: auto;
+    /*margin-right: auto;
+    margin-left: auto;*/
 }
 
 #shipments {
@@ -609,6 +609,8 @@ pre code {
     margin-right: 5%;
 }
 
+
+/*
 @media (min-width: 576px) {
     .container {
         max-width: 540px;
@@ -632,6 +634,7 @@ pre code {
         max-width: 1140px;
     }
 }
+*/
 
 .container-fluid {
     width: 100%;
@@ -10023,7 +10026,7 @@ table.dataTable tr[role=row]:first-child {
 }
 
 #shipments>thead>tr:nth-child(1)>th:nth-child(3) {
-   /* border-radius: 0px 6px 0px 0px !important;*/
+    /* border-radius: 0px 6px 0px 0px !important;*/
 }
 
 table.dataTable tbody tr:last-child {
@@ -10732,21 +10735,23 @@ div.DTFC_Blocker {
 table.dataTable.table-striped.DTFC_Cloned tbody {
     background-color: white
 }
-@media (max-width: 991px){
-table.dataTable.fixedHeader-floating,
-table.dataTable.fixedHeader-locked {
-    background-color: white;
-    margin-top: 57px !important;
-    margin-bottom: 0 !important
+
+@media (max-width: 991px) {
+    table.dataTable.fixedHeader-floating,
+    table.dataTable.fixedHeader-locked {
+        background-color: white;
+        margin-top: 57px !important;
+        margin-bottom: 0 !important
+    }
 }
-}
-@media (min-width: 992px){
-table.dataTable.fixedHeader-floating,
-table.dataTable.fixedHeader-locked {
-    background-color: white;
-    margin-top: 48px !important;
-    margin-bottom: 0 !important
-}
+
+@media (min-width: 992px) {
+    table.dataTable.fixedHeader-floating,
+    table.dataTable.fixedHeader-locked {
+        background-color: white;
+        margin-top: 48px !important;
+        margin-bottom: 0 !important
+    }
 }
 
 table.dataTable.fixedHeader-floating {

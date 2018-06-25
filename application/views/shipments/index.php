@@ -2,7 +2,7 @@
 <h2>
 	<?php echo $title; ?>
 </h2>
-<table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered hover" id="shipments" width="100%">
+<table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered hover" id="shipments" width="90%">
 <thead>
 		<tr>
 			<th>Status</th>

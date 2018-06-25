@@ -1,69 +1,84 @@
-
 @import url(https://fonts.googleapis.com/css?family=Raleway:100);
-
 body.dataTables,
 body.jqueryui {
-	font: 75%/1.25em "Helvetica Neue", HelveticaNeue, Arial, Helvetica, sans-serif;
-	margin: 0;
-	padding: 0;
-	color: #333;
-	background-color: #fff;
+    font: 75%/1.25em "Helvetica Neue", HelveticaNeue, Arial, Helvetica, sans-serif;
+    margin: 0;
+    padding: 0;
+    color: #333;
+    background-color: #fff;
 }
 
+
+/*
 body.dataTables div.container,
 body.jqueryui div.container {
-	max-width: 980px;
-	margin: 0 auto;
+    max-width: 980px;
+    /*margin: 0 auto;
 }
+*/
 
 body.dataTables h1,
 body.jqueryui h1 {
-	font-family: 'HelveticaNeue-UltraLight', 'Helvetica Neue UltraLight', 'Raleway', 'Helvetica Neue', Arial, Helvetica, sans-serif;
-	font-weight: 100;
-	letter-spacing: 1px;
-	font-size: 3em;
-	line-height: 1em;
+    font-family: 'HelveticaNeue-UltraLight', 'Helvetica Neue UltraLight', 'Raleway', 'Helvetica Neue', Arial, Helvetica, sans-serif;
+    font-weight: 100;
+    letter-spacing: 1px;
+    font-size: 3em;
+    line-height: 1em;
 }
 
 h1 span {
-	font-size: 0.5em;
-	line-height: 1em;
+    font-size: 0.5em;
+    line-height: 1em;
 }
+
+
 /*
 tr:nth-child(odd){
 	background: #fff2dd;
 }*/
+
 table.dataTable thead .sorting {
-     background-image: none !important;
+    background-image: none !important;
 }
+
 table.dataTable thead .sorting_asc {
     background-image: none !important;
 }
+
 table.dataTable thead .sorting_desc {
     background-image: none !important;
 }
-table.dataTable th{
-	background: #333334;
+
+table.dataTable th {
+    background: #333334;
     color: white;
-	padding: 0px !important;
-	margin: 0px !important;
+    padding: 0px !important;
+    margin: 0px !important;
 }
+
 table.dataTable td {
-	/*border: 1px solid #ccc;*/
-	text-align: center;
-	border: 1px solid white;
-	padding-left: 0px !important;
-	padding-right: 0px !important;
-	padding-top: 5px !important;
-	margin: 0px !important;
-	vertical-align: middle !important;
+    /*border: 1px solid #ccc;*/
+    text-align: center;
+    border: 1px solid white;
+    padding-left: 0px !important;
+    padding-right: 0px !important;
+    padding-top: 5px !important;
+    margin: 0px !important;
+    vertical-align: middle !important;
 }
+
+
 /*
 tr:nth-child(even) {*/
+
+
 /*    background-color: #f2f2f2*/
-	/*background-color: #fffaf2;
+
+
+/*background-color: #fffaf2;
 }
 */
+
 .status_red {
     color: red !important;
     background-color: #ffd2d2 !important;
