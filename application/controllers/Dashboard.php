@@ -13,6 +13,9 @@ class Dashboard extends CI_Controller{
 
     function index()
     {
+		if (!$this->session->userdata('logged_in')) {
+            redirect('users/login');
+        }
         $data['_view'] = 'dashboard';
         $this->load->view('layouts/main',$data);
     }
