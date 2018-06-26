@@ -15,9 +15,10 @@
 
 	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/pdfmake.min.js"></script>
 	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js"></script>
-	<script type="text/javascript" src="https://cdn.datatables.net/v/bs4/jq-3.3.1/jszip-2.5.0/dt-1.10.18/af-2.3.0/b-1.5.2/b-colvis-1.5.1/b-flash-1.5.2/b-html5-1.5.2/b-print-1.5.2/fc-3.2.5/fh-3.1.4/kt-2.4.0/r-2.2.2/rg-1.0.3/rr-1.2.4/sc-1.5.0/sl-1.2.6/datatables.min.js"></script>
+	<script type="text/javascript" charset="utf-8" src="https://cdn.datatables.net/v/bs4-4.1.1/jq-3.3.1/moment-2.18.1/jszip-2.5.0/pdfmake-0.1.36/dt-1.10.18/af-2.3.0/b-1.5.2/b-colvis-1.5.1/b-flash-1.5.2/b-html5-1.5.2/b-print-1.5.2/fc-3.2.5/fh-3.1.4/kt-2.4.0/r-2.2.2/rg-1.0.3/rr-1.2.4/sc-1.5.0/sl-1.2.6/datatables.min.js"></script>
+	<!--<script type="text/javascript" src="https://cdn.datatables.net/v/bs4/jq-3.3.1/jszip-2.5.0/dt-1.10.18/af-2.3.0/b-1.5.2/b-colvis-1.5.1/b-flash-1.5.2/b-html5-1.5.2/b-print-1.5.2/fc-3.2.5/fh-3.1.4/kt-2.4.0/r-2.2.2/rg-1.0.3/rr-1.2.4/sc-1.5.0/sl-1.2.6/datatables.min.js"></script>
 
-	<!--<script type="text/javascript" charset="utf-8" src="https://cdn.datatables.net/v/bs4-4.0.0/jq-3.2.1/moment-2.18.1/jszip-2.5.0/pdfmake-0.1.32/dt-1.10.16/af-2.2.2/b-1.5.1/b-colvis-1.5.1/b-flash-1.5.1/b-html5-1.5.1/b-print-1.5.1/cr-1.4.1/fc-3.2.4/fh-3.1.3/kt-2.3.2/r-2.2.1/rg-1.0.2/rr-1.2.3/sc-1.4.4/sl-1.2.5/datatables.min.js"></script>-->
+	<script type="text/javascript" charset="utf-8" src="https://cdn.datatables.net/v/bs4-4.0.0/jq-3.2.1/moment-2.18.1/jszip-2.5.0/pdfmake-0.1.32/dt-1.10.16/af-2.2.2/b-1.5.1/b-colvis-1.5.1/b-flash-1.5.1/b-html5-1.5.1/b-print-1.5.1/cr-1.4.1/fc-3.2.4/fh-3.1.3/kt-2.3.2/r-2.2.1/rg-1.0.2/rr-1.2.3/sc-1.4.4/sl-1.2.5/datatables.min.js"></script>-->
 	<script type="text/javascript" charset="utf-8" src="<?php echo base_url(); ?>assets/js/ColReorderWithResize.js"></script>
 	<script type="text/javascript" charset="utf-8" src="<?php echo base_url(); ?>assets/js/dataTables.editor.min.js"></script>
 	<script type="text/javascript" charset="utf-8" src="<?php echo base_url(); ?>assets/js/editor.bootstrap4.min.js"></script>
@@ -59,6 +60,7 @@
 					<li class="nav-item">
 						<a class="nav-link" href="<?php echo base_url(); ?>">Home</a>
 					</li>
+					
 					<li class="nav-item dropdown">
 						<?php if(!$this->session->userdata('logged_in')) : ?>
 						<a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" id="userspace" aria-expanded="false">User Space
@@ -86,6 +88,11 @@
 						</div>
 						<?php endif; ?>
 					</li>
+					<?php if($this->session->userdata('logged_in')) : ?>
+						<li class="nav-item">
+							<a class="nav-link" href="<?php echo base_url(); ?>dashboard/index">System Administration</a>
+						</li>
+					<?php endif; ?>
 				</ul>
 			</div>
 		</div>

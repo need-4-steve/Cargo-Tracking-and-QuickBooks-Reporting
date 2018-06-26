@@ -24,6 +24,10 @@ class Document_model extends CI_Model
     {
         return $this->db->get_where('vendor_documents', array('filename' => $filename))->row_array();
     }
+    public function get_document_by_identifying_label ($label)
+    {
+        return $this->db->get_where('vendor_documents', array('identifying_label' => $label))->row_array();
+    }
 
     public function md5_file_exists($md5){
         if (is_null($md5) || empty($md5)) return false;

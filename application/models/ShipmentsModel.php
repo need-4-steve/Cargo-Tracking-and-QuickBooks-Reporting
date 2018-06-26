@@ -192,7 +192,6 @@ class ShipmentsModel extends CI_Model
                     ->setFormatter( function ( $val, $data, $opts ) {
                         return ! $val ? 0 : 1;
                     } ),
-                    Field::inst( 'shipments.directory_name' ),
                     Field::inst( 'shipments.latest_event' )
             )
             ->leftJoin( 'products', 'products.id', '=', 'shipments.product_id' )
@@ -257,6 +256,15 @@ class ShipmentsModel extends CI_Model
         $query = $this->db->get_where('vendors', array('name' => $vendorName));
         $result= $query->row_array();
         return $result['id'];
+    }
+
+    public function get_vendor_associated_product($vendorId=FALSE){
+        if ($vendorId === FALSE) return false;
+        $query = $this->db->get_where('vendor_products', array('vendor_id' => $vendorId));
+        $result= $query->row_array();
+        $query2 = $this->db->get_where('products', array('id' => $result['product_id']));
+        $result2= $query2->row_array();
+        return $result2;
     }
 
     public function get_vendor_email_list_by_shortname($vendor_abbreviation=FALSE){

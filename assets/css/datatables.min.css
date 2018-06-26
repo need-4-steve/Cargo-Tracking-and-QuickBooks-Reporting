@@ -605,8 +605,8 @@ pre code {
 
 #shipments {
     width: 80%;
-    margin-left: 5%;
-    margin-right: 5%;
+    /*margin-left: 5%;
+    margin-right: 5%;*/
 }
 
 
@@ -2264,6 +2264,7 @@ select.form-control-lg:not([size]):not([multiple]),
 
 .form-group {
     margin-bottom: 1rem;
+    width: 100%;
 }
 
 .form-text {

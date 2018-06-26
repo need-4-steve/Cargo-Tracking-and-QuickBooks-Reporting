@@ -498,18 +498,7 @@
                         className: "dt-body-center"
                     },
                     {
-                        data: "shipments.has_documents",
-                        render: function(data, type, row) {
-                            if (type === 'display') {
-                                var rowData = table.row(row).data();
-                                if (data == true) {
-                                    return '<a href="/richfilemanager?expandedFolder=' + rowData.directory_name + '/' + '" target="_blank"><img src="/assets/folder_icon.png"></a>';
-                                } else {
-                                    //disabled_folder_icon
-                                    return '<img src="/assets/folder_icon.png" class="disabled_folder_icon">';
-                                }
-                            }
-                        }
+                        data: "shipments.has_documents"
                     }
                 ],
                 order: [
@@ -551,7 +540,11 @@
                     } else {
                         $("td:nth-child(15)", row).removeClass("red_background");
                     }
-
+                    if (data.shipments.has_documents == 1) {
+                        $("td:last-child", row).html('<a href="/richfilemanager?expandedFolder=' + data.shipments.po + ' ' + data.shipments.container_number + '/' + '" target="_blank"><img src="/assets/folder_icon.png"></a>');
+                    } else {
+                        $("td:last-child", row).html('<img src="/assets/folder_icon.png" class="disabled_folder_icon">');
+                    }
                 },
                 rowCallback: function(row, data, displayNum, displayIndex, dataIndex) {
                     if ((data.shipments.qb_rt == 1 && data.shipments.qb_ws == 1) || data.shipments.is_complete == 1) {
@@ -561,6 +554,7 @@
                     } else {
                         if ($(row).hasClass("row_disabled")) $(row).removeClass("row_disabled");
                     }
+
                     if (data.shipments.latest_event.includes('Empty Container Returned')) {
                         $("td:nth-child(1)", row).html('<div id="status_div" class = "circle_disabled"><p style="font-style:italic;margin-left: -11 !important;font-size:8px;text-align:center;display:block;color:#000000b5;">Empty Container Returned...</p></div>');
                         /*table.row(row)
@@ -869,19 +863,6 @@
                 }
             });
 
-            new $.fn.dataTable.Buttons(
-                table, [
-                    /* { extend: "create", editor: editor },*/
-                    {
-                        extend: "edit",
-                        editor: editor
-                    },
-                    {
-                        extend: "remove",
-                        editor: editor
-                    }
-                ]
-            );
 
         });
 
