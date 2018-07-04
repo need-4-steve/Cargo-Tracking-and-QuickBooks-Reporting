@@ -250,34 +250,14 @@
                     }
                 ],
                 select: "false",
-                buttons: [
-                    /*{
-                                            extend: 'collection',
-                                            text: 'Table control',
-                                            buttons: [{
-                                                    text: 'Toggle Select Column',
-                                                    action: function(e, dt, node, config) {
-                                                        dt.column(0).visible(!dt.column(0).visible());
-                                                    }
-                                                },
-                                                {
-                                                    text: 'Toggle Documents Column',
-                                                    action: function(e, dt, node, config) {
-                                                        dt.column(-1).visible(!dt.column(-1).visible());
-                                                    }
-                                                },
-                                                'colvis',
-                                                'colvisRestore'
-                                            ]
-                                        },*/
-                    {
+                buttons: [{
                         extend: 'copy',
                         text: 'Copy to clipboard'
                     },
                     {
                         text: 'Reload',
                         action: function(e, dt, node, config) {
-                            dt.ajax.reload();
+                            location.reload(true);
                         }
                     },
                     {
@@ -290,22 +270,7 @@
                                 page: 'current'
                             }
                         },
-                        //download: 'open',
                         customize: function(doc) {
-                            /*var cols = [];
-                            cols[0] = {
-                                text: 'Left part',
-                                alignment: 'left',
-                                margin: [20]
-                            };
-                            cols[1] = {
-                                text: 'Right part',
-                                alignment: 'right',
-                                margin: [0, 0, 20]
-                            };
-                            var objFooter = {};
-                            objFooter['columns'] = cols;
-                            doc['footer'] = objFooter;*/
                             doc.content.splice(1, 0, {
                                 margin: [0, 0, 0, 12],
                                 alignment: 'center',
@@ -316,21 +281,6 @@
                     {
                         extend: 'excelHtml5',
                         title: 'Cargo Data',
-                        /*customize: function(xlsx) {
-                            var sheet = xlsx.xl.worksheets['sheet1.xml'];
-                            var lastCol = sheet.getElementsByTagName('col').length - 1;
-                            var colRange = createCellPos(lastCol) + '1';
-                            //Has to be done this way to avoid creation of unwanted namespace atributes.
-                            var afSerializer = new XMLSerializer();
-                            var xmlString = afSerializer.serializeToString(sheet);
-                            var parser = new DOMParser();
-                            var xmlDoc = parser.parseFromString(xmlString, 'text/xml');
-                            var xlsxFilter = xmlDoc.createElementNS('http://schemas.openxmlformats.org/spreadsheetml/2006/main', 'autoFilter');
-                            var filterAttr = xmlDoc.createAttribute('ref');
-                            filterAttr.value = 'A1:' + colRange;
-                            xlsxFilter.setAttributeNode(filterAttr);
-                            sheet.getElementsByTagName('worksheet')[0].appendChild(xlsxFilter);
-                        },*/
                         text: 'Save as Excel Spreadsheet',
                         exportOptions: {
                             modifier: {
@@ -339,20 +289,13 @@
                         }
                     }
                 ],
-                columns: [
-                    /*{ // Checkbox select column
-                                            data: null,
-                                            defaultContent: '',
-                                            className: 'select-checkbox',
-                                            orderable: false
-                                        },*/
-                    {
+                columns: [{
                         data: "shipments.status",
                         render: function(data, type, row) {
                             var color = '';
                             var rowData = table.row(row).data();
                             if (type === 'display') {
-                                if (rowData.is_complete == 1 || (rowData.qb_rt == 1 && rowData.qb_ws == 1)) {
+                                if ((rowData.qb_rt == 1 && rowData.qb_ws == 1)) {
                                     color = 'circle_disabled';
                                 } else {
                                     if (data === '0') {
@@ -362,7 +305,7 @@
                                     } else if (data === '2') {
                                         color = 'circle_green';
                                     } else if (data === '3') {
-                                        color = 'circle_disabled';
+                                        color = '   ';
                                     }
                                 }
                                 return '<div id="status_div" class = \"' + color + '\"><p></p></div>';
@@ -475,8 +418,6 @@
                         },
                         className: "dt-body-center"
                     },
-                    /*{data: "shipments.latest_event"},
-                    {data: "shipments.latest_event_time_and_date"},*/
                     {
                         data: "shipments.requires_payment",
                         render: function(data, type, row) {
@@ -506,7 +447,7 @@
                     [5, 'asc'],
                     [1, 'asc']
                 ],
-                /*stateSaveCallback: function(settings, data) {
+                stateSaveCallback: function(settings, data) {
                     // Send an Ajax request to the server with the state object
                     $.ajax({
                         url: "/Ajax/save_state",
@@ -530,7 +471,7 @@
                         }
                     });
                     return o;
-                },*/
+                },
                 createdRow: function(row, data, dataIndex) {
                     if (data.shipments.eta === '1970-01-01') {
                         data.shipments.eta = '';
@@ -698,7 +639,7 @@
                         }
                         var statusTranslation = "circle_disabled";
                         if (daysDifference > 7) statusTranslation = "circle_green";
-                        else if (daysDifference < 7 && daysDifference > 3) statusTranslation = "circle_yellow";
+                        else if (daysDifference <= 7 && daysDifference > 3) statusTranslation = "circle_yellow";
                         else if (daysDifference < 3 && daysDifference >= 0) statusTranslation = "circle_red";
                         else statusTranslation = "circle_disabled";
                         $("td:first-child > div#status_div", row).addClass(statusTranslation);
@@ -862,9 +803,6 @@
                     });
                 }
             });
-
-
         });
-
     }
     (jQuery));

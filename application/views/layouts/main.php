@@ -7,18 +7,58 @@
         <!-- Tell the browser to be responsive to screen width -->
         <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
         <!-- Bootstrap 3.3.6 -->
-        <link rel="stylesheet" href="<?php echo site_url('resources/css/bootstrap.min.css');?>">
+        <link rel="stylesheet" href="<?php echo site_url('resources/css/bootstrap.min.css');?>" />
         <!-- Font Awesome -->
-        <link rel="stylesheet" href="<?php echo site_url('resources/css/font-awesome.min.css');?>">
+        <link rel="stylesheet" href="<?php echo site_url('resources/css/font-awesome.min.css');?>" />
         <!-- Ionicons -->
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css" />
         <!-- Datetimepicker -->
-        <link rel="stylesheet" href="<?php echo site_url('resources/css/bootstrap-datetimepicker.min.css');?>">
+        <link rel="stylesheet" href="<?php echo site_url('resources/css/bootstrap-datetimepicker.min.css');?>" />
         <!-- Theme style -->
-        <link rel="stylesheet" href="<?php echo site_url('resources/css/AdminLTE.min.css');?>">
+        <link rel="stylesheet" href="<?php echo site_url('resources/css/AdminLTE.min.css');?>" />
         <!-- AdminLTE Skins. Choose a skin from the css/skins
              folder instead of downloading all of them to reduce the load. -->
-        <link rel="stylesheet" href="<?php echo site_url('resources/css/_all-skins.min.css');?>">
+        <link rel="stylesheet" href="<?php echo site_url('resources/css/_all-skins.min.css');?>" />
+		<style>
+		
+			.slidecontainer {
+				width: 100%;
+			}
+
+			.slider {
+				-webkit-appearance: none;
+				width: 100%;
+				height: 15px;
+				border-radius: 5px;
+				background: #d3d3d3;
+				outline: none;
+				opacity: 0.7;
+				-webkit-transition: .2s;
+				transition: opacity .2s;
+			}
+
+			.slider:hover {
+				opacity: 1;
+			}
+
+			.slider::-webkit-slider-thumb {
+				-webkit-appearance: none;
+				appearance: none;
+				width: 25px;
+				height: 25px;
+				border-radius: 50%;
+				background: #4CAF50;
+				cursor: pointer;
+			}
+
+			.slider::-moz-range-thumb {
+				width: 25px;
+				height: 25px;
+				border-radius: 50%;
+				background: #4CAF50;
+				cursor: pointer;
+			}
+		</style>
     </head>
     
     <body class="hold-transition skin-blue sidebar-mini">
@@ -102,45 +142,19 @@
                                 <i class="fa fa-dashboard"></i> <span>Dashboard</span>
                             </a>
                         </li>
-						<li>
+						<!--<li>
                             <a href="#">
-                                <i class="fa fa-desktop"></i> <span>Archived Shipment</span>
+                                <i class="fa fa-desktop"></i> <span>Setting</span>
                             </a>
                             <ul class="treeview-menu">
 								<li class="active">
-                                    <a href="<?php echo site_url('archived_shipment/add');?>"><i class="fa fa-plus"></i> Add</a>
+                                    <a href="<?php echo site_url('setting/add');?>"><i class="fa fa-plus"></i> Add</a>
                                 </li>
 								<li>
-                                    <a href="<?php echo site_url('archived_shipment/index');?>"><i class="fa fa-list-ul"></i> Listing</a>
+                                    <a href="<?php echo site_url('setting/index');?>"><i class="fa fa-list-ul"></i> Listing</a>
                                 </li>
 							</ul>
-                        </li>
-						<li>
-                            <a href="#">
-                                <i class="fa fa-desktop"></i> <span>Calendar Event</span>
-                            </a>
-                            <ul class="treeview-menu">
-								<li class="active">
-                                    <a href="<?php echo site_url('calendar_event/add');?>"><i class="fa fa-plus"></i> Add</a>
-                                </li>
-								<li>
-                                    <a href="<?php echo site_url('calendar_event/index');?>"><i class="fa fa-list-ul"></i> Listing</a>
-                                </li>
-							</ul>
-                        </li>
-						<li>
-                            <a href="#">
-                                <i class="fa fa-desktop"></i> <span>Datatables State</span>
-                            </a>
-                            <ul class="treeview-menu">
-								<li class="active">
-                                    <a href="<?php echo site_url('datatables_state/add');?>"><i class="fa fa-plus"></i> Add</a>
-                                </li>
-								<li>
-                                    <a href="<?php echo site_url('datatables_state/index');?>"><i class="fa fa-list-ul"></i> Listing</a>
-                                </li>
-							</ul>
-                        </li>
+                        </li>-->
 						<li>
                             <a href="#">
                                 <i class="fa fa-dollar"></i> <span>Product</span>
@@ -156,19 +170,6 @@
                         </li>
 						<li>
                             <a href="#">
-                                <i class="fa fa-desktop"></i> <span>Shipment</span>
-                            </a>
-                            <ul class="treeview-menu">
-								<li class="active">
-                                    <a href="<?php echo site_url('shipment/add');?>"><i class="fa fa-plus"></i> Add</a>
-                                </li>
-								<li>
-                                    <a href="<?php echo site_url('shipment/index');?>"><i class="fa fa-list-ul"></i> Listing</a>
-                                </li>
-							</ul>
-                        </li>
-						<li>
-                            <a href="#">
                                 <i class="fa fa-desktop"></i> <span>Trucker</span>
                             </a>
                             <ul class="treeview-menu">
@@ -177,19 +178,6 @@
                                 </li>
 								<li>
                                     <a href="<?php echo site_url('trucker/index');?>"><i class="fa fa-list-ul"></i> Listing</a>
-                                </li>
-							</ul>
-                        </li>
-						<li>
-                            <a href="#">
-                                <i class="fa fa-desktop"></i> <span>Update Event</span>
-                            </a>
-                            <ul class="treeview-menu">
-								<li class="active">
-                                    <a href="<?php echo site_url('update_event/add');?>"><i class="fa fa-plus"></i> Add</a>
-                                </li>
-								<li>
-                                    <a href="<?php echo site_url('update_event/index');?>"><i class="fa fa-list-ul"></i> Listing</a>
                                 </li>
 							</ul>
                         </li>
@@ -262,9 +250,7 @@
                 <!-- /.content -->
             </div>
             <!-- /.content-wrapper -->
-            <footer class="main-footer">
-                <strong>Generated By <a href="http://www.crudigniter.com/">CRUDigniter</a> 3.2</strong>
-            </footer>
+            
 
             <!-- Control Sidebar -->
             <aside class="control-sidebar control-sidebar-dark">
@@ -292,9 +278,11 @@
         </div>
         <!-- ./wrapper -->
 
-        <!-- jQuery 2.2.3 -->
+        
         <script src="<?php echo site_url('resources/js/jquery-2.2.3.min.js');?>"></script>
-        <!-- Bootstrap 3.3.6 -->
+	<!-- jQuery 2.2.3 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>-->
+		<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+       <!-- Bootstrap 3.3.6 -->
         <script src="<?php echo site_url('resources/js/bootstrap.min.js');?>"></script>
         <!-- FastClick -->
         <script src="<?php echo site_url('resources/js/fastclick.js');?>"></script>
@@ -306,5 +294,82 @@
         <script src="<?php echo site_url('resources/js/moment.js');?>"></script>
         <script src="<?php echo site_url('resources/js/bootstrap-datetimepicker.min.js');?>"></script>
         <script src="<?php echo site_url('resources/js/global.js');?>"></script>
+		<script src="<?php echo site_url('assets/color-picker/jquery.minicolors.js');?>"></script>
+		<script src="<?php echo site_url('assets/fontselect/jquery.fontselect.js');?>"></script>
+  <script src="https://jqueryui.com/resources/demos/external/jquery-mousewheel/jquery.mousewheel.js"></script>
+		<script>
+    $(document).ready( function() {
+		$('#table_header_font').fontselect().change(function(){
+          // replace + signs with spaces for css
+          var font = $(this).val().replace(/\+/g, ' ');
+          // split font into family and weight
+          font = font.split(':');
+          // set family on paragraphs 
+          $('#header_font_example').css('font-family', font[0]);
+        });
+		$('#table_cell_font').fontselect().change(function(){
+          // replace + signs with spaces for css
+          var font = $(this).val().replace(/\+/g, ' ');
+          // split font into family and weight
+          font = font.split(':');
+          // set family on paragraphs 
+          $('#table_cell_font_example').css('font-family', font[0]);
+        });
+		var table_cell_font_spinner = $( "#table_cell_font_size" ).spinner();
+		var table_header_font_spinner = $( "#table_header_font_size" ).spinner();
+		$( "button" ).button();
+        //
+        // Dear reader, it's actually very easy to initialize MiniColors. For example:
+        //
+        //  $(selector).minicolors();
+        //
+        // The way I've done it below is just for the demo, so don't get confused
+        // by it. Also, data- attributes aren't supported at this time. Again,
+        // they're only used for the purposes of this demo.
+        //
+        $('#table_cell_font_color').minicolors({
+          control: $(this).attr('data-control') || 'hue',
+          defaultValue: $(this).attr('data-defaultValue') || '',
+          format: $(this).attr('data-format') || 'hex',
+          keywords: $(this).attr('data-keywords') || '',
+          inline: $(this).attr('data-inline') === 'true',
+          letterCase: $(this).attr('data-letterCase') || 'lowercase',
+          opacity: $(this).attr('data-opacity'),
+          position: $(this).attr('data-position') || 'bottom',
+          swatches: $(this).attr('data-swatches') ? $(this).attr('data-swatches').split('|') : [],
+          change: function(hex, opacity) {
+            var log;
+            try {
+              log = hex ? hex : 'transparent';
+              if( opacity ) log += ', ' + opacity;
+              console.log(log);
+            } catch(e) {}
+          },
+          theme: 'default'
+        });
+		$('#table_header_font_color').minicolors({
+          control: $(this).attr('data-control') || 'hue',
+          defaultValue: $(this).attr('data-defaultValue') || '',
+          format: $(this).attr('data-format') || 'hex',
+          keywords: $(this).attr('data-keywords') || '',
+          inline: $(this).attr('data-inline') === 'true',
+          letterCase: $(this).attr('data-letterCase') || 'lowercase',
+          opacity: $(this).attr('data-opacity'),
+          position: $(this).attr('data-position') || 'bottom',
+          swatches: $(this).attr('data-swatches') ? $(this).attr('data-swatches').split('|') : [],
+          change: function(hex, opacity) {
+            var log;
+            try {
+              log = hex ? hex : 'transparent';
+              if( opacity ) log += ', ' + opacity;
+              console.log(log);
+            } catch(e) {}
+          },
+          theme: 'default'
+        });
+
+
+    });
+  </script>
     </body>
 </html>

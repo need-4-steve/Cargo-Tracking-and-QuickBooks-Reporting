@@ -1,4 +1,41 @@
 @import url(https://fonts.googleapis.com/css?family=Raleway:100);
+
+/** DI: MAKE CHANGES HERE **/
+
+
+/* [table header]*/
+
+table.dataTable thead th {
+    font-size: 15px !important;
+    font-family: "Helvetica Neue", HelveticaNeue, Arial, Helvetica, sans-serif !important;
+    font-weight: bold !important;
+    /* font-weight options: lighter, normal, bold, bolder*/
+    color: white !important;
+    background: #333334 !important;
+}
+
+
+/*cells*/
+
+table.dataTable td {
+    font-size: 14px !important;
+    color: #666666 !important;
+    font-family: "Helvetica Neue", HelveticaNeue, Arial, Helvetica, sans-serif !important;
+    font-weight: normal !important;
+    /* font-weight options: lighter, normal, bold, bolder*/
+}
+
+
+/*last is the table width in percent of the viewable page*/
+
+#shipments {
+    width: 80% !important;
+    margin: 0 !important;
+}
+
+
+/*STOP HERE*/
+
 body.dataTables,
 body.jqueryui {
     font: 75%/1.25em "Helvetica Neue", HelveticaNeue, Arial, Helvetica, sans-serif;

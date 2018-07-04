@@ -32,4 +32,5 @@ user_guide_src/cilexer/pycilexer.egg-info/*
 /_wordpress/
 /_wp2/
 /vendor_documents/
+/_ignore/
 

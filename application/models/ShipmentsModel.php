@@ -258,6 +258,13 @@ class ShipmentsModel extends CI_Model
         return $result['id'];
     }
 
+    public function get_vendor_id_by_initials($vendor_initials=FALSE){
+        if ($vendor_initials === FALSE) return false;
+        $query = $this->db->get_where('vendors', array('document_initials' => $vendor_initials));
+        $result= $query->row_array();
+        return $result['id'];
+    }
+
     public function get_vendor_associated_product($vendorId=FALSE){
         if ($vendorId === FALSE) return false;
         $query = $this->db->get_where('vendor_products', array('vendor_id' => $vendorId));
@@ -314,6 +321,11 @@ class ShipmentsModel extends CI_Model
         return $result;
     }
 
+    public function get_all_containers(){
+        $query = $this->db->query("SELECT * from shipments WHERE 1=1");
+        return $query->result();
+    }
+
     public function get_fields_to_update($selectString,$whereArray){
         $this->db->select( is_null($selectString || empty($selectString)) ? '*' : $selectString );
         $query = $this->db->get_where('shipments', $whereArray);
@@ -335,10 +347,15 @@ class ShipmentsModel extends CI_Model
         }
     }
     
-    
-    public function get_by_po_number($po_number){
+    public function get_by_po_number($po_number, $vendor_initials=NULL){
         $this->db->from('shipments');
         $this->db->where('po',$po_number);
+        if (!is_null($vendor_initials) && !empty($vendor_initials)) {
+            $vendor_id = $this->get_vendor_id_by_initials($vendor_initials);
+            if (!is_null($vendor_id) && !empty($vendor_id) && $vendor_id > 1){
+                $this->db->where('vendor_id',$vendor_id);
+            }
+        }
         $query = $this->db->get();
         $row= $query->row();
         if (!isset($row)) return NULL;
@@ -411,6 +428,14 @@ class ShipmentsModel extends CI_Model
         $query = $this->db->get_where('shipments', array('container_number' => $container_number));
         if(empty($query->row_array())) return false;
         else return true;
+    }
+
+    function delete_container_entry($id){
+        return $this->db->delete('shipments',array('id'=>$id));
+    }
+
+    function delete_container_entryby_container_number($container_number){
+        return $this->db->delete('shipments',array('container_number'=>$container_number));
     }
 
 }

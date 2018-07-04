@@ -45,6 +45,11 @@
 -->	<!--[if lt IE 9]>
         <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 	<![endif]-->
+	<style>
+	.font-size-label{
+		display: inline-block; 
+	}
+	</style>
 </head>
 
 <body class="dataTables">
@@ -90,7 +95,7 @@
 					</li>
 					<?php if($this->session->userdata('logged_in')) : ?>
 						<li class="nav-item">
-							<a class="nav-link" href="<?php echo base_url(); ?>dashboard/index">System Administration</a>
+							<a class="nav-link" target="_blank" href="<?php echo base_url(); ?>dashboard/index">System Administration</a>
 						</li>
 					<?php endif; ?>
 				</ul>
