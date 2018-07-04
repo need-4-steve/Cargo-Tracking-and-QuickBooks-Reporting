@@ -1240,6 +1240,11 @@ class Shipments extends CI_Controller
                     echo "[SUCCESS]=>".$somethingWorthwhile[0].$somethingWorthwhile[1]. PHP_EOL;
                     print_r($testVal);
                 }
+                $testVal=substr($testVal,0,-2);
+                $testValMM = substr($testVal,0,2);
+                $testValDD = substr($testVal,2,2);
+                $yearDigits = date('y');
+                $testVal=$testValMM. '/' . $testValDD . '/' . $yearDigits;
                 $etaStrToTime = new DateTime($testVal); //date_create($data['newContainers'][$c - 1]['eta']);
                 $etaStrToTime->setTime(5, 00);
                 echo "[CN.CA etaStrToTime]-> " . $etaStrToTime->format("Y-m-d\TH:i:s") . PHP_EOL;
