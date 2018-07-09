@@ -1,6 +1,25 @@
 (function($) {
         var editor;
+        jQuery.extend(jQuery.fn.dataTable.ext.order, {
+
+            "non-empty-string-asc": function(str1, str2) {
+                if (str1 == "")
+                    return 1;
+                if (str2 == "")
+                    return -1;
+                return ((str1 < str2) ? -1 : ((str1 > str2) ? 1 : 0));
+            },
+
+            "non-empty-string-desc": function(str1, str2) {
+                if (str1 == "")
+                    return -1;
+                if (str2 == "")
+                    return 1;
+                return ((str1 < str2) ? 1 : ((str1 > str2) ? -1 : 0));
+            }
+        });
         $(document).ready(function() {
+
             /*[START] editor declaration section*/
             editor = new $.fn.dataTable.Editor({
                 ajax: '/Ajax/Shipments',
@@ -239,17 +258,10 @@
                 dom: 'RBlfrtip',
                 //responsive: 'true',
                 columnDefs: [{
-                        "defaultContent": " ",
-                        "type": "non-empty-string",
-                        "targets": "_all"
-                    },
-                    {
-                        "targets": [24],
-                        "visible": false,
-                        "searchable": false
-                    }
-                ],
-                select: "false",
+                    targets: 8,
+                    type: "non-empty-string"
+                }],
+                select: "single",
                 buttons: [{
                         extend: 'copy',
                         text: 'Copy to clipboard'
@@ -443,9 +455,7 @@
                     }
                 ],
                 order: [
-                    [8, 'asc'],
-                    [5, 'asc'],
-                    [1, 'asc']
+                    [8, 'asc']
                 ],
                 stateSaveCallback: function(settings, data) {
                     // Send an Ajax request to the server with the state object
@@ -482,7 +492,7 @@
                         $("td:nth-child(15)", row).removeClass("red_background");
                     }
                     if (data.shipments.has_documents == 1) {
-                        $("td:last-child", row).html('<a href="/richfilemanager?expandedFolder=' + data.shipments.po + ' ' + data.shipments.container_number + '/' + '" target="_blank"><img src="/assets/folder_icon.png"></a>');
+                        $("td:last-child", row).html('<a href="/richfilemanager?expandedFolder=' + data.shipments.file_directory + '/' + '" target="_blank"><img src="/assets/folder_icon.png"></a>');
                     } else {
                         $("td:last-child", row).html('<img src="/assets/folder_icon.png" class="disabled_folder_icon">');
                     }
@@ -497,7 +507,7 @@
                     }
 
                     if (data.shipments.latest_event.includes('Empty Container Returned')) {
-                        $("td:nth-child(1)", row).html('<div id="status_div" class = "circle_disabled"><p style="font-style:italic;margin-left: -11 !important;font-size:8px;text-align:center;display:block;color:#000000b5;">Empty Container Returned...</p></div>');
+                        $("td:nth-child(1)", row).html('<div id="status_div" class = "circle_disabled"></div>');
                         /*table.row(row)
                             .data(data)
                             .draw();*/
@@ -640,7 +650,7 @@
                         var statusTranslation = "circle_disabled";
                         if (daysDifference > 7) statusTranslation = "circle_green";
                         else if (daysDifference <= 7 && daysDifference > 3) statusTranslation = "circle_yellow";
-                        else if (daysDifference < 3 && daysDifference >= 0) statusTranslation = "circle_red";
+                        else if (daysDifference <= 3 && daysDifference >= 0) statusTranslation = "circle_red";
                         else statusTranslation = "circle_disabled";
                         $("td:first-child > div#status_div", row).addClass(statusTranslation);
                     }

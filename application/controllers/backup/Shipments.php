@@ -203,25 +203,7 @@ class Shipments extends CI_Controller
                     echo "[containerDataExists?]->" . $containerDataExists . PHP_EOL;
                     if ($containerDataExists) {
                         echo "[YES EXISTS]->" . $dataRows[$c][1] . PHP_EOL;
-                        $reportContainerData = array();
-                        echo "[REPORT DATA FOR EXISTING CONTAINER] => ". PHP_EOL;
-                        for ($d = 2; $d < count($columnNames); $d++) {
-                            $key = $columnNames[$d];
-                            $reportContainerData[$key] = $dataRows[$c][$d];
-                            echo "[key]->" . $key . "\t[value]=>" . $reportContainerData[$key] . PHP_EOL;
-                            if ($key === 'eta' || $key === 'latest_event_timestamp') {
-                                if (!is_null($reportContainerData['eta']) && strlen($reportContainerData[$key]) >= 15) {
-                                    $reportContainerData[$key] = trim(substr($reportContainerData[$key], 0, 16));
-                                    $reportContainerData[$key] = date('m/d/Y H:II', strtotime($reportContainerData[$key]));
-                                } else {
-                                    $reportContainerData[$key] = null;
-                                }
-                            }
-                        }
-                        $data['newContainers'][$c - 1] = (array) $this->ShipmentsModel->get_by_container_number($dataRow_CN);
-                        $updateValues = $this->ShipmentsModel->get_fields_to_update('container_number, discharge_port, final_destination, latest_event, latest_event_time_and_date, eta, status, qb_ws, qb_rt', array('container_number' => $dataRow_CN));
-                        $updateValues['final_destination'] = $reportContainerData['destination_city'] . ', ' . $reportContainerData['destination_state'];                        
-                        $updateValues['discharge_port'] = $reportContainerData['discharge_port'];
+                        $updateValues = $this->ShipmentsModel->get_fields_to_update('container_number, latest_event_time_and_date, eta, status, qb_ws, qb_rt', array('container_number' => $dataRow_CN));
                         $etaDataRowResult = new DateTime();
                         $statusValue = -1;
                         $etaDataRowString = $dataRows[$c][7]; //05/23/2018 10:28 (Actual)
@@ -278,6 +260,11 @@ class Shipments extends CI_Controller
                         } else {
                             //null eta
                             $updateValues['eta'] = null;
+                            //date_add($updateValues['eta'], date_interval_create_from_date_string('50 years'));
+                            /*$updateValues['eta']->add(new DateInterval('P1Y'));
+                            $updateValues['eta'] = $updateValues['eta']->format('Y-m-d');*/
+                            $data['newContainers'][$c - 1]['status'] = 3;
+                            $data['newContainers'][$c - 1]['eta'] = null;
                             $updateValues['status'] = 3;
                         }
                         echo "[STATUS]->" . $updateValues['status'] . PHP_EOL;
@@ -300,16 +287,12 @@ class Shipments extends CI_Controller
                             $updateValues['status'] = 3;
                         }
                         echo "{[data['newContainers'][$c - 1]}->update_record " . PHP_EOL;
-                        $updateValues['latest_event']=$reportContainerData['latest_event'];
                         print_r($updateValues);
                         if (!$updateValues['is_complete'] && strpos($dataRow_CN,'[')===false) $allContainersString.=$dataRow_CN.'+';
                         $this->ShipmentsModel->update_record(array('container_number' => $updateValues['container_number']),
                             array('latest_event_time_and_date' => (is_null($updateValues['latest_event_time_and_date']) || empty($updateValues['latest_event_time_and_date'])) ? null : $updateValues['latest_event_time_and_date'],
                                 'eta' => $updateValues['eta'],
                                 'status' => $updateValues['status'],
-                                'discharge_port' => $updateValues['discharge_port'],
-                                'final_destination' => $updateValues['final_destination'],
-                                'latest_event' => $updateValues['latest_event'],
                                 'is_complete' => $updateValues['is_complete'],
                                 'is_active' => true //$updateValues['is_active']
                             )
@@ -327,7 +310,7 @@ class Shipments extends CI_Controller
                         for ($d = 2; $d < count($columnNames); $d++) {
                             $key = $columnNames[$d];
                             $data['newContainers'][$c - 1][$key] = $dataRows[$c][$d];
-                            echo "[key]->" . $key . "[\tvalue]=>" . $data['newContainers'][$c - 1][$key] . PHP_EOL;
+                            echo "[key]->" . $key . "[value]=>" . $data['newContainers'][$c - 1][$key] . PHP_EOL;
                             if ($key === 'eta' || $key === 'latest_event_timestamp') {
                                 if (!is_null($data['newContainers'][$c - 1]['eta']) && strlen($data['newContainers'][$c - 1][$key]) >= 15) {
                                     $data['newContainers'][$c - 1][$key] = trim(substr($data['newContainers'][$c - 1][$key], 0, 16));
@@ -498,16 +481,6 @@ class Shipments extends CI_Controller
             $execution_time = round($execution_time, 2); //makes time two decimal places long
             echo 'Total Execution Time: ' . $execution_time . ' Secs' . PHP_EOL;
         } else {
-            $containers= json_decode(json_encode($this->ShipmentsModel->get_all_containers()));
-            foreach ($containers as $container){
-                $container->final_destination = str_replace("Tennessee","TN",$container->final_destination);
-                $container->final_destination = str_replace("North Carolina","NC",$container->final_destination);
-                $container->final_destination = str_replace("South Carolina","SC",$container->final_destination);
-                $container->discharge_port = trim(str_replace("(Intended)"," ",$container->discharge_port));
-                $this->ShipmentsModel->update_record(array('container_number' => $container->container_number),
-                                                        array('final_destination' => $container->final_destination,'discharge_port' => $container->discharge_port)
-            );
-            }
             /* else not a command line call.... */
             $data['title'] = "Active Shipments";
             $this->load->view('templates/header', $data);
@@ -578,10 +551,8 @@ class Shipments extends CI_Controller
                             if (is_cli()) echo "[outputResult] => " . $outputResult . PHP_EOL;
                             $bolContainerData = $this->ShipmentsModel->get_by_bol($htmlBoL);
                             foreach ($bolContainerData as $bolContainer) {
-                                if (is_cli()) {
-                                    echo "[CONTAINER_DATA]=>".$bolContainer['container_number']. PHP_EOL;
-                                    print_r($bolContainer);
-                                }
+                                if (is_cli()) echo "[CONTAINER_DATA]=>".$bolContainer['container_number']. PHP_EOL;
+                                print_r($bolContainer);
                             }
                         }
                         // Mark as Read
@@ -846,8 +817,8 @@ class Shipments extends CI_Controller
                                                     ]);
                                                     /* Di's Server ->
                                                      $pdf = new \TonchikTm\PdfToHtml\Pdf($tmpFileDir, [
-                                                        'pdftohtml_path' => 'F:/xampp/htdocs/assets/poppler0.51/bin/pdftohtml.exe',
-                                                        'pdfinfo_path' => 'F:/xampp/htdocs/assets/poppler0.51/bin/pdfinfo.exe',
+                                                        'pdftohtml_path' => 'C:/xampp/htdocs/assets/poppler0.51/bin/pdftohtml.exe',
+                                                        'pdfinfo_path' => 'C:/xampp/htdocs/assets/poppler0.51/bin/pdfinfo.exe',
                                                     ]);
                                                     */
                                                     $pdfInfo = $pdf->getInfo();
@@ -921,7 +892,7 @@ class Shipments extends CI_Controller
                                                 if (strpos(strtolower($vendorProduct['product_name']),strtolower($productType))!==false){
                                                     $associatedVendorData=$this->ShipmentsModel->get_vendor_data_by_id($vendor['id']);
                                                     echo 'NEW VENDOR ASSOCIATION for '.$filename.': '. PHP_EOL;
-                                                    if (is_cli())print_r($associatedVendorData);
+                                                    print_r($associatedVendorData);
                                                     break;
                                                 }
                                             }
@@ -933,8 +904,8 @@ class Shipments extends CI_Controller
                                             ]);
                                             /* Di's server ->
                                             $pdf = new \TonchikTm\PdfToHtml\Pdf($tmpFileDir, [
-                                                'pdftohtml_path' => 'F:/xampp/htdocs/assets/poppler0.51/bin/pdftohtml.exe',
-                                                'pdfinfo_path' => 'F:/xampp/htdocs/assets/poppler0.51/bin/pdfinfo.exe',
+                                                'pdftohtml_path' => 'C:/xampp/htdocs/assets/poppler0.51/bin/pdftohtml.exe',
+                                                'pdfinfo_path' => 'C:/xampp/htdocs/assets/poppler0.51/bin/pdfinfo.exe',
                                             ]);*/
                                             $pdfInfo = $pdf->getInfo();
                                             $contentFirstPage = $pdf->getHtml()->getPage(1);
@@ -1301,7 +1272,7 @@ class Shipments extends CI_Controller
                         $statusValue = 0;
                     }
                 } else {
-                    $statusValue = 0; 
+                    $statusValue = 0;
                 } 
                 if (is_cli()){
                     echo "[statusValue] => " . $statusValue . PHP_EOL;

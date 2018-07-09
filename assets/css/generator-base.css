@@ -2,6 +2,10 @@
 
 /** DI: MAKE CHANGES HERE **/
 
+table.dataTable td {
+    white-space: nowrap !important;
+}
+
 
 /* [table header]*/
 
@@ -29,12 +33,17 @@ table.dataTable td {
 /*last is the table width in percent of the viewable page*/
 
 #shipments {
-    width: 80% !important;
+    width: 95% !important;
     margin: 0 !important;
 }
 
 
 /*STOP HERE*/
+
+
+/****************************************************************************
+*****************************************************************************
+*****************************************************************************/
 
 body.dataTables,
 body.jqueryui {

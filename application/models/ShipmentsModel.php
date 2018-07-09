@@ -25,6 +25,13 @@ class ShipmentsModel extends CI_Model
         $this->editorDb = $editorDb;
     }
 
+
+    public function sql_replace($WhatWithWhat){
+        $this->db->replace('shipments', $WhatWithWhat);
+    }
+
+
+
     public function archiveInactiveRecords() {
         $q = $this->db->get_where('shipments', array('is_active' => false))->result_array();
         foreach ($q as $r) { // loop over results
@@ -192,7 +199,8 @@ class ShipmentsModel extends CI_Model
                     ->setFormatter( function ( $val, $data, $opts ) {
                         return ! $val ? 0 : 1;
                     } ),
-                    Field::inst( 'shipments.latest_event' )
+                    Field::inst( 'shipments.latest_event' ),
+                    Field::inst( 'shipments.file_directory' )
             )
             ->leftJoin( 'products', 'products.id', '=', 'shipments.product_id' )
             ->leftJoin( 'truckers', 'truckers.id', '=', 'shipments.trucker_id' )
