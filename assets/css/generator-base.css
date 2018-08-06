@@ -1,8 +1,18 @@
 @import url(https://fonts.googleapis.com/css?family=Raleway:100);
 
 /** DI: MAKE CHANGES HERE **/
-
 table.dataTable td {
+	white-space: nowrap !important;
+}
+table.dataTable td:nth-child(8),
+table.dataTable td:nth-child(7) {
+    /*This is the FINAL DESTINATION COLUMN*/
+    /*font-size: 12px !important;*/
+    white-space: nowrap !important;
+}
+
+table.dataTable td:nth-child(3) {
+    /*font-size: 12px !important;*/
     white-space: nowrap !important;
 }
 

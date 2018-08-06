@@ -85,8 +85,8 @@
 						<div class="dropdown-menu" aria-labelledby="userspace">
 							<a class="dropdown-item" href="<?php echo base_url(); ?>shipments/getcurrent">Get Active Shipments</a>
 							<div class="dropdown-divider"></div>
-							<a class="dropdown-item" href="<?php echo base_url(); ?>shipments/index">Shipment History</a>
-							<div class="dropdown-divider"></div>
+							<!--<a class="dropdown-item" href="<?php echo base_url(); ?>shipments/index">Shipment History</a>
+							<div class="dropdown-divider"></div>-->
 							<a class="dropdown-item" href="<?php echo base_url(); ?>calendar">Calendar</a>
 							<div class="dropdown-divider"></div>
 							<a class="dropdown-item" href="<?php echo base_url(); ?>users/logout">Logout</a>

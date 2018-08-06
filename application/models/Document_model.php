@@ -50,9 +50,43 @@ class Document_model extends CI_Model
     {
         if (is_null($shipment_id) || empty($shipment_id)) return false;
         $query = $this->db->get_where('vendor_documents', array('shipment_id' => $shipment_id));
-        $this->db->order_by('creation_timestamp', 'desc');
         $rows= $query->result_array();
         if (count($rows)<=0) return false;
+        return $rows;
+    }
+
+    public function get_all_documents_associated_with_po ($po)
+    {
+        if (is_null($po) || empty($po)) return false;
+        $query = $this->db->get_where('vendor_documents', array('po_number' => $po));
+        
+        $rows= $query->result_array();
+        if (count($rows)<=0) return false;
+        return $rows;
+    }
+
+    public function get_all_documents_associated_with_cn_label ($container_numero)
+    {
+        if (is_null($container_numero) || empty($container_numero)) return false;
+        if (is_cli()) echo 'GET DOC BY ID LABEL ' . $container_numero . PHP_EOL;
+        /*$query = $this->db->get_where('vendor_documents', array('identifying_label' => trim($shipment_id)));
+        $rows= $query->result_array();
+        print_r($rows);
+        if (count($rows)<=0) return false;
+        if (is_cli()) echo 'ROWS? ' . PHP_EOL;
+        */
+        $allDocs=$this->get_all_documents();
+        $rows=array();
+        foreach($allDocs as $doc){
+            if (is_cli()) echo 'doc[idlabel]=>  '. $doc['identifying_label'] . '===' .$container_numero. PHP_EOL;
+            if (strtoupper(trim($doc['identifying_label']))===strtoupper(trim($container_numero))){
+                    $rows[]=$doc;
+                }
+            }
+        if (empty($rows)) return false;
+        if (is_cli()) echo 'ROWS!!!!'. PHP_EOL;
+        print_r($rows);
+        if (is_cli()) echo 'ROWS!!!!'. PHP_EOL;
         return $rows;
     }
 
@@ -60,7 +94,7 @@ class Document_model extends CI_Model
     {
         if (is_null($document_type) || empty($document_type)) return false;
         $query = $this->db->get_where('vendor_documents', array('document_type' => $document_type));
-        $this->db->order_by('creation_timestamp', 'desc');
+        
         $rows= $query->result_array();
         if (count($rows)<=0) return false;
         return $rows;
@@ -73,7 +107,7 @@ class Document_model extends CI_Model
         $container= $query->row_array();
         if (is_null($container) || empty($container)) return false;
         $query2 = $this->db->get_where('vendor_documents', array('shipment_id' => $container['id']));
-        $this->db->order_by('creation_timestamp', 'desc');
+        
         $rows= $query2->result_array();
         if (count($rows)<=0) return false;
         return $rows;
@@ -94,7 +128,7 @@ class Document_model extends CI_Model
     public function update_document($id, $params)
     {
         $this->db->where('id', $id);
-        return $this->db->update('vendor_documents', $params);
+        $this->db->update('vendor_documents', $params);
     }
 
     /*

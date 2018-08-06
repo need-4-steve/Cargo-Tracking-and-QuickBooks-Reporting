@@ -713,6 +713,6 @@ class Str
             ];
         }
 
-        return $languageSpecific[$language] ?? null;
+        return $languageSpecific[$language] ? $languageSpecific[$language] : null;
     }
 }

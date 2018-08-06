@@ -26,7 +26,7 @@
                 table: '#shipments',
                 columnDefs: [{
                     type: 'datetime',
-                    targets: [9, 10, 12]
+                    targets: [10, 11, 13]
                 }],
                 fields: [{ //1
                         label: "Status",
@@ -34,73 +34,73 @@
                         type: "readonly"
                     },
                     { //2
+                        label: "Container Size",
+                        name: "shipments.container_size",
+                        type: "readonly"
+                    },
+                    { //3
                         label: "P/O#",
                         name: "shipments.po"
                     },
-                    { //3
+                    { //4
                         label: "Product",
                         name: "shipments.product_id",
                         type: "select",
                         placeholder: ""
                     },
-                    { //4
+                    { //5
                         label: "CN",
                         name: "shipments.container_number",
                         type: "readonly"
                     },
-                    { //5
+                    { //6
                         label: "B/L",
                         name: "shipments.bill_of_lading",
                         type: "readonly"
                     },
-                    { //6
+                    { //7
                         label: "Vendor",
                         name: "shipments.vendor_id",
                         type: "select",
                         placeholder: ""
                     },
-                    { //7
+                    { //8
                         label: "Port",
                         name: "shipments.discharge_port",
                         type: "readonly"
                     },
-                    { //8
+                    { //9
                         label: "Dest.",
                         name: "shipments.final_destination",
                         type: "readonly"
                     },
-                    { //9
+                    { //10
                         label: "ETA",
                         name: "shipments.eta",
                         type: "datetime",
                         format: 'MM-DD-YYYY'
                     },
-                    { //10
+                    { //11
                         label: "LFD",
                         name: "shipments.lfd",
                         type: "datetime",
                         format: 'MM-DD-YYYY'
                     },
-                    { //11
+                    { //12
                         label: "Pickup Number",
                         name: "shipments.pickup_number"
                     },
-                    { //12
+                    { //13
                         label: "Truck Date",
                         name: "shipments.truck_date",
                         type: "datetime",
                         format: 'MM-DD-YYYY h:mm A'
                     },
-                    { //13
+                    { //14
                         label: "Truck Co.",
                         name: "shipments.trucker_id",
                         type: "select",
                         placeholder: ""
-                    },
-                    { //14
-                        label: "Container Size",
-                        name: "shipments.container_size",
-                        type: "readonly"
                     },
                     { //15
                         label: "B/L Status",
@@ -108,8 +108,8 @@
                         type: "readonly"
                     },
                     { //16
-                        label: "Freight",
-                        name: "shipments.freight",
+                        label: "Received",
+                        name: "shipments.rcvd",
                         type: "checkbox",
                         options: [{
                             label: "",
@@ -119,61 +119,6 @@
                         unselectedValue: 0
                     },
                     { //17
-                        label: "ISF",
-                        name: "shipments.isf_required",
-                        type: "checkbox",
-                        options: [{
-                            label: "",
-                            value: 1
-                        }],
-                        separator: '',
-                        unselectedValue: 0
-                    },
-                    { //18
-                        label: "Customs",
-                        name: "shipments.customs",
-                        type: "checkbox",
-                        options: [{
-                            label: "",
-                            value: 1
-                        }],
-                        separator: '',
-                        unselectedValue: 0
-                    },
-                    { //19
-                        label: "PO",
-                        name: "shipments.po_boolean",
-                        type: "checkbox",
-                        options: [{
-                            label: "",
-                            value: 1
-                        }],
-                        separator: '',
-                        unselectedValue: 0
-                    },
-                    { //20
-                        label: "QB RT",
-                        name: "shipments.qb_rt",
-                        type: "checkbox",
-                        options: [{
-                            label: "",
-                            value: 1
-                        }],
-                        separator: '',
-                        unselectedValue: 0
-                    },
-                    { //21
-                        label: "QB WS",
-                        name: "shipments.qb_ws",
-                        type: "checkbox",
-                        options: [{
-                            label: "",
-                            value: 1
-                        }],
-                        separator: '',
-                        unselectedValue: 0
-                    },
-                    { //22
                         label: "Vendor Payment",
                         name: "shipments.requires_payment",
                         type: "checkbox",
@@ -184,7 +129,40 @@
                         separator: '',
                         unselectedValue: 0
                     },
-                    { //23
+                    { //18
+                        label: "Freight",
+                        name: "shipments.freight",
+                        type: "checkbox",
+                        options: [{
+                            label: "",
+                            value: 1
+                        }],
+                        separator: '',
+                        unselectedValue: 0
+                    },
+                    { //19
+                        label: "Customs",
+                        name: "shipments.customs",
+                        type: "checkbox",
+                        options: [{
+                            label: "",
+                            value: 1
+                        }],
+                        separator: '',
+                        unselectedValue: 0
+                    },
+                    { //20
+                        label: "ISF",
+                        name: "shipments.isf_required",
+                        type: "checkbox",
+                        options: [{
+                            label: "",
+                            value: 1
+                        }],
+                        separator: '',
+                        unselectedValue: 0
+                    },
+                    { //21
                         label: "D.O.",
                         name: "shipments.do",
                         type: "checkbox",
@@ -195,7 +173,40 @@
                         separator: '',
                         unselectedValue: 0
                     },
+                    { //22
+                        label: "PO",
+                        name: "shipments.po_boolean",
+                        type: "checkbox",
+                        options: [{
+                            label: "",
+                            value: 1
+                        }],
+                        separator: '',
+                        unselectedValue: 0
+                    },
+                    { //23
+                        label: "QB RT",
+                        name: "shipments.qb_rt",
+                        type: "checkbox",
+                        options: [{
+                            label: "",
+                            value: 1
+                        }],
+                        separator: '',
+                        unselectedValue: 0
+                    },
                     { //24
+                        label: "QB WS",
+                        name: "shipments.qb_ws",
+                        type: "checkbox",
+                        options: [{
+                            label: "",
+                            value: 1
+                        }],
+                        separator: '',
+                        unselectedValue: 0
+                    },
+                    { //25
                         label: "Docs",
                         name: "shipments.has_documents"
                     }
@@ -258,7 +269,7 @@
                 dom: 'RBlfrtip',
                 //responsive: 'true',
                 columnDefs: [{
-                    targets: 8,
+                    targets: 7,
                     type: "non-empty-string"
                 }],
                 select: "single",
@@ -307,7 +318,7 @@
                             var color = '';
                             var rowData = table.row(row).data();
                             if (type === 'display') {
-                                if ((rowData.qb_rt == 1 && rowData.qb_ws == 1)) {
+                                if ((rowData.qb_rt == 1 && rowData.qb_ws == 1) || rowData.is_complete == 1 || rowData.rcvd == 1) {
                                     color = 'circle_disabled';
                                 } else {
                                     if (data === '0') {
@@ -324,6 +335,9 @@
                             }
                             return data;
                         }
+                    },
+                    {
+                        data: "shipments.container_size"
                     },
                     {
                         data: "shipments.po"
@@ -365,16 +379,43 @@
                         editField: "shipments.trucker_id"
                     },
                     {
-                        data: "shipments.container_size"
+                        data: "shipments.bl_status"
                     },
                     {
-                        data: "shipments.bl_status"
+                        data: "shipments.rcvd",
+                        render: function(data, type, row) {
+                            if (type === 'display') {
+                                return '<input type="checkbox" id="editor-rcvd" class="rowCB">';
+                            }
+                            return data;
+                        },
+                        className: "dt-body-center"
+                    },
+                    {
+                        data: "shipments.requires_payment",
+                        render: function(data, type, row) {
+                            if (type === 'display') {
+                                return '<input type="checkbox" id="editor-requires_payment" class="rowCB">';
+                            }
+                            return data;
+                        },
+                        className: "dt-body-center"
                     },
                     {
                         data: "shipments.freight",
                         render: function(data, type, row) {
                             if (type === 'display') {
                                 return '<input type="checkbox" id="editor-freight" class="rowCB">';
+                            }
+                            return data;
+                        },
+                        className: "dt-body-center"
+                    },
+                    {
+                        data: "shipments.customs",
+                        render: function(data, type, row) {
+                            if (type === 'display') {
+                                return '<input type="checkbox" id="editor-customs" class="rowCB">';
                             }
                             return data;
                         },
@@ -391,10 +432,10 @@
                         className: "dt-body-center"
                     },
                     {
-                        data: "shipments.customs",
+                        data: "shipments.do",
                         render: function(data, type, row) {
                             if (type === 'display') {
-                                return '<input type="checkbox" id="editor-customs" class="rowCB">';
+                                return '<input type="checkbox" id="editor-do" class="rowCB">';
                             }
                             return data;
                         },
@@ -431,31 +472,11 @@
                         className: "dt-body-center"
                     },
                     {
-                        data: "shipments.requires_payment",
-                        render: function(data, type, row) {
-                            if (type === 'display') {
-                                return '<input type="checkbox" id="editor-requires_payment" class="rowCB">';
-                            }
-                            return data;
-                        },
-                        className: "dt-body-center"
-                    },
-                    {
-                        data: "shipments.do",
-                        render: function(data, type, row) {
-                            if (type === 'display') {
-                                return '<input type="checkbox" id="editor-do" class="rowCB">';
-                            }
-                            return data;
-                        },
-                        className: "dt-body-center"
-                    },
-                    {
                         data: "shipments.has_documents"
                     }
                 ],
                 order: [
-                    [8, 'asc']
+                    [9, 'asc']
                 ],
                 stateSaveCallback: function(settings, data) {
                     // Send an Ajax request to the server with the state object
@@ -492,13 +513,13 @@
                         $("td:nth-child(15)", row).removeClass("red_background");
                     }
                     if (data.shipments.has_documents == 1) {
-                        $("td:last-child", row).html('<a href="/richfilemanager?expandedFolder=' + data.shipments.file_directory + '/' + '" target="_blank"><img src="/assets/folder_icon.png"></a>');
+                        $("td:last-child", row).html('<a href="/richfilemanager?expandedFolder=' + data.shipments.file_directory + '" target="_blank"><img src="/assets/folder_icon.png"></a>');
                     } else {
                         $("td:last-child", row).html('<img src="/assets/folder_icon.png" class="disabled_folder_icon">');
                     }
                 },
                 rowCallback: function(row, data, displayNum, displayIndex, dataIndex) {
-                    if ((data.shipments.qb_rt == 1 && data.shipments.qb_ws == 1) || data.shipments.is_complete == 1) {
+                    if (data.shipments.is_complete == 1 || data.shipments.rcvd == 1 || data.shipments.latest_event.includes('Empty Container Returned')) {
                         if (!$(row).hasClass("row_disabled")) $(row).addClass("row_disabled");
                         /*var currentData = table.row(this).data();
                         console.log(currentData);*/
@@ -512,54 +533,9 @@
                             .data(data)
                             .draw();*/
                     }
-                    /*    if (data.shipments.freight == 1 && data.shipments.isf_required == 1 &&
-                            data.shipments.customs == 1 && data.shipments.po_boolean == 1 &&
-                            data.shipments.qb_rt == 1 && data.shipments.qb_ws == 1 &&
-                            data.shipments.requires_payment == 1 && data.shipments.do == 1) {
-                            data.shipments.status = -1;
-                            data.shipments.is_complete = 1;
-                            $(row).addClass("row_disabled");
-                            editor.edit($(this).closest('tr'), false, { submit: 'changed' })
-                                .set('shipments.status', -1)
-                                .submit();
-                        } else {
-                            data.shipments.status = 0;
-                            data.shipments.is_complete = 0;
-                            $(row).removeClass("row_disabled");
-                            var today = new Date();
-                            var dd = today.getDate();
-                            var mm = today.getMonth() + 1; //January is 0!
-                            var yyyy = today.getFullYear();
-                            var etaDate = new Date();
-                            var ddEta = today.getDate();
-                            var mmEta = today.getMonth() + 1; //January is 0!
-                            var yyyyEta = today.getFullYear();
-                            /*if (dd < 10) { dd = '0' + dd; }
-                            if (mm < 10) { mm = '0' + mm; }
-                            if (ddEta < 10) { ddEta = '0' + ddEta; }
-                            if (mmEta < 10) { mmEta = '0' + mmEta; }
-                            today = mm + '-' + dd + '-' + yyyy;
-                            etaDate = mmEta + '-' + ddEta + '-' + yyyyEta;
-                            var daysDifference = 0;
-                            if (data.shipments.eta === null) {
-                                daysDifference = -1;
-                            } else {
-                                daysDifference = datediff(parseDate(today), parseDate(data.shipments.eta));
-                            }
-                            var statusTranslation = 3;
-                            if (daysDifference > 7) statusTranslation = 2;
-                            else if (daysDifference > 3) statusTranslation = 1;
-                            else if (daysDifference >= 0) statusTranslation = 0;
-                            else statusTranslation = 3;
-                            console.log("status: " + statusTranslation);
-                            
-                           
-                    //                        console.log("DaysDifference: " + daysDifference);
-                    editor.edit($(this).closest('tr'), false, { submit: 'changed' })
-                        .set('shipments.status', 1)
-                        .submit();*/
 
                     $('#editor-freight', row).prop('checked', data.shipments.freight == 1);
+                    $('#editor-rcvd', row).prop('checked', data.shipments.rcvd == 1);
                     $('#editor-isfrequired', row).prop('checked', data.shipments.isf_required == 1);
                     $('#editor-customs', row).prop('checked', data.shipments.customs == 1);
                     $('#editor-po_boolean', row).prop('checked', data.shipments.po_boolean == 1);
@@ -574,40 +550,47 @@
                         $("td:nth-child(16)", row).removeClass("status_blue");
                         $("td:nth-child(16)", row).addClass("status_red");
                     }
-                    if (data.shipments.isf_required == 1) {
-                        $("td:nth-child(17)", row).addClass("status_blue");
-                        $("td:nth-child(17)", row).removeClass("status_red");
-                    } else {
-                        $("td:nth-child(17)", row).removeClass("status_blue");
-                        $("td:nth-child(17)", row).addClass("status_red");
-                    }
-                    if (data.shipments.customs == 1) {
+                    if (data.shipments.freight == 1) {
                         $("td:nth-child(18)", row).addClass("status_blue");
                         $("td:nth-child(18)", row).removeClass("status_red");
                     } else {
                         $("td:nth-child(18)", row).removeClass("status_blue");
                         $("td:nth-child(18)", row).addClass("status_red");
                     }
-                    if (data.shipments.po_boolean == 1) {
-                        $("td:nth-child(19)", row).addClass("status_blue");
-                        $("td:nth-child(19)", row).removeClass("status_red");
-                    } else {
-                        $("td:nth-child(19)", row).removeClass("status_blue");
-                        $("td:nth-child(19)", row).addClass("status_red");
-                    }
-                    if (data.shipments.qb_rt == 1) {
+                    if (data.shipments.isf_required == 1) {
                         $("td:nth-child(20)", row).addClass("status_blue");
                         $("td:nth-child(20)", row).removeClass("status_red");
                     } else {
                         $("td:nth-child(20)", row).removeClass("status_blue");
                         $("td:nth-child(20)", row).addClass("status_red");
                     }
-                    if (data.shipments.qb_ws == 1) {
-                        $("td:nth-child(21)", row).addClass("status_blue");
-                        $("td:nth-child(21)", row).removeClass("status_red");
+                    if (data.shipments.customs == 1) {
+                        $("td:nth-child(19)", row).addClass("status_blue");
+                        $("td:nth-child(19)", row).removeClass("status_red");
                     } else {
-                        $("td:nth-child(21)", row).removeClass("status_blue");
-                        $("td:nth-child(21)", row).addClass("status_red");
+                        $("td:nth-child(19)", row).removeClass("status_blue");
+                        $("td:nth-child(19)", row).addClass("status_red");
+                    }
+                    if (data.shipments.po_boolean == 1) {
+                        $("td:nth-child(22)", row).addClass("status_blue");
+                        $("td:nth-child(22)", row).removeClass("status_red");
+                    } else {
+                        $("td:nth-child(22)", row).removeClass("status_blue");
+                        $("td:nth-child(22)", row).addClass("status_red");
+                    }
+                    if (data.shipments.qb_rt == 1) {
+                        $("td:nth-child(23)", row).addClass("status_blue");
+                        $("td:nth-child(23)", row).removeClass("status_red");
+                    } else {
+                        $("td:nth-child(23)", row).removeClass("status_blue");
+                        $("td:nth-child(23)", row).addClass("status_red");
+                    }
+                    if (data.shipments.qb_ws == 1) {
+                        $("td:nth-child(24)", row).addClass("status_blue");
+                        $("td:nth-child(24)", row).removeClass("status_red");
+                    } else {
+                        $("td:nth-child(24)", row).removeClass("status_blue");
+                        $("td:nth-child(24)", row).addClass("status_red");
                     }
                     if (data.shipments.qb_ws == 1 && data.shipments.qb_rt == 1) {
                         $("td:first-child > div#status_div", row).removeClass("circle_green");
@@ -624,6 +607,7 @@
                         var mm = today.getMonth() + 1; //January is 0!
                         var yyyy = today.getFullYear();
                         var etaDate = new Date();
+                        var truckDate = new Date();
                         var ddEta = today.getDate();
                         var mmEta = today.getMonth() + 1; //January is 0!
                         var yyyyEta = today.getFullYear();
@@ -641,36 +625,54 @@
                         }
                         today = mm + '-' + dd + '-' + yyyy;
                         etaDate = mmEta + '-' + ddEta + '-' + yyyyEta;
-                        var daysDifference = 0;
+                        var daysDifference = 0,
+                            daysDifferenceTruck = 0;
                         if (data.shipments.eta === null) {
                             daysDifference = -1;
                         } else {
                             daysDifference = datediff(parseDate(today), parseDate(data.shipments.eta));
                         }
+                        if (data.shipments.truck_date === null) {
+                            daysDifferenceTruck = -1;
+                        } else {
+                            daysDifferenceTruck = datediff(parseDate(today), parseDate(data.shipments.truck_date));
+                        }
                         var statusTranslation = "circle_disabled";
                         if (daysDifference > 7) statusTranslation = "circle_green";
                         else if (daysDifference <= 7 && daysDifference > 3) statusTranslation = "circle_yellow";
-                        else if (daysDifference <= 3 && daysDifference >= 0) statusTranslation = "circle_red";
-                        else statusTranslation = "circle_disabled";
+                        else statusTranslation = "circle_red";
+                        /*else if (daysDifference <= 3) statusTranslation = "circle_red";
+                        else statusTranslation = "circle_disabled";*/
+                        if (data.shipments.is_complete == 1 || data.shipments.rcvd == 1 || data.shipments.latest_event.includes('Empty Container Returned') || (data.shipments.qb_rt == 1 && data.shipments.qb_ws == 1)) {
+                            statusTranslation = "circle_disabled";
+                        }
+                        if (data.shipments.truck_date !== null && daysDifferenceTruck <= 0) {
+                            if (!$(row).hasClass("row_disabled")) $(row).addClass("row_disabled");
+                        }
                         $("td:first-child > div#status_div", row).addClass(statusTranslation);
                     }
                     if (data.shipments.requires_payment == 1) {
-                        $("td:nth-child(22)", row).addClass("status_blue");
-                        $("td:nth-child(22)", row).removeClass("status_red");
+                        $("td:nth-child(17)", row).addClass("status_blue");
+                        $("td:nth-child(17)", row).removeClass("status_red");
                     } else {
-                        $("td:nth-child(22)", row).removeClass("status_blue");
-                        $("td:nth-child(22)", row).addClass("status_red");
+                        $("td:nth-child(17)", row).removeClass("status_blue");
+                        $("td:nth-child(17)", row).addClass("status_red");
                     }
                     if (data.shipments.do == 1) {
-                        $("td:nth-child(23)", row).addClass("status_blue");
-                        $("td:nth-child(23)", row).removeClass("status_red");
+                        $("td:nth-child(21)", row).addClass("status_blue");
+                        $("td:nth-child(21)", row).removeClass("status_red");
                     } else {
-                        $("td:nth-child(23)", row).removeClass("status_blue");
-                        $("td:nth-child(23)", row).addClass("status_red");
+                        $("td:nth-child(21)", row).removeClass("status_blue");
+                        $("td:nth-child(21)", row).addClass("status_red");
                     }
                 }
             });
             /*[END] datatable declaration section*/
+            setInterval(updateDataTable, 300000);
+
+            function updateDataTable() {
+                $('#shipments').DataTable().ajax.reload(null, false);
+            }
 
             // new Date("dateString") is browser-dependent and discouraged, so we'll write
             // a simple parse function for U.S. date format (which does no error checking)
@@ -685,9 +687,6 @@
                 return Math.round((second - first) / (1000 * 60 * 60 * 24));
             }
 
-            function updateStatus(row) {
-
-            }
             jQuery.extend(jQuery.fn.dataTableExt.oSort, {
                 "non-empty-string-asc": function(str1, str2) {
                     if (str1 == null || str1 == "")
@@ -707,6 +706,19 @@
             });
             /*[START checkbox class change section]*/
             $('#shipments')
+                .on('change', '#editor-rcvd',
+                    function() {
+                        editor.edit($(this).closest('tr'), false, {
+                                submit: 'changed'
+                            })
+                            .set('shipments.rcvd', $(this).prop('checked') ? 1 : 0)
+                            .submit();
+                        $(this).closest('td').removeClass($(this).prop('checked') ? 'status_red' : "status_blue");
+                        $(this).closest('td').addClass(($(this).prop('checked')) ? 'status_blue' : "status_red");
+                        //var data = table.row($(this).parents('tr')).data();
+                        $('#shipments').DataTable().ajax.reload(null, false);
+                    }
+                )
                 .on('change', '#editor-freight',
                     function() {
                         editor.edit($(this).closest('tr'), false, {

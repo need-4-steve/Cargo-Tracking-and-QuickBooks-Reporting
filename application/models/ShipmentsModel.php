@@ -25,13 +25,6 @@ class ShipmentsModel extends CI_Model
         $this->editorDb = $editorDb;
     }
 
-
-    public function sql_replace($WhatWithWhat){
-        $this->db->replace('shipments', $WhatWithWhat);
-    }
-
-
-
     public function archiveInactiveRecords() {
         $q = $this->db->get_where('shipments', array('is_active' => false))->result_array();
         foreach ($q as $r) { // loop over results
@@ -48,7 +41,7 @@ class ShipmentsModel extends CI_Model
     }
 
     public function exists_in_archive($container_number){
-        if (is_null($container_number) || empty($container_number)) return false;
+        if (is_null($container_number) || empty($container_number)) return true;
         $q = $this->db->get_where('archived_shipments', array('container_number' => $container_number))->result_array();
         if (count($q)<=0) return false;
         return true;
@@ -192,6 +185,14 @@ class ShipmentsModel extends CI_Model
                         return ! $val ? 0 : 1;
                     } ),
                 Field::inst( 'shipments.is_complete' )
+                    ->getFormatter(
+                        function ( $val, $data ) {
+                            return $val ? 1  : 0;
+                        } )
+                    ->setFormatter( function ( $val, $data, $opts ) {
+                        return ! $val ? 0 : 1;
+                    } ),
+                    Field::inst( 'shipments.rcvd' )
                     ->getFormatter(
                         function ( $val, $data ) {
                             return $val ? 1  : 0;
@@ -356,15 +357,15 @@ class ShipmentsModel extends CI_Model
     }
     
     public function get_by_po_number($po_number, $vendor_initials=NULL){
-        $this->db->from('shipments');
-        $this->db->where('po',$po_number);
+        //$this->db->from('shipments');
         if (!is_null($vendor_initials) && !empty($vendor_initials)) {
             $vendor_id = $this->get_vendor_id_by_initials($vendor_initials);
-            if (!is_null($vendor_id) && !empty($vendor_id) && $vendor_id > 1){
+            if (!is_null($vendor_id) && !empty($vendor_id)){
                 $this->db->where('vendor_id',$vendor_id);
             }
         }
-        $query = $this->db->get();
+        $this->db->where('po',$po_number);        
+        $query = $this->db->get('shipments');
         $row= $query->row();
         if (!isset($row)) return NULL;
         return $row;
@@ -394,7 +395,7 @@ class ShipmentsModel extends CI_Model
     public function update_record($where=array(),$data=array()){
         $this->db->where($where);
         $this->db->update('shipments',$data);
-        return $this->db->affected_rows();
+        /*return $this->db->affected_rows();*/
     }
 
     public function add_record($data){

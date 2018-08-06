@@ -181,28 +181,56 @@ class Shipments extends CI_Controller
                 for ($c = $start; $c < count($dataRows); $c++) {
                     echo "[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[+++START_CONTAINER_PROCESSING+++]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]".PHP_EOL;
                     echo "[c]->" . $c . PHP_EOL;
+                    $extraDigit='';
+                    $completeCN='';
                     $valueCount = count($dataRows[$c]);
                     $dataRow_bol = trim(substr($dataRows[$c][0], 2, 10));
                     echo "[dataRow_bol]->" . $dataRow_bol . PHP_EOL;
                     $dataRow_CN = $dataRows[$c][1];
+                    echo "[dataRow_CN ORIGINAL]->" . $dataRow_CN . PHP_EOL;
                     if ($dataRow_CN === 'Unassigned') {
                         $dataRow_CN = "[" . $dataRow_bol . "]";
+                        $completeCN=$dataRow_CN;
                     } else {
-                        $lengthOfCN = strpos($dataRow_CN, '-');
-                        $tempCNval = substr($dataRow_CN, 0, (($lengthOfCN > 4) ? $lengthOfCN : strlen($dataRow_CN)));
-                        $dataRow_CN = $tempCNval;
+                        if (strpos($dataRow_CN, '-') !== false) {
+                            $lengthOfCN = strpos($dataRow_CN, '-');
+                            $tempCNval = substr($dataRow_CN, 0, (($lengthOfCN > 4) ? $lengthOfCN : strlen($dataRow_CN)));
+                            $dataRow_CN = $tempCNval;
+                            echo "[dataRow_CN AFTER REMOVAL OF HYPHENATED NUMBER]->" . $dataRow_CN . PHP_EOL;
+                            $extraDigit = substr($dataRows[$c][1],-1);
+                            $completeCN=$dataRow_CN.$extraDigit;
+                        }
                     }
                     echo "[dataRow_CN]->" . $dataRow_CN . PHP_EOL;
                     $data['newContainers'][$c - 1]['bill_of_lading'] = $dataRow_bol;
-                    $data['newContainers'][$c - 1]['container_number'] = $dataRow_CN;
+                    $data['newContainers'][$c - 1]['container_number'] = $completeCN;
                     $data['newContainers'][$c - 1]['latest_event'] = $dataRows[$c][13];
                     echo "[bill_of_lading]->" . $dataRow_bol . PHP_EOL;
                     echo "[container_number]->" . $dataRow_CN . PHP_EOL;
                     $containerDataExists = $this->ShipmentsModel->record_exists($dataRow_CN);
+                    if (!$containerDataExists){
+                        echo "[CONTAINER NUMBER IS CORRECT]=>".$dataRow_CN.PHP_EOL;
+                        $containerDataExists = $this->ShipmentsModel->record_exists($completeCN);
+                        if ($containerDataExists){
+                            echo '[CONTAINER STORED AS]=>\t'.$completeCN . PHP_EOL;
+                        } else {
+                            echo '[CONTAINER NOT FOUND]'.PHP_EOL;
+                        }
+                    } else {
+                        if ($dataRows[$c][1] !== 'Unassigned') {
+                            echo "[CONTAINER NUMBER IS NOT CORRECT]=>".$dataRow_CN.PHP_EOL;
+                            echo "[ADDING EXTRA DIGIT]=>".$extraDigit.PHP_EOL;
+                            $this->ShipmentsModel->update_record(array('container_number' => $dataRow_CN),array('container_number' => $completeCN));
+                        } else {
+                            echo "[CONTAINER NUMBER UNASSIGNED]". PHP_EOL; 
+                        }
+                    }
+                    $dataRow_CN = $completeCN;
+                    echo "[NEW VALUE FOR dataRow_CN]=>".$dataRow_CN.PHP_EOL;    
                     //first, check if the container_number is already in our database, if it is, just grab the latest_event data
                     echo "[containerDataExists?]->" . $containerDataExists . PHP_EOL;
                     if ($containerDataExists) {
-                        echo "[YES EXISTS]->" . $dataRows[$c][1] . PHP_EOL;
+                        echo "[YES EXISTS]->" . $dataRow_CN . PHP_EOL;
                         $reportContainerData = array();
                         echo "[REPORT DATA FOR EXISTING CONTAINER] => ". PHP_EOL;
                         for ($d = 2; $d < count($columnNames); $d++) {
@@ -219,10 +247,18 @@ class Shipments extends CI_Controller
                             }
                         }
                         $data['newContainers'][$c - 1] = (array) $this->ShipmentsModel->get_by_container_number($dataRow_CN);
-                        $updateValues = $this->ShipmentsModel->get_fields_to_update('container_number, discharge_port, final_destination, latest_event, latest_event_time_and_date, eta, status, qb_ws, qb_rt', array('container_number' => $dataRow_CN));
+                        $updateValues['container_number']=$dataRow_CN;
+                        $updateValues = $this->ShipmentsModel->get_fields_to_update('container_number, discharge_port, final_destination, vendor_id, product_id, bl_status, truck_date, latest_event, latest_event_time_and_date, eta, status, qb_ws, qb_rt, rcvd, is_complete', array('container_number' => $dataRow_CN));
+                        echo 'updateValues pulled from db....'.PHP_EOL;
+                        print_r($updateValues);     
                         $updateValues['final_destination'] = $reportContainerData['destination_city'] . ', ' . $reportContainerData['destination_state'];                        
                         $updateValues['discharge_port'] = $reportContainerData['discharge_port'];
+                        $reportContainerData['vendor_name'] = str_replace("Limited.","Limited",$reportContainerData['vendor_name']);
+                        $reportContainerData['vendor_name'] = str_replace("Ltd.","Ltd",$reportContainerData['vendor_name']);
+                        $updateValues['vendor_id'] = $this->ShipmentsModel->get_vendor_id_by_name($reportContainerData['vendor_name']);
+                        $updateValues['product_id'] = $this->ShipmentsModel->get_product_id_by_vendor_id($updateValues['vendor_id']);
                         $etaDataRowResult = new DateTime();
+                        $updateValues['is_complete']=false;
                         $statusValue = -1;
                         $etaDataRowString = $dataRows[$c][7]; //05/23/2018 10:28 (Actual)
                         $latestContainerEventTimestamp = $dataRows[$c][14];
@@ -267,21 +303,43 @@ class Shipments extends CI_Controller
                                 } else {
                                     $updateValues['status'] = 0;
                                 }
-
                             } else {
                                 //maybe change logic for dates passed
                                 $updateValues['status'] = 0;
-                            }
-                            if (!is_null($updateValues['qb_rt']) && !is_null($updateValues['qb_ws']) && $updateValues['qb_rt'] === true && $updateValues['qb_ws'] === true) {
-                                $updateValues['status'] = 3;
+                                $updateValues['is_complete']=true;
                             }
                         } else {
                             //null eta
                             $updateValues['eta'] = null;
                             $updateValues['status'] = 3;
                         }
+                        /* if (!is_null($updateValues['qb_rt']) && !is_null($updateValues['qb_ws']) && $updateValues['qb_rt'] === true && $updateValues['qb_ws'] === true) {
+                            $updateValues['status'] = 3;
+                        }*/
+                        echo "[CURRENT_STATUS] =>".$updateValues['status'].PHP_EOL;
+                        if (!is_null($updateValues['rcvd']) && $updateValues['rcvd'] === true) {
+                            $updateValues['status'] = 3;
+                            $updateValues['is_complete']=true;
+                            echo "[status] =>".$updateValues['status']." => updateValues[rcvd] => ". $updateValues['rcvd'] . PHP_EOL;
+                        } 
+                        if (!is_null($updateValues['truck_date'])){
+                            $truckDate = new DateTime($updateValues['truck_date']);
+                            echo "[truck_date] =>".$updateValues['truck_date']. PHP_EOL;
+                            $nowTime = new DateTime('now'); //now
+                            if ($truckDate <= $nowTime) {
+                                $updateValues['status']=3;
+                                $updateValues['is_complete']=true;
+                                echo "[status] =>".$updateValues['status']." => updateValues[truck_date] => ". $updateValues['truck_date'] . PHP_EOL;
+                            }
+                        }
+                        if (!isset($updateValues['is_complete']) || $updateValues['is_complete']===false) {
+                            $updateValues['is_complete']= (strpos($reportContainerData['latest_event'], 'Empty Container Returned') !== false ? true : false);
+                            if ($updateValues['is_complete']) $updateValues['status']=3;
+                            echo "[status] =>".$updateValues['status']." => updateValues[is_complete] => ". $updateValues['is_complete'] . PHP_EOL;
+                        }
                         echo "[STATUS]->" . $updateValues['status'] . PHP_EOL;
-                        $booleanValues = $this->ShipmentsModel->get_fields_to_update('freight,isf_required,customs,po_boolean,qb_rt,qb_ws,requires_payment,do,is_complete,is_active', array('container_number' => $updateValues['container_number']));
+                        echo "[is_complete]-> " . (int) $updateValues['is_complete'] . PHP_EOL;  
+                        $booleanValues = $this->ShipmentsModel->get_fields_to_update('freight,isf_required,customs,po_boolean,qb_rt,qb_ws,requires_payment,do,is_complete,is_active,rcvd', array('container_number' => $dataRow_CN));
                         $allTrue = true;
                         foreach ($booleanValues as $boolKey => $boolValue) {
                             if (strpos($boolKey, 'is_complete') === false && strpos($boolKey, 'is_active') === false) {
@@ -291,16 +349,13 @@ class Shipments extends CI_Controller
                                 }
                             }
                         }
-                        $updateValues['is_complete'] = (strpos($data['newContainers'][$c - 1]['latest_event'], 'Empty Container Returned') !== false ? true : $allTrue);
-                        echo "[is_complete]-> " . (int) $updateValues['is_complete'] . PHP_EOL;
-                        $updateValues['is_active'] = (strpos($data['newContainers'][$c - 1]['latest_event'], 'Empty Container Returned') !== false ? true : false);
-                        echo "[is_active]-> " . (int) $updateValues['is_active'] . PHP_EOL;
                         if ($allTrue) {
                             $updateValues['is_complete'] = true;
                             $updateValues['status'] = 3;
                         }
                         echo "{[data['newContainers'][$c - 1]}->update_record " . PHP_EOL;
                         $updateValues['latest_event']=$reportContainerData['latest_event'];
+                        $updateValues['bl_status']=$reportContainerData['bl_status'];
                         print_r($updateValues);
                         if (!$updateValues['is_complete'] && strpos($dataRow_CN,'[')===false) $allContainersString.=$dataRow_CN.'+';
                         $this->ShipmentsModel->update_record(array('container_number' => $updateValues['container_number']),
@@ -309,6 +364,9 @@ class Shipments extends CI_Controller
                                 'status' => $updateValues['status'],
                                 'discharge_port' => $updateValues['discharge_port'],
                                 'final_destination' => $updateValues['final_destination'],
+                                'vendor_id' => $updateValues['vendor_id'],
+                                'product_id' => $updateValues['product_id'],
+                                'bl_status' => $updateValues['bl_status'],
                                 'latest_event' => $updateValues['latest_event'],
                                 'is_complete' => $updateValues['is_complete'],
                                 'is_active' => true //$updateValues['is_active']
@@ -326,21 +384,27 @@ class Shipments extends CI_Controller
                         echo "[NOPE DONT EXIST]->" . $dataRows[$c][1] . PHP_EOL;
                         for ($d = 2; $d < count($columnNames); $d++) {
                             $key = $columnNames[$d];
-                            $data['newContainers'][$c - 1][$key] = $dataRows[$c][$d];
-                            echo "[key]->" . $key . "[\tvalue]=>" . $data['newContainers'][$c - 1][$key] . PHP_EOL;
+                            $value = $dataRows[$c][$d];
+                            echo "[key]->" . $key . "\t[value]=>" . $value . PHP_EOL;
                             if ($key === 'eta' || $key === 'latest_event_timestamp') {
-                                if (!is_null($data['newContainers'][$c - 1]['eta']) && strlen($data['newContainers'][$c - 1][$key]) >= 15) {
-                                    $data['newContainers'][$c - 1][$key] = trim(substr($data['newContainers'][$c - 1][$key], 0, 16));
-                                    $data['newContainers'][$c - 1][$key] = date('m/d/Y H:II', strtotime($data['newContainers'][$c - 1][$key]));
+                                echo "[ETA-KEY]->". $value . PHP_EOL;
+                                if (!is_null($value)) {
+                                    $data['newContainers'][$c - 1][$key] = trim(substr($value, 0, 16));
+                                    //DateTime::createFromFormat('m/d/Y G:i', $etaDataRowString)
+                                    $data['newContainers'][$c - 1][$key] = DateTime::createFromFormat('m/d/Y G:i', $data['newContainers'][$c - 1][$key]);
                                 } else {
+                                    echo "[ETA-KEY]->NULL" . PHP_EOL;
                                     $data['newContainers'][$c - 1][$key] = null;
                                 }
+                            } else {
+                                $data['newContainers'][$c - 1][$key] = $value;
                             }
                         }
                         $statusValue = -1;
                         $etaStrToTime = null;
+                        print_r($data['newContainers'][$c-1]);
                         //the process that data appropriately for a new entry
-                        if (!is_null($data['newContainers'][$c - 1]['eta']) && (strtotime($data['newContainers'][$c - 1]['eta']) < strtotime('2017-01-01 12:00'))) {
+                        if (!is_null($data['newContainers'][$c - 1]['eta']) && ($data['newContainers'][$c - 1]['eta'] < new DateTime('2017-01-01 12:00'))) {
                            /* $data['newContainers'][$c - 1]['eta'] = new DateTime('now');
                             //null eta
                             //date_add($updateValues['eta'], date_interval_create_from_date_string('50 years'));
@@ -348,8 +412,9 @@ class Shipments extends CI_Controller
                             $data['newContainers'][$c - 1]['eta'] = null;
                             $data['newContainers'][$c - 1]['status'] = 3;
                             $statusValue = 3;
-                        } else if (!is_null($data['newContainers'][$c - 1]['eta']) && !empty($data['newContainers'][$c - 1]['eta']) && strlen($data['newContainers'][$c - 1]['eta'] > 11)) {
-                            $etaStrToTime = new DateTime($data['newContainers'][$c - 1]['eta']); //date_create($data['newContainers'][$c - 1]['eta']);
+                            echo 'NULL ETA1'.PHP_EOL;
+                        } else if (!is_null($data['newContainers'][$c - 1]['eta']) && !empty($data['newContainers'][$c - 1]['eta'])) {
+                            $etaStrToTime = $data['newContainers'][$c - 1]['eta']; //date_create($data['newContainers'][$c - 1]['eta']);
                             $etaStrToTime->setTime(5, 00);
                             echo "[NEW ENTRY etaStrToTime]-> " . $etaStrToTime->format("Y-m-d\TH:i:s") . PHP_EOL;
                             $nowTime = new DateTime('now'); //now
@@ -366,7 +431,6 @@ class Shipments extends CI_Controller
                                 } else {
                                     $statusValue = 0;
                                 }
-
                                 //echo $data['newContainers'][$c - 1]['container_number'] . "[statusValue]= ". $statusValue. PHP_EOL;
                                 //echo $nowTime->format('m-d-y') . " to ". $etaStrToTime->format('m-d-y') . " = " . $nowTime->diff($etaStrToTime)->days . " days. statusValue=>" .$statusValue. PHP_EOL;
                             } else {
@@ -375,6 +439,7 @@ class Shipments extends CI_Controller
                             }
                             echo "[NEW ENTRY statusValue]-> " . $statusValue . PHP_EOL;
                         } else {
+                            echo 'NULL ETA2'.PHP_EOL;
                             $data['newContainers'][$c - 1]['eta'] = new DateTime('now');
                             //null eta
                             //date_add($updateValues['eta'], date_interval_create_from_date_string('50 years'));
@@ -386,11 +451,13 @@ class Shipments extends CI_Controller
                         }
                         $data['newContainers'][$c - 1]['status'] = $statusValue;
                         $data['newContainers'][$c - 1]['final_destination'] = $data['newContainers'][$c - 1]['destination_city'] . ', ' . $data['newContainers'][$c - 1]['destination_state'];
+                        $data['newContainers'][$c - 1]['vendor_name'] = str_replace("Limited.","Limited",$data['newContainers'][$c - 1]['vendor_name']);
+                        $data['newContainers'][$c - 1]['vendor_name'] = str_replace("Ltd.","Ltd",$data['newContainers'][$c - 1]['vendor_name']);
                         $data['newContainers'][$c - 1]['vendor_id'] = $this->ShipmentsModel->get_vendor_id_by_name($data['newContainers'][$c - 1]['vendor_name']);
                         $data['newContainers'][$c - 1]['product_id'] = $this->ShipmentsModel->get_product_id_by_vendor_id($data['newContainers'][$c - 1]['vendor_id']);
                         $data['newContainers'][$c - 1]['isf_required'] = $this->ShipmentsModel->getISFreq($data['newContainers'][$c - 1]['discharge_port']);
                         $data['newContainers'][$c - 1]['do'] = $this->ShipmentsModel->getDOvalue($data['newContainers'][$c - 1]['destination_city']);
-                        $data['newContainers'][$c - 1]['latest_event_time_and_date'] = date("Y-m-d\TH:i:s", strtotime($data['newContainers'][$c - 1]['latest_event_timestamp']));
+                        $data['newContainers'][$c - 1]['latest_event_time_and_date'] =$data['newContainers'][$c - 1]['latest_event_timestamp'];
                         $data['newContainers'][$c - 1]['is_complete'] = (strpos($data['newContainers'][$c - 1]['latest_event'], 'Empty Container Returned') !== false ? true : false);
                         $updateData = array(
                             'status' => $data['newContainers'][$c - 1]['status'],
@@ -401,11 +468,11 @@ class Shipments extends CI_Controller
                             'discharge_port' => $data['newContainers'][$c - 1]['discharge_port'],
                             'final_destination' => $data['newContainers'][$c - 1]['final_destination'],
                             'isf_required' => isset($data['newContainers'][$c - 1]['isf_required']) ? $data['newContainers'][$c - 1]['isf_required'] : false,
-                            'eta' => empty($data['newContainers'][$c - 1]['eta']) ? null : date("Y-m-d\TH:i:s", strtotime($data['newContainers'][$c - 1]['eta'])),
+                            'eta' => empty($data['newContainers'][$c - 1]['eta']) ? null : $data['newContainers'][$c - 1]['eta']->format('Y-m-d'),
                             'bl_status' => $data['newContainers'][$c - 1]['bl_status'],
                             'container_size' => $data['newContainers'][$c - 1]['container_size'],
                             'latest_event' => $data['newContainers'][$c - 1]['latest_event'],
-                            'latest_event_time_and_date' => date("Y-m-d\TH:i:s", strtotime($data['newContainers'][$c - 1]['latest_event_timestamp'])),
+                            'latest_event_time_and_date' =>!empty($data['newContainers'][$c - 1]['latest_event_timestamp']) ? $data['newContainers'][$c - 1]['latest_event_timestamp']->format("Y-m-d\TH:i:s"):null,
                             'is_active' => true,
                             'is_complete' => $data['newContainers'][$c - 1]['is_complete'],
                             'do' => $data['newContainers'][$c - 1]['do']);
@@ -413,13 +480,13 @@ class Shipments extends CI_Controller
                         echo "[NEW ENTRY ADDED newId]-> " . $newId . PHP_EOL;
                         if (!is_null($data['newContainers'][$c - 1]['eta']) && !is_null($etaStrToTime) && !empty($data['newContainers'][$c - 1]['eta'])) {
                             $etaStartDate = $etaStrToTime;
-                            echo "[eta]" . $data['newContainers'][$c - 1]['eta'] . PHP_EOL;
+                            echo "[eta]" . $data['newContainers'][$c - 1]['eta']->format("Y-m-d") . PHP_EOL;
                             echo "[etaStart]" . $etaStartDate->format('Y-m-d') . PHP_EOL;
                             date_time_set($etaStartDate, 00, 0);
                             $etaEndDate = $etaStrToTime;
                             date_time_set($etaEndDate, 23, 59);
                             echo "[etaEnd]" . $etaStartDate->format('Y-m-d') . PHP_EOL;
-                            $md5CheckValue = md5($data['newContainers'][$c - 1]['container_number'] . '->ETA->' . $data['newContainers'][$c - 1]['eta']);
+                            $md5CheckValue = md5($data['newContainers'][$c - 1]['container_number'] . '->ETA->' . $data['newContainers'][$c - 1]['eta']->format("Y-m-d") );
                             $eventData = array(
                                 'title' => $data['newContainers'][$c - 1]['container_number'],
                                 'event_type' => 'ETA',
@@ -454,11 +521,12 @@ class Shipments extends CI_Controller
                     $containers = $this->ShipmentsModel->get_by_bol($bol);
                     foreach ($containers as $container) {
                         echo "[UPDATING CN]->" . $container['container_number'] . PHP_EOL;
+                        print_r($curlData);
                         $this->ShipmentsModel
                             ->update_record(array('container_number' => $container['container_number']),
                                 array('lfd' => (empty($curlData['lfd']) ? null : date("Y-m-d", strtotime($curlData['lfd']))),
                                     'pickup_number' => (empty($curlData['pickup_number']) ? null : $curlData['pickup_number']),
-                                    'bl_status' => (is_null($curlData['bl_status']) || !array_key_exists('bl_status', $curlData) || empty($curlData['bl_status']) ? null : $curlData['bl_status'])));
+                                    'bl_status' => (is_null($curlData['bl_status']) || empty($curlData['bl_status']) ? (is_null($container['bl_status']) || empty($container['bl_status']) ? "Not Released" : $container['bl_status'] ) : $curlData['bl_status'])));
                         if (!is_null($curlData['lfd']) && !empty($curlData['lfd'])) {
                             $lfdStartDate = new DateTime($curlData['lfd']);
                             date_time_set($lfdStartDate, 00, 0);
@@ -472,7 +540,7 @@ class Shipments extends CI_Controller
                                 'end' => $lfdEndDate->format('Y-m-d H:i:s'),
                                 'description' => 'Last Free Day for Container #: ' . $container['container_number'] . '. Times/Dates Subject to Change...',
                                 'shipment_id' => $container['id'],
-                                'md5_container_number_and_date' => $md5CheckLFDValue,
+                                'md5_container_number_and_date' => $md5CheckLFDValue
                             );
                             if (!$this->Calendar_Model->check_md5_if_event_exists($md5CheckLFDValue)) {
                                 $this->Calendar_Model->add_event($lfdEventData);
@@ -500,9 +568,11 @@ class Shipments extends CI_Controller
         } else {
             $containers= json_decode(json_encode($this->ShipmentsModel->get_all_containers()));
             foreach ($containers as $container){
+                $container->final_destination = str_replace("Texas","TX",$container->final_destination);
                 $container->final_destination = str_replace("Tennessee","TN",$container->final_destination);
                 $container->final_destination = str_replace("North Carolina","NC",$container->final_destination);
                 $container->final_destination = str_replace("South Carolina","SC",$container->final_destination);
+                $container->final_destination = str_replace("California","CA",$container->final_destination);
                 $container->discharge_port = trim(str_replace("(Intended)"," ",$container->discharge_port));
                 $this->ShipmentsModel->update_record(array('container_number' => $container->container_number),
                                                         array('final_destination' => $container->final_destination,'discharge_port' => $container->discharge_port)
@@ -514,6 +584,8 @@ class Shipments extends CI_Controller
             $this->check_for_eta_updates();
             $this->get_cn_data();
             $this->check_for_email_documents();
+            $this->fix_inconsistencies();
+            
             $this->load->view('shipments/index', $data);
             $endtime = microtime(true);
             $execution_time = ($endtime - $starttime); //gets run time in secs
@@ -523,6 +595,82 @@ class Shipments extends CI_Controller
             echo 'Total Execution Time: ' . $execution_time . ' Secs' . PHP_EOL;
             $this->load->view('templates/footer');
         }
+    }
+
+
+    public function fix_inconsistencies(){
+        $allShipments = json_decode(json_encode($this->ShipmentsModel->get_all_containers()));
+        if (is_cli()) echo '[START FIXING INCONSISTENCIES]' .PHP_EOL;
+        foreach($allShipments as $shipment){
+            $shipmentChanges=array();
+            if (is_cli()) echo '[START SHIPMENT FIXING]=>' .PHP_EOL;
+            if (is_cli()) echo '[container_number]=>'.$shipment->container_number .PHP_EOL;
+            if (!is_null($shipment->po) && !empty($shipment->po) && strlen($shipment->po > 0)) {
+                $shipmentVendor = json_decode(json_encode($this->ShipmentsModel->get_vendor_data_by_id($shipment->vendor_id)));
+                if (is_null($shipmentVendor)) continue;
+                if (is_cli()) echo '[VENDOR]=>' .PHP_EOL;
+                if (is_cli()) print_r($shipmentVendor);
+                if (strpos($shipment->po,$shipmentVendor->document_initials)===false){
+                    $shipment->po=$shipmentVendor->document_initials.$shipment->po;
+                    if (is_cli()) echo '[EDIT shipment->po]=> ' . $shipment->po .PHP_EOL;
+                    $shipmentChanges['po']=$shipment->po;
+                }
+            }
+            $documents=$this->Document_model->get_all_documents_associated_with_cn_label($shipment->container_number);
+            if (is_cli()) echo '[DOCUMENTS]=> ' .PHP_EOL;
+            $documentChanges=array();
+            if ($documents!==false){
+                $shipment->has_documents=true;
+                $shipmentChanges['has_documents']=$shipment->has_documents;
+                if (is_cli()) echo '[DOCUMENT[0] ID]=>' .$documents[0]['id'].PHP_EOL;
+                if (is_cli()) echo '[DOCUMENT[0] PO_NUMBER]=>' .$documents[0]['po_number'].PHP_EOL;
+                /*$shipment->po=$documents[0]['po_number'];
+                $shipmentChanges['po']=$documents[0]['po_number'];*/
+                if ($documents[0]['po_number']!=="00000"){
+                    $shipment->po=$documents[0]['po_number'];
+                    $shipmentChanges['po']=$documents[0]['po_number'];
+                } else {
+                    $documentChanges['po_number']=$shipment->po;
+                }
+                $shipment->file_directory=$documents[0]['filepath'];
+                $shipmentChanges['file_directory']=$shipment->file_directory;
+                if (is_cli()) echo '[EDIT shipment->has_documents]=> ' . $shipment->has_documents .PHP_EOL;
+                if (is_cli()) echo '[EDIT shipment->file_directory]=> ' . $shipment->file_directory .PHP_EOL;
+                $documentChanges['shipment_id']=$shipment->id;
+                $documentChanges['identifying_label']=$shipment->container_number;
+                foreach($documents as $doc){
+                    if (is_cli()) echo '[DOC]=> '.PHP_EOL;
+                    if (is_cli()) echo print_r($doc);
+                    $this->Document_model->update_document($doc['id'],$documentChanges);
+                }
+            } else {
+                $documents2=$this->Document_model->get_all_documents_associated_with_po($shipment->po);
+                if ($documents2!==false){
+                    $shipment->has_documents=true;
+                    $shipmentChanges['has_documents']=$shipment->has_documents;
+                    $shipment->file_directory=$documents2[0]['filepath'];
+                    $shipmentChanges['file_directory']=$shipment->file_directory;
+                    if (is_cli()) echo '[EDIT2 shipment->has_documents]=> ' . $shipment->has_documents .PHP_EOL;
+                    if (is_cli()) echo '[EDIT2 shipment->file_directory]=> ' . $shipment->file_directory .PHP_EOL;
+                    foreach($documents2 as $doc){
+                        if (is_cli()) echo '[DOC2]=> '.PHP_EOL;
+                        if (is_cli()) echo print_r($doc);
+                        $this->Document_model->update_document($doc['id'],array('shipment_id'=>$shipment->id, 'identifying_label'=>$shipment->container_number));
+                        if (is_cli()) echo '[EDIT2 shipment->has_documents]=> ' . $shipment->has_documents .PHP_EOL;
+                    }
+                } else {
+                    $shipmentChanges['has_documents']=false;
+                }
+            }
+            if ($shipment->has_documents){
+                $shipment->file_directory=trim(str_replace("/vendor_documents"," ",$shipment->file_directory));
+                $shipmentChanges['file_directory']=$shipment->file_directory;
+            }
+            if (is_cli()) echo '[UDPATING CONTAINER]=> ' . $shipment->container_number .PHP_EOL;
+            $this->ShipmentsModel->update_record(array('id'=>$shipment->id),$shipmentChanges);
+            if (is_cli()) echo '[END SHIPMENT FIXING]' .PHP_EOL;
+        }
+        if (is_cli()) echo '[END FIXING INCONSISTENCIES]' .PHP_EOL;
     }
 
     public function check_for_eta_updates(){
@@ -555,7 +703,7 @@ class Shipments extends CI_Controller
                     $headerInfo = imap_headerinfo($inbox, $msgno);
                     $msgBody = imap_body($inbox, $msgno);
                     /* get information specific to this email */
-                    if (is_cli()) echo "<br/>email_number: $mail <br/> msgNo: $msgno<br/>";
+                    if (is_cli()) echo "email_number: $mail ".PHP_EOL." msgNo: $msgno".PHP_EOL;
                     $overview = imap_fetch_overview($inbox, $msgno, 0) or die("can't fetch overview: " . imap_last_error());
                     $pos = strpos($overview[0]->subject, 'Update : ETA Change at Final Destination');
                     $pos2 = strpos($overview[0]->from, 'coscon@coscon.com');
@@ -772,10 +920,10 @@ class Shipments extends CI_Controller
                                 continue;
                             }
 							if (is_cli()) {
-								echo 'attachments dopwnloaded...' . PHP_EOL;
+								echo 'attachments downloaded...' . PHP_EOL;
 								print_r($vendorSender);
 							}
-                            $tmpAttachments = array();
+                            /*$tmpAttachments = array();
                             $newAttachments = array();
                             /*foreach ($attachments as $attachment) {
                             if (strtoupper($attachment['file_extension'])==='OCTET-STREAM' || strtoupper($attachment['file_extension'])==='XLS'){
@@ -786,16 +934,18 @@ class Shipments extends CI_Controller
                             }*/
                             /* foreach ($tmpAttachments as $tmpAttachment){
                             $newAttachments[]=$tmpAttachment;
-                            }*/
-                            unset($tmpAttachments);
+                            }
+                            unset($tmpAttachments);*/
                             foreach ($attachments as $attachment) {
                                 $documentBL = '';
                                 $documentCN = '';
+                                $documentCNmultiple = array();
                                 $documentType = '';
                                 $associatedCargoData = null;
                                 $filename = '';
                                 $fullPathAndFileName = '';
                                 $vendorIdLabelForDocuments = '';
+                                $multiple_containers = false;
                                 $directoryStructure = $_SERVER['DOCUMENT_ROOT'] . "/vendor_documents";
                                 $poPlaceholder = '00000';
                                 if ($attachment['is_attachment'] == 1) {
@@ -822,6 +972,74 @@ class Shipments extends CI_Controller
                                     }
 
                                     switch (strtoupper($vendorSender['abbreviation'])) {
+                                        case null:
+                                            if (is_cli()) echo "SENT INTERNALLY...." . PHP_EOL; 
+                                            $vendorIdLabelForDocuments="NA";
+                                            $documentType = "Document";
+                                            $vendorIdLabelForDocuments="NA";
+                                            if (preg_match_all('/' . '[A-Z]{4}[0-9]{7}/', $overview[0]->subject, $matches)) {
+                                                if (is_cli()) echo $overview[0]->subject. " => preg_match result ...." . PHP_EOL; 
+                                                if (is_cli()) print_r($matches[0]);
+                                                $documentCNmultiple = array_unique($matches[0]);
+                                                if (is_cli()) print_r($documentCNmultiple); 
+                                                if (count($documentCNmultiple)>1)$multiple_containers=true; 
+                                                $documentCN=$documentCNmultiple[0];
+                                                if (is_cli()) echo "documentCN=>" .$documentCN . PHP_EOL; 
+                                                foreach($documentCNmultiple as $resultContainer) {
+                                                    $this->ShipmentsModel->update_record(array('container_number' => $resultContainer), array('vendor_identifier' => $vendorIdLabelForDocuments, 'has_documents' => true));
+                                                }
+                                                $associatedCargoData = json_decode(json_encode($this->ShipmentsModel->get_by_container_number($documentCN)));
+                                                if (is_cli()) echo "associatedCargoData" . PHP_EOL; 
+                                                if (is_cli()) print_r($associatedCargoData);
+                                                //$documentCN = substr(trim($match[0]), strpos($textContent, $match[0]) + 2, strlen($match[0]));
+                                                if (is_cli()) echo "documentCN => ".$documentCN.PHP_EOL;
+                                            } else {
+                                                break 2;
+                                            }
+                                            $poPlaceholder = substr($overview[0]->subject,0,strpos($overview[0]->subject,$documentCN)-1);
+                                            if (is_cli()) echo "poPlaceholder => ".$poPlaceholder.PHP_EOL;
+                                            $documentInitials = substr($poPlaceholder,0,2);
+                                            if (is_cli()) echo "documentInitials=>" .  $documentInitials . PHP_EOL; 
+                                            foreach ($vendors as $vendor) {
+                                                if (strtoupper($documentInitials)===strtoupper($vendor['document_initials'])) {
+                                                    $associatedVendorData=$this->ShipmentsModel->get_vendor_data_by_id($vendor['id']);
+                                                    echo 'NEW VENDOR ASSOCIATION for '.$filename.': '. PHP_EOL;
+                                                    if (is_cli())print_r($associatedVendorData);
+                                                    break;
+                                                }
+                                            }
+                                            
+                                          /*if (is_cli()) echo "SENT INTERNALLY...." . PHP_EOL;
+                                            $email_subject_data = $overview[0]->subject;
+                                            $specifics = explode('-',$email_subject_data);
+                                            $poPlaceholder=$specifics[0];
+                                            for($numbernumber=1;$numbernumber<count($specifics)-1;$numbernumber++){
+                                                $poPlaceholder.='-'.$specifics[$numbernumber];
+                                            }
+                                            $vendorIdLabelForDocuments="NA";
+                                            $documentType = "Document";
+                                            if (strpos($specifics[count($specifics)-1],'/')!==false) {
+                                                $multiple_containers=true;
+                                                $documentCNmultiple = explode($specifics[count($specifics)-1], '/');
+                                                $documentCN = $documentCNmultiple[0];
+                                                if (is_cli()) echo "Multiple Containers Associated...". PHP_EOL;
+                                                if (is_cli()) print_r($documentCNmultiple);
+                                                $associatedCargoData=json_decode(json_encode($this->ShipmentsModel->get_by_container_number($documentCNmultiple[0])));
+                                                if (is_cli()) "associatedCargoData = > " . $documentCNmultiple[0]. PHP_EOL;
+                                                foreach ($documentCNmultiple as $cn){
+                                                    $this->ShipmentsModel->update_record(array('container_number' => $cn), array('vendor_identifier' => $vendorIdLabelForDocuments, 'has_documents' => true));
+                                                }
+                                            } else {
+                                                $documentCN = $specifics[count($specifics)-1];
+                                                if (is_cli())echo "Container =>".$documentCN. PHP_EOL;
+                                                $this->ShipmentsModel->update_record(array('po' => $poPlaceholder), array('vendor_identifier' => $vendorIdLabelForDocuments, 'has_documents' => true));
+                                            }
+                                            if (is_cli()) echo "PO =>".$poPlaceholder.PHP_EOL;
+                                            $initialsFromSpecifics=substr($specifics[0],0,2);
+                                            if (is_cli()) echo "initialsFromSpecifics=>". $initialsFromSpecifics . PHP_EOL;
+                                            $associatedVendorData = array('document_initials'=>$initialsFromSpecifics);
+                                            if (is_cli()) echo "123123=>". $initialsFromSpecifics . PHP_EOL;*/
+                                            break;
                                         case "WANDA":
                                             if (is_cli()) echo 'attachment[file_extension]=>'.strtoupper($attachment['file_extension']).PHP_EOL;
                                             if (preg_match('/LB\d{2}/', $filename, $match)) {
@@ -955,14 +1173,15 @@ class Shipments extends CI_Controller
                                                     $regexStart = $associatedVendorData['document_initials'];
                                                     if (preg_match('/' . $regexStart . '[0-9]{5}/', $textContent, $match)){
                                                         $poPlaceholder = trim($match[0]);
-                                                        $poPlaceholder = substr($poPlaceholder,strlen($regexStart),strlen($poPlaceholder));
+                                                        //$poPlaceholder = substr($poPlaceholder,strlen($regexStart),strlen($poPlaceholder));
                                                         //same as above with a different function:
 															//$poPlaceholder = str_replace($regexStart,'',$poPlaceHolder);
                                                         if (is_cli()){
 															echo "VENDOR DOCUMENT INITIALS => ". $regexStart. PHP_EOL;
-															echo "PO FOUND (without vendor initials) => ". $poPlaceholder. PHP_EOL;
+															echo "PO FOUND (with vendor initials) => ". $poPlaceholder. PHP_EOL;
 														}
                                                         $associatedCargoData = json_decode(json_encode($this->ShipmentsModel->get_by_po_number($poPlaceholder,$associatedVendorData['document_initials'])),true);
+                                                        if (is_cli()) echo "got associatedCargoData ". PHP_EOL;
                                                         if (!is_null($associatedCargoData)) {
                                                             if (is_cli()) {
 																echo "CARGO ENTRY FOUND => ".PHP_EOL;
@@ -987,11 +1206,16 @@ class Shipments extends CI_Controller
                                             $documentType = "Unassociated Document";
                                             break;
                                     }
+                                   /* if (is_cli()) echo "this=>". $initialsFromSpecifics . PHP_EOL;*/
                                     //generate the document storage directory structure name
-                                    if (is_null($associatedCargoData) || empty($associatedCargoData)) {
+                                    if ((is_null($associatedCargoData) || empty($associatedCargoData)) && empty($documentCN)) {
+                                        //if (is_cli()) echo "xx=>". $initialsFromSpecifics . PHP_EOL;
                                         $associatedCargoData = json_decode(json_encode($this->ShipmentsModel->get_by_po_number($poPlaceholder,$associatedVendorData['document_initials'])),true);
+                                        if (is_cli()) echo "associatedCargoData=>" . PHP_EOL;
                                         if (is_null($associatedCargoData)){
+                                            if (is_cli()) echo "null" . PHP_EOL;
                                             //save to folder for unassociated files...or maybe do a manual save or something? idk yet but i'll figure it out...
+                                            /*$associatedVendorData=json_encod*/
                                             $dirDate = date("mdy");
                                             if ($attachment['file_extension'] === 'OCTET-STREAM') {
                                                 $attachment['file_extension'] = 'XLS';
@@ -999,18 +1223,28 @@ class Shipments extends CI_Controller
                                             $directoryStructure = $_SERVER['DOCUMENT_ROOT'] . "/" . "vendor_documents/UNASSOCIATED_FILES/$dirDate/" . strtoupper($associatedVendorData['abbreviation']) . "/" . "$poPlaceholder/" . $attachment['file_extension'] . "/";
                                         }else{
                                             if (is_cli()) echo "CARGO ENTRY FOUND AT THE LAST MINUTE => ".$associatedCargoData['container_number'].PHP_EOL;
+                                            if (is_cli())print_r($associatedCargoData);
                                             if (is_cli()) echo "PO NUMBER => ".$poPlaceholder.PHP_EOL;
                                             $this->ShipmentsModel->update_record(array('po' => $poPlaceholder), array('vendor_identifier' => $vendorIdLabelForDocuments, 'has_documents' => true));
                                             $documentCN=$associatedCargoData['container_number'];
                                             $yearDigits = date('y');
-                                            $poFolderName = $associatedVendorData['document_initials'] . $yearDigits . '-' . $poPlaceholder . ' ' . $documentCN;
                                             $directoryStructure = $_SERVER['DOCUMENT_ROOT'] . "/" . "vendor_documents/" . trim($poFolderName) . '/';
                                         }
                                     } else {
+                                        /*if (is_cli()) echo "oo=>". $initialsFromSpecifics . PHP_EOL;*/
                                         $yearDigits = date('y');
                                         if (is_cli()) echo "LAST SECTION =>  ". PHP_EOL;
+                                        /*if (is_cli()) echo "initialsFr1235245656856797697omSpecifics=>". $initialsFromSpecifics . PHP_EOL;*/
                                         $this->ShipmentsModel->update_record(array('container_number' => $documentCN), array('po' => $poPlaceholder));
-                                        $poFolderName = $associatedVendorData['document_initials'] . $yearDigits . '-' . $poPlaceholder . ' ' . $documentCN;
+                                        if (is_cli()) echo "container_number=>" .$documentCN. PHP_EOL;
+                                        if (is_cli()) echo "PO=>" .$poPlaceholder. PHP_EOL;
+                                        if (is_null($documentCN) || empty($documentCN)) $documentCN = "NO_CN";
+                                        if (strpos(strtoupper($poPlaceholder),$associatedVendorData['document_initials'].$yearDigits.'-')===false) {
+                                            $poFolderName = $associatedVendorData['document_initials'] . $yearDigits . '-' . $poPlaceholder . ' ' . $documentCN;
+                                        } else {
+                                            $poFolderName = $poPlaceholder . ' ' . $documentCN;
+                                        }
+                                        if (is_cli()) echo "poFolderName=>" .$poFolderName . PHP_EOL;
                                         $directoryStructure = $_SERVER['DOCUMENT_ROOT'] . "/" . "vendor_documents/" . trim($poFolderName) . '/';
                                         //a better way to do it would be to use directories for each data piece
                                         //  ie-> for a wanda invoice from 2018 with PO 123456 and CN ABCD123456
@@ -1020,20 +1254,34 @@ class Shipments extends CI_Controller
                                         //$directoryStructure .= '/' . strtoupper($documentType) . '/';
                                         $this->ShipmentsModel->set_has_documents($documentCN, true);
                                     }
+                                    if (is_null($documentCN) || empty($documentCN)) $documentCN = "NO_CN";
+                                    if (strpos(strtoupper($poPlaceholder),$associatedVendorData['document_initials'].$yearDigits.'-')===false) {
+                                        $poFolderName = $associatedVendorData['document_initials'] . $yearDigits . '-' . $poPlaceholder . ' ' . $documentCN;
+                                    } else {
+                                        $poFolderName = $poPlaceholder . ' ' . $documentCN;
+                                    }
+                                    $directoryStructure = $_SERVER['DOCUMENT_ROOT'] . "/" . "vendor_documents/" . trim($poFolderName) . '/'; 
                                     $fullPathAndFileName = $directoryStructure . $filename;
                                     if (!file_exists(dirname($fullPathAndFileName))) {
                                         mkdir(dirname($fullPathAndFileName), 0777, true);
                                     }
-
                                     $md5_hash = md5($attachment['attachment']);
-                                    if (file_put_contents($fullPathAndFileName, $attachment['attachment'])) {
+                                    if (!empty($documentCN)){
+                                        $associatedCargoData = (array) json_decode(json_encode($this->ShipmentsModel->get_by_container_number($documentCN)));
+                                        if (is_cli()) {
+                                            echo "associatedCargoData=>" . PHP_EOL;
+                                            print_r($associatedCargoData);
+                                            echo 'about to add document to database' . PHP_EOL;
+                                        }
+                                    }
+                                    if (file_put_contents($fullPathAndFileName, $attachment['attachment']) && !$this->Document_model->md5_file_exists($md5_hash)) {
                                         $documentData = array(
                                             'filename' => $filename,
                                             'filepath' => $directoryStructure,
                                             'file_extension' => $attachment['file_extension'],
                                             'shipment_id' => (is_null($associatedCargoData) ? null : $associatedCargoData['id']),
                                             'md5_hash' => $md5_hash,
-                                            'identifying_label' => $vendorIdLabelForDocuments,
+                                            'identifying_label' => $documentCN,
                                             'creation_timestamp' => date("Y-m-d H:i:s"),
                                             'document_type' => $documentType,
                                             'vendor_id' => $associatedVendorData['id'],
@@ -1041,6 +1289,49 @@ class Shipments extends CI_Controller
                                         );
                                         $newDocumentId = $this->Document_model->add_document($documentData);
                                         $this->ShipmentsModel->update_record(array('container_number'=>$documentCN),array('file_directory'=>$poFolderName));
+                                    }
+                                    if ($multiple_containers){
+                                        if (is_cli()) echo "round 2..." . PHP_EOL;
+                                        for($counter=1;$counter<count($documentCNmultiple);$counter++){
+                                            $documentCN = $documentCNmultiple[$counter];
+                                            $this->ShipmentsModel->update_record(array('container_number' => $documentCN), array('po' => $poPlaceholder));
+                                            if (strpos(strtoupper($poPlaceholder),$associatedVendorData['document_initials'].$yearDigits.'-')===false) {
+                                                $poFolderName = $associatedVendorData['document_initials'] . $yearDigits . '-' . $poPlaceholder . ' ' . $documentCN;
+                                            } else {
+                                                $poFolderName = $poPlaceholder . ' ' . $documentCN;
+                                            }
+                                            $directoryStructure = $_SERVER['DOCUMENT_ROOT'] . "/" . "vendor_documents/" . trim($poFolderName) . '/';
+                                            //a better way to do it would be to use directories for each data piece
+                                            //  ie-> for a wanda invoice from 2018 with PO 123456 and CN ABCD123456
+                                            //       $directoryName=$_SERVER['DOCUMENT_ROOT'] . "/vendor_documents" .
+                                            //                       "/$vendor" . "/$current_year" . "/purchse_order_number" .
+                                            //                       "/$container_number" . "/document_type" . "/$filename";
+                                            //$directoryStructure .= '/' . strtoupper($documentType) . '/';
+                                            $this->ShipmentsModel->set_has_documents($documentCN, true);
+                                            $filename = str_replace('.','-'.$counter.'.',$filename);
+                                            $fullPathAndFileName = $directoryStructure . $filename;
+                                            if (!file_exists(dirname($fullPathAndFileName))) {
+                                                mkdir(dirname($fullPathAndFileName), 0777, true);
+                                            }
+                                            $associatedCargoData= (array) json_decode(json_encode($this->ShipmentsModel->get_by_container_number($documentCN)));
+                                            $md5_hash = md5($attachment['attachment']);
+                                            if (file_put_contents($fullPathAndFileName, $attachment['attachment']) && !$this->Document_model->md5_file_exists($md5_hash.'-'.$counter)) {
+                                                $documentData = array(
+                                                    'filename' => $filename,
+                                                    'filepath' => $directoryStructure,
+                                                    'file_extension' => $attachment['file_extension'],
+                                                    'shipment_id' => (is_null($associatedCargoData) ? null : $associatedCargoData['id']),
+                                                    'md5_hash' => $md5_hash.'-'.$counter,
+                                                    'identifying_label' => $documentCN,
+                                                    'creation_timestamp' => date("Y-m-d H:i:s"),
+                                                    'document_type' => $documentType,
+                                                    'vendor_id' => $associatedVendorData['id'],
+                                                    'po_number' => $poPlaceholder
+                                                );
+                                                $newDocumentId = $this->Document_model->add_document($documentData);
+                                                $this->ShipmentsModel->update_record(array('container_number'=>$documentCN),array('file_directory'=>$poFolderName));
+                                            }
+                                        }
                                     }
                                     unlink($tmpFileDir);
                                     unset($tmpFileDir);
@@ -1132,17 +1423,20 @@ class Shipments extends CI_Controller
         if (curl_error($ch)) {
             return null;
         }
+        if (is_cli()) "[LFD RESPONSE CN: ".$bol."]". PHP_EOL;
 
         curl_close($ch);
         $jsonData = json_decode($output, true);
         if (is_cli()) print_r($jsonData);
         if (!empty($jsonData['data']['content']['cargoTrackingContainer'])) {
             $return = array('lfd' => $jsonData['data']['content']['cargoTrackingContainer'][0]['lfd'], 'pickup_number' => $jsonData['data']['content']['cargoTrackingContainer'][0]['pickUpNumber'], 'bl_status' => $jsonData['data']['content']['blRealStatus']);
-            return $return;
         } else {
             $return = array('lfd' => null, 'pickup_number' => null, 'bl_status' => $jsonData['data']['content']['blRealStatus']);
-            return $return;
         }
+		if (is_cli()) "[RETURN VALUE]". PHP_EOL;
+		if (is_cli()) print_r($return);
+		return $return;
+
 
         //echo "OUTPUT:".PHP_EOL. $output . "ENDOUTPUT" . PHP_EOL;
         /* if (!$this->hasCookie) echo $output;*/
@@ -1217,7 +1511,7 @@ class Shipments extends CI_Controller
         if (empty($container_numbers)){
             $containers = json_decode(json_encode($this->ShipmentsModel->get_all_containers()));
             if (is_cli()) var_dump($containers);
-            foreach ($containers as $container)if (strpos($container->container_number,"[")===false) $container_numbers.=$container->container_number.'+';
+            foreach ($containers as $container)if (strpos($container->container_number,"[")===false && (!$container->is_complete)) $container_numbers.=$container->container_number.'+';
             $container_numbers = substr($container_numbers,0,-1);
             if (is_cli()) echo "[container_numbers] => ". PHP_EOL . $container_numbers . PHP_EOL;
         }

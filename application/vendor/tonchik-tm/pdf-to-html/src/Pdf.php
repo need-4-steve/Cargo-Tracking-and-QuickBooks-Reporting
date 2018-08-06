@@ -23,8 +23,8 @@ class Pdf extends Base
     private $result = null;
 
     private $defaultOptions = [
-        'pdftohtml_path' => 'F:/xampp/htdocs/assets/poppler0.51/bin/pdftohtml.exe',
-        'pdfinfo_path' => 'F:/xampp/htdocs/assets/poppler0.51/bin/pdfinfo.exe',
+        'pdftohtml_path' => 'C:/xampp/htdocs/assets/poppler0.51/bin/pdftohtml.exe',
+        'pdfinfo_path' => 'C:/xampp/htdocs/assets/poppler0.51/bin/pdfinfo.exe',
 
         'generate' => [
             'singlePage' => false,
@@ -34,7 +34,7 @@ class Pdf extends Base
             'noFrames' => true,
         ],
 
-        'outputDir' => 'F:/xampp/htdocs/assets/tmp',
+        'outputDir' => 'C:/xampp/htdocs/assets/tmp',
         'removeOutputDir' => false,
         'clearAfter' => true,
 

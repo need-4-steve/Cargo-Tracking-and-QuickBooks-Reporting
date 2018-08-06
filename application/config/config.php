@@ -24,7 +24,7 @@ ini_set('max_execution_time', 300); //300 seconds = 5 minutes
 | a PHP script and you can easily do that on your own.
 |
 */
-$config['base_url'] = 'http://localhost/';//'http://192.168.1.5/'; <-SERVER 2016 MACHINE
+$config['base_url'] = 'http://localhost/';// 'http://192.168.1.5/'; <-SERVER 2016 MACHINE
 
 /*
 |--------------------------------------------------------------------------
