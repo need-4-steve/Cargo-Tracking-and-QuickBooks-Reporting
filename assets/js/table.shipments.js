@@ -527,7 +527,7 @@
                         if ($(row).hasClass("row_disabled")) $(row).removeClass("row_disabled");
                     }
 
-                    if (data.shipments.latest_event.includes('Empty Container Returned')) {
+                    if (data.shipments.latest_event.includes('Empty Container Returned') || data.shipments.is_complete == 1) {
                         $("td:nth-child(1)", row).html('<div id="status_div" class = "circle_disabled"></div>');
                         /*table.row(row)
                             .data(data)
@@ -592,7 +592,7 @@
                         $("td:nth-child(24)", row).removeClass("status_blue");
                         $("td:nth-child(24)", row).addClass("status_red");
                     }
-                    if (data.shipments.qb_ws == 1 && data.shipments.qb_rt == 1) {
+                    if ((data.shipments.qb_ws == 1 && data.shipments.qb_rt == 1) || data.shipments.rcvd == 1) {
                         $("td:first-child > div#status_div", row).removeClass("circle_green");
                         $("td:first-child > div#status_div", row).removeClass("circle_yellow");
                         $("td:first-child > div#status_div", row).removeClass("circle_red");

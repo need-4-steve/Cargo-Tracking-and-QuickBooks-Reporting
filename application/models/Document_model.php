@@ -68,8 +68,8 @@ class Document_model extends CI_Model
     public function get_all_documents_associated_with_cn_label ($container_numero)
     {
         if (is_null($container_numero) || empty($container_numero)) return false;
-        if (is_cli()) echo 'GET DOC BY ID LABEL ' . $container_numero . PHP_EOL;
-        /*$query = $this->db->get_where('vendor_documents', array('identifying_label' => trim($shipment_id)));
+        /*if (is_cli()) echo 'GET DOC BY ID LABEL ' . $container_numero . PHP_EOL;
+        $query = $this->db->get_where('vendor_documents', array('identifying_label' => trim($shipment_id)));
         $rows= $query->result_array();
         print_r($rows);
         if (count($rows)<=0) return false;
@@ -78,15 +78,15 @@ class Document_model extends CI_Model
         $allDocs=$this->get_all_documents();
         $rows=array();
         foreach($allDocs as $doc){
-            if (is_cli()) echo 'doc[idlabel]=>  '. $doc['identifying_label'] . '===' .$container_numero. PHP_EOL;
+            /*if (is_cli()) echo 'doc[idlabel]=>  '. $doc['identifying_label'] . '===' .$container_numero. PHP_EOL;*/
             if (strtoupper(trim($doc['identifying_label']))===strtoupper(trim($container_numero))){
                     $rows[]=$doc;
                 }
             }
         if (empty($rows)) return false;
-        if (is_cli()) echo 'ROWS!!!!'. PHP_EOL;
+        /*if (is_cli()) echo 'ROWS!!!!'. PHP_EOL;
         print_r($rows);
-        if (is_cli()) echo 'ROWS!!!!'. PHP_EOL;
+        if (is_cli()) echo 'ROWS!!!!'. PHP_EOL;*/
         return $rows;
     }
 

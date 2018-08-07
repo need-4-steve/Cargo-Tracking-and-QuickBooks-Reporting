@@ -34,3 +34,7 @@
 		</tr>
 	</thead>
 </table>
+
+<div>
+<h3><?php echo $time_taken; ?></h3>
+</div>
