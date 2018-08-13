@@ -601,11 +601,16 @@ class Shipments extends CI_Controller
             $shipmentChanges=array();
             if (is_cli()) echo '[START SHIPMENT FIXING]=>' .PHP_EOL;
             if (is_cli()) echo '[container_number]=>'.$shipment->container_number .PHP_EOL;
+            if (!is_null($shipment->po) && !empty($shipment->po)&&strlen($shipment->po === 2)) {
+                $shipment->po = '';
+                $shipmentChanges['po']='';
+            }
             if (!is_null($shipment->po) && !empty($shipment->po) && strlen($shipment->po) > 0) {
                 $shipmentVendor = json_decode(json_encode($this->ShipmentsModel->get_vendor_data_by_id($shipment->vendor_id)));
                 if (is_null($shipmentVendor)) continue;
                 if (is_cli()) echo '[VENDOR]=>' .PHP_EOL;
                 if (is_cli()) print_r($shipmentVendor);
+               
                 if (strpos($shipment->po,$shipmentVendor->document_initials)===false){
                     $shipment->po=$shipmentVendor->document_initials.$shipment->po;
                     if (is_cli()) echo '[EDIT shipment->po]=> ' . $shipment->po .PHP_EOL;
@@ -993,6 +998,7 @@ class Shipments extends CI_Controller
                                 $documentType = '';
                                 $associatedCargoData = null;
                                 $filename = '';
+                                $yearDigits = date('y');
                                 $fullPathAndFileName = '';
                                 $vendorIdLabelForDocuments = '';
                                 $multiple_containers = false;
@@ -1025,7 +1031,7 @@ class Shipments extends CI_Controller
                                         case null:
                                             if (is_cli()) echo "SENT INTERNALLY...." . PHP_EOL; 
                                             $vendorIdLabelForDocuments="NA";
-                                            $documentType = "Document";
+                                            $documentType = "Document"; 
                                             $vendorIdLabelForDocuments="NA";
                                             if (preg_match_all('/' . '[A-Z]{4}[0-9]{7}/', $overview[0]->subject, $matches)) {
                                                 if (is_cli()) echo $overview[0]->subject. " => preg_match result ...." . PHP_EOL; 
@@ -1043,20 +1049,34 @@ class Shipments extends CI_Controller
                                                 if (is_cli()) print_r($associatedCargoData);
                                                 //$documentCN = substr(trim($match[0]), strpos($textContent, $match[0]) + 2, strlen($match[0]));
                                                 if (is_cli()) echo "documentCN => ".$documentCN.PHP_EOL;
-                                            } else {
-                                                break 2;
-                                            }
-                                            $poPlaceholder = substr($overview[0]->subject,0,strpos($overview[0]->subject,$documentCN)-1);
-                                            if (is_cli()) echo "poPlaceholder => ".$poPlaceholder.PHP_EOL;
-                                            $documentInitials = substr($poPlaceholder,0,2);
-                                            if (is_cli()) echo "documentInitials=>" .  $documentInitials . PHP_EOL; 
-                                            foreach ($vendors as $vendor) {
-                                                if (strtoupper($documentInitials)===strtoupper($vendor['document_initials'])) {
-                                                    $associatedVendorData=$this->ShipmentsModel->get_vendor_data_by_id($vendor['id']);
+                                                $poPlaceholder = substr($overview[0]->subject,0,strpos($overview[0]->subject,$documentCN)-1);
+                                                if (is_cli()) echo "poPlaceholder => ".$poPlaceholder.PHP_EOL;
+                                                $documentInitials = substr($poPlaceholder,0,2);
+                                                if ($documentInitials==="JT") $documentInitials="JX";
+                                                if (is_cli()) echo "documentInitials=>" .  $documentInitials . PHP_EOL; 
+                                                foreach ($vendors as $vendor) {
+                                                    if (strtoupper($documentInitials)===strtoupper($vendor['document_initials'])) {
+                                                        $associatedVendorData=$this->ShipmentsModel->get_vendor_data_by_id($vendor['id']);
+                                                        if (is_cli()) echo 'NEW VENDOR ASSOCIATION for '.$filename.': '. PHP_EOL;
+                                                        if (is_cli())print_r($associatedVendorData);
+                                                        break;
+                                                    }
+                                                }
+                                            } else if (strpos($filename,"LB$yearDigits-")!==false) {
+                                                if (preg_match('/LB'.$yearDigits.'-[0-9]{3}/', $filename, $match)){
+                                                    $poPlaceholder = str_replace("LB","WD",$match[0]);
+                                                    $associatedCargoData = json_decode(json_encode($this->ShipmentsModel->get_by_po_number($poPlaceholder)));
+                                                    if (is_cli()) echo "associatedCargoData" . PHP_EOL; 
+                                                    if (is_cli()) print_r($associatedCargoData);
+                                                    //$documentCN = substr(trim($match[0]), strpos($textContent, $match[0]) + 2, strlen($match[0]));
+                                                    if (is_cli()) echo "documentCN => ".$documentCN.PHP_EOL;
+                                                    $associatedVendorData=$this->ShipmentsModel->get_vendor_id_by_initials("WD");
                                                     if (is_cli()) echo 'NEW VENDOR ASSOCIATION for '.$filename.': '. PHP_EOL;
                                                     if (is_cli())print_r($associatedVendorData);
-                                                    break;
+                                                    $documentType=$attachment['file_extension'];
                                                 }
+                                            } else {
+                                                break 2;
                                             }
                                             $yearDigits = date('y');
                                             if (strpos(strtoupper($poPlaceholder),'WD'.$yearDigits)!==false && strpos(strtoupper($poPlaceholder),'WD'.$yearDigits.'-')===false){
@@ -1097,33 +1117,42 @@ class Shipments extends CI_Controller
                                             break;
                                         case "WANDA":
                                             if (is_cli()) echo 'attachment[file_extension]=>'.strtoupper($attachment['file_extension']).PHP_EOL;
-                                            if (preg_match('/LB\d{2}/', $filename, $match)) {
-                                                $vendorIdLabelForDocuments = trim($match[0]);
-                                            } else if (preg_match('/LB\d{3}/', $filename, $match)) {
-                                                $vendorIdLabelForDocuments = trim($match[0]);
-                                            } else {
-                                                if (strpos(strtoupper($filename), strtoupper($attachment['file_extension']))) {
-                                                    $vendorIdLabelForDocuments = trim(substr($filename, strripos($filename, ' ') + 1,
-                                                        ((strpos(strtoupper($filename), strtoupper($attachment['file_extension'])) - 1) - (strripos($filename, ' ') + 1))));
+                                            $lbNumber='';
+                                            if (strpos($filename,'-')===false){
+                                                if (preg_match('/LB\d{2}/', $filename, $match)) {
+                                                    $lbNumber = trim($match[0]);
+                                                } else if (preg_match('/LB\d{3}/', $filename, $match)) {
+                                                    $lbNumber = trim($match[0]);
                                                 }
+                                                $lbNumber = str_replace('LB','',$lbNumber);
+                                                if (strlen($lbNumber)===2) $lbNumber='0'.$lbNumber;
+                                            } else {
+                                                if (preg_match('/' . 'LB'.$yearDigits.'-\d{3}/', $filename, $match)) {
+                                                    $lbNumber = trim($match[0]);                                            
+                                                } else if (preg_match('/' . 'LB'.$yearDigits.'-\d{2}/', $filename, $match)){
+                                                    $lbNumber = trim($match[0]);                                            
+                                                }
+                                                $lbNumber = str_replace('LB'.$yearDigits.'-','',$lbNumber);
+                                                if (strlen($lbNumber)===2) $lbNumber='0'.$lbNumber;
                                             }
-                                            if (is_cli()) echo "vendorIdLabelForDocuments => ".$vendorIdLabelForDocuments . PHP_EOL;
+                                            if (is_cli()) echo "lbNumber => ".$lbNumber . PHP_EOL;
+                                            $poPlaceholder="WD$yearDigits-$lbNumber";
                                             switch (strtoupper($attachment['file_extension'])) {
                                                 case "PDF":
                                                     if (is_cli()) echo 'wanda pdf=>'.PHP_EOL;
                                                     $documentType = "Bill_of_Lading";
                                                     /* Local Server -> */
-                                                    $pdf = new \TonchikTm\PdfToHtml\Pdf($tmpFileDir, [
+                                                    /*$pdf = new \TonchikTm\PdfToHtml\Pdf($tmpFileDir, [
                                                         'pdftohtml_path' => 'C:/xampp/htdocs/assets/poppler0.51/bin/pdftohtml.exe',
                                                         'pdfinfo_path' => 'C:/xampp/htdocs/assets/poppler0.51/bin/pdfinfo.exe',
-                                                    ]);
+                                                    ]);*/
                                                     /* Di's Server ->
                                                      $pdf = new \TonchikTm\PdfToHtml\Pdf($tmpFileDir, [
                                                         'pdftohtml_path' => 'F:/xampp/htdocs/assets/poppler0.51/bin/pdftohtml.exe',
                                                         'pdfinfo_path' => 'F:/xampp/htdocs/assets/poppler0.51/bin/pdfinfo.exe',
                                                     ]);
                                                     */
-                                                    $pdfInfo = $pdf->getInfo();
+                                                    /*$pdfInfo = $pdf->getInfo();
                                                     $html = $pdf->getHtmlContent();
                                                     if (is_cli()){
 														echo "var_dump of html".PHP_EOL;
@@ -1154,22 +1183,36 @@ class Shipments extends CI_Controller
                                                         break;
                                                     } else {
                                                         break;
-                                                    }
+                                                    }*/
                                                     break;
                                                 case "XLS":
                                                     if (is_cli()) echo 'wanda xls=>'.PHP_EOL;
                                                     $documentType = "Parts_List";
-                                                    $associatedCargoData = $this->ShipmentsModel->get_by_vendor_specific_identifier($associatedVendorData['document_initials'] . $vendorIdLabelForDocuments);
+                                                    /*$associatedCargoData = $this->ShipmentsModel->get_by_vendor_specific_identifier($associatedVendorData['document_initials'] . $vendorIdLabelForDocuments);
                                                     if (is_null($associatedCargoData) || empty($associatedCargoData)) {
                                                         break;
                                                     }
                                                     $poPlaceholder = $associatedCargoData['po'];
                                                     $associatedCargoData = $this->ShipmentsModel->update_record(array('container_number' => $associatedCargoData['container_number'], 'has_documents' => true));
+                                                    */
                                                     break;
                                                 default:
                                                     //otherwise, store in 'Other' documents folder
                                                     $documentType = "Other";
                                                     break;
+                                            }
+                                            $associatedCargoData = json_decode(json_encode($this->ShipmentsModel->get_by_po_number($poPlaceholder,$associatedVendorData['document_initials'])),true);
+                                            if (is_cli()) echo "got associatedCargoData ". PHP_EOL;
+                                            if (!is_null($associatedCargoData)) {
+                                                if (is_cli()) {
+                                                    echo "CARGO ENTRY FOUND => ".PHP_EOL;
+                                                    print_r($associatedCargoData);
+                                                }
+                                                $this->ShipmentsModel->update_record(array('po' => $poPlaceholder), array('vendor_identifier' => $vendorIdLabelForDocuments, 'has_documents' => true));
+                                                $documentCN=$associatedCargoData['container_number'];
+                                                if (is_cli()) echo "documentCN-> $documentCN". PHP_EOL;
+                                            } else {
+                                                if (is_cli()) echo 'NO CARGO DATA FOUND...'. PHP_EOL;
                                             }
                                             break;
                                         case "JIANXIN":
@@ -1233,7 +1276,9 @@ class Shipments extends CI_Controller
 															//$poPlaceholder = str_replace($regexStart,'',$poPlaceHolder);
                                                         if (is_cli()){
 															echo "VENDOR DOCUMENT INITIALS => ". $regexStart. PHP_EOL;
-															echo "PO FOUND (with vendor initials) => ". $poPlaceholder. PHP_EOL;
+                                                            echo "PO FOUND (with vendor initials) => ". $poPlaceholder. PHP_EOL;
+                                                            echo "MATCHES:".PHP_EOL;
+                                                            print_r($matches);
 														}
                                                         $associatedCargoData = json_decode(json_encode($this->ShipmentsModel->get_by_po_number($poPlaceholder,$associatedVendorData['document_initials'])),true);
                                                         if (is_cli()) echo "got associatedCargoData ". PHP_EOL;
@@ -1282,7 +1327,6 @@ class Shipments extends CI_Controller
                                             if (is_cli()) echo "PO NUMBER => ".$poPlaceholder.PHP_EOL;
                                             $this->ShipmentsModel->update_record(array('po' => $poPlaceholder), array('vendor_identifier' => $vendorIdLabelForDocuments, 'has_documents' => true));
                                             $documentCN=$associatedCargoData['container_number'];
-                                            $yearDigits = date('y');
                                             $directoryStructure = $_SERVER['DOCUMENT_ROOT'] . "/" . "vendor_documents/" . trim($poFolderName) . '/';
                                         }
                                     } else {
