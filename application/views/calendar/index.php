@@ -161,10 +161,10 @@
 						color: #d119cf;
 						background-color: #faebfa;
 						border: 1px solid #f3aef2;
-					*/
-                    element.css('color', '#D14');
-					element.css('background-color', '#fcf6f8');
-                    element.css('border-color', '#f7d6df');
+					*/element.css('color', '#c29f00');
+					element.css('background-color', '#fff9d7');
+                    element.css('border-color', '#ffe700');
+                    
                 } else if (event.event_type=='LFD'){
 					/*BLUES
 						background-color: #d9edf7;
@@ -181,9 +181,9 @@
 						background-color: #fff9d7;
 						border: 1px solid #ffe700;
 					*/
-                    element.css('color', '#c29f00');
-					element.css('background-color', '#fff9d7');
-                    element.css('border-color', '#ffe700');
+                    element.css('color', '#D14');
+					element.css('background-color', '#fcf6f8');
+                    element.css('border-color', '#f7d6df');
 				} else if (event.event_type='N/A') {
 					/*color: #c29f00;
 					background-color: #fff9d7;

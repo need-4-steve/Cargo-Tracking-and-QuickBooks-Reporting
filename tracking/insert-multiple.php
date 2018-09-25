@@ -33,7 +33,10 @@ $carrier = "USPS";
 $email = mysqli_real_escape_string($link, $_REQUEST['email']); */
  
 // attempt insert query execution
+//$sql = "INSERT INTO barcodes (name, barcode, carrier) VALUES ('$name', '$tracking', '$carrier')";
+//Cheng
 $sql = "INSERT INTO barcodes (name, barcode, carrier) VALUES ('$name', '$tracking', '$carrier')";
+
 if(mysqli_query($link, $sql)){
     //header("Location: http://localhost/simon/add-record-form.php");
 	//header("Location: http://192.168.1.5:8080/tracking/add-record-form.php");

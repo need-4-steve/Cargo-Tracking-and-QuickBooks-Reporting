@@ -17,6 +17,9 @@ function submitdata() {
 					cache: false,
 					success: function(html) {
 					document.getElementById("loginform").reset();
+					},
+					error: function (textStatus, errorThrown) {
+						alert(errorThrown);
 					}
 					});
 				}

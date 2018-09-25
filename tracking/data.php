@@ -77,6 +77,8 @@ $bdates
 	
 $result = mysqli_query($link,$query);
 
+//print $query;
+
 
 echo "<a href='search.php'>Back to Search</a>
 <br><br>

@@ -32,7 +32,7 @@ table.dataTable thead th {
 /*cells*/
 
 table.dataTable td {
-    font-size: 14px !important;
+    font-size: 13px !important;
     color: #666666 !important;
     font-family: "Helvetica Neue", HelveticaNeue, Arial, Helvetica, sans-serif !important;
     font-weight: normal !important;

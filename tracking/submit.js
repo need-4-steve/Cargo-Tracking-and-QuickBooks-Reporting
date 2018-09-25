@@ -12,13 +12,19 @@ function submitdata() {
 					// AJAX code to submit form.
 					$.ajax({
 					type: "POST",
-					url: "http://192.168.1.5:8080/tracking/insert-multiple.php",
+					//url: "http://192.168.1.5:8080/tracking/insert-multiple.php",
+					//url: "http://192.168.1.4:8080/tracking/insert-multiple.php",
+					url: "http://192.168.1.4/tracking/insert-multiple.php",
 					data: dataString,
 					cache: false,
 					success: function(html) {
 					document.getElementById("loginform").reset();
 					
+					},
+					error: function (textStatus, errorThrown) {
+						alert(errorThrown);
 					}
+
 					});
 				}
 				document.getElementById("barcode").focus();

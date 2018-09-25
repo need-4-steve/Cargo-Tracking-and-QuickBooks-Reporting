@@ -1,0 +1,15 @@
+SELECT
+    CreditMemoLine.TxnDate AS DATE ,
+    CreditMemoLine.CustomerRefFullName AS Customer,
+    Item.FullName,
+    CreditMemoLine.CreditMemoLineItemRefFullName AS Product,
+    0 - CreditMemoLine.CreditMemoLineQuantity  AS Credit_Quantity ,
+    0 - CreditMemoLine.CreditMemoLineAmount  AS Credit_Amount ,
+    CreditMemoLine.CreditMemoLineTxnLineID AS Tax_ID 
+FROM
+    CreditMemoLine
+INNER JOIN Item ON CreditMemoLine.CreditMemoLineItemRefFullName = Item.FullName
+ORDER BY
+    CreditMemoLine.TxnDate
+DESC
+    

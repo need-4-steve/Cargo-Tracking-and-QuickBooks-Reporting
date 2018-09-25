@@ -26,7 +26,8 @@ $email = mysqli_real_escape_string($link, $_REQUEST['email']); */
 // attempt insert query execution
 $sql = "INSERT INTO barcodesoffice (name, barcode, carrier) VALUES ('$name', '$tracking', '$carrier')";
 if(mysqli_query($link, $sql)){
-    header("Location: http://192.168.1.5:8080/tracking/add-record-office.php");
+    //header("Location: http://192.168.1.5:8080/tracking/add-record-office.php");
+    header("Location: http://192.168.1.4/tracking/add-record-office.php");
 } else{
     echo "ERROR: Could not able to execute $sql. " . mysqli_error($link);
 }

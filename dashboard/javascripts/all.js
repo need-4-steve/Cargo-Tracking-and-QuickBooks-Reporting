@@ -5445,21 +5445,6 @@ window.Modernizr = (function( window, document, undefined ) {
 
 $(document).foundation();
 
-$(document).ready(function() {
-  // Load latest forum posts
-  var discussions = $('#discussions'), limit = 2;
-  $.ajax({
-    url: discussions.data('feed-url') || "https://community.apachefriends.org/f/feed.php",
-    dataType: 'xml',
-    success: function(xml) {
-      $('> ol', discussions).empty(); $('> p', discussions).remove(); // clear any existing content
-      $(xml).find('entry').each(function(i) {
-        if (i > (limit - 1)) return; // stop if we have enough
-        var c = $(this).find('content').text().replace(/<img\b[^>]*>/ig, '');
-        $('> ol', discussions).append('<li><h5>' + $(this).find('title').text() + '</h5><p>' + truncate(c) + ' <a href="' + $(this).find('id').text() + '">Read more&nbsp;&raquo;</p></li>'); 
-      });
-    }
-  });
 
   // tweet it form
   $('form#tweet').submit(function(event) {
@@ -5502,6 +5487,12 @@ $(document).ready(function() {
       next.slideDown();
     return false;
   });
+
+  // Show section if anchor provided
+  var anchor = window.location.hash;
+  if(anchor !== ''){
+    $('dl.accordion > dd' + anchor).show();
+  }
 });
 
 function truncate(text, length) {

@@ -1,0 +1,179 @@
+//单个产品销售个数和总价基于时间--需要搞定
+//inventory算清楚
+
+SELECT
+    total_ItemSales.itemListID,
+    total_ItemSales.SalesReceiptLineRate,
+    total_ItemSales.ListID,
+    total_ItemSales.Name,
+    total_ItemSales.FullName,
+    total_ItemSales.type,
+    total_ItemSales.GroupListID,
+    total_ItemSales.ItemInventoryAssemblyLnItemInventoryRefFullName,
+    SUM(
+        total_ItemSales.SIGNALSalesQuantity
+    ) AS salesQuantity,
+    total_ItemSales.percentage,
+    SUM(
+        total_ItemSales.singleItemAmount
+    ) AS singleItemAmount
+FROM
+    (
+    SELECT
+        sales_summary.CustomerRefFullName,
+        sales_summary.SalesReceiptLineItemRefListID,
+        sales_summary.SalesReceiptLineItemRefFullName,
+        sales_summary.SalesReceiptLineRate,
+        sales_summary.SUM_SalesReceiptLineQuantity,
+        sales_summary.SUM_SalesReceiptLineAmount,
+        newtable.ListID,
+        newtable.Name,
+        newtable.FullName,
+        newtable.type,
+        newtable.GroupListID,
+        newtable.itemListID,
+        newtable.ItemInventoryAssemblyLnItemInventoryRefFullName,
+        (
+            sales_summary.SUM_SalesReceiptLineQuantity * newtable.ItemInventoryAssemblyLnQuantity
+        ) AS SIGNALSalesQuantity,
+        newtable.percentage,
+        (
+            sales_summary.SUM_SalesReceiptLineAmount * newtable.percentage
+        ) AS singleItemAmount
+    FROM
+        (
+        SELECT
+            `salesreceiptline`.`CustomerRefFullName` AS `CustomerRefFullName`,
+            `salesreceiptline`.`SalesReceiptLineItemRefListID` AS `SalesReceiptLineItemRefListID`,
+            `salesreceiptline`.`SalesReceiptLineItemRefFullName` AS `SalesReceiptLineItemRefFullName`,
+            SalesReceiptLineRate,
+            SUM(
+                `salesreceiptline`.`SalesReceiptLineQuantity`
+            ) AS `SUM_SalesReceiptLineQuantity`,
+            SUM(
+                `salesreceiptline`.`SalesReceiptLineAmount`
+            ) AS `SUM_SalesReceiptLineAmount`
+        FROM
+            `salesreceiptline`
+        WHERE
+            TimeCreated > '2018-05-01 00:00:00.000' AND TimeCreated <= '2018-06-01 00:00:00.000'
+        GROUP BY
+            `salesreceiptline`.`SalesReceiptLineItemRefListID`,
+            `salesreceiptline`.`CustomerRefFullName`
+    ) AS sales_summary
+LEFT JOIN(
+    SELECT
+        bigtable.ListID,
+        bigtable.Name,
+        bigtable.FullName,
+        bigtable.GroupListID,
+        bigtable.itemListID,
+        bigtable.ItemInventoryAssemblyLnItemInventoryRefFullName,
+        bigtable.type,
+        bigtable.ItemInventoryAssemblyLnQuantity,
+        IFNULL(
+            t_assembly_price_percentage.Price_Percentage,
+            '1'
+        ) AS percentage
+    FROM
+        (
+        SELECT
+            tab1.ListID,
+            tab1.Name,
+            tab1.FullName,
+            tab1.type,
+            tab1.GroupListID,
+            tab1.itemListID,
+            tab1.ItemInventoryAssemblyLnItemInventoryRefFullName,
+            tab1.ItemInventoryAssemblyLnQuantity
+        FROM
+            (
+            SELECT
+                itemtest.ListID,
+                itemtest.Name,
+                itemtest.FullName,
+                itemtest.type,
+                IFNULL(
+                    iteminventoryassemblyline.ItemInventoryAssemblyLnItemInventoryRefListID,
+                    itemtest.ListID
+                ) AS GroupListID,
+                IFNULL(
+                    iteminventoryassemblyline.ItemInventoryAssemblyLnItemInventoryRefListID,
+                    itemtest.ListID
+                ) AS itemListID,
+                IFNULL(
+                    iteminventoryassemblyline.ItemInventoryAssemblyLnItemInventoryRefFullName,
+                    itemtest.FullName
+                ) AS ItemInventoryAssemblyLnItemInventoryRefFullName,
+                IFNULL(
+                    iteminventoryassemblyline.ItemInventoryAssemblyLnQuantity,
+                    '1'
+                ) AS ItemInventoryAssemblyLnQuantity
+            FROM
+                itemtest
+            LEFT JOIN `iteminventoryassemblyline` ON itemtest.ListID = iteminventoryassemblyline.ListID
+        ) AS tab1
+    LEFT JOIN(
+        SELECT DISTINCT
+            (temp.ListID)
+        FROM
+            (
+            SELECT
+                itemtest.ListID,
+                itemtest.Name,
+                itemtest.FullName,
+                itemtest.type,
+                iteminventoryassemblyline.ItemInventoryAssemblyLnItemInventoryRefListID
+            FROM
+                itemtest
+            LEFT JOIN `iteminventoryassemblyline` ON itemtest.ListID = iteminventoryassemblyline.ListID
+        ) AS temp
+    INNER JOIN iteminventoryassemblyline ON temp.ItemInventoryAssemblyLnItemInventoryRefListID = iteminventoryassemblyline.ListID
+    WHERE
+        iteminventoryassemblyline.ItemInventoryAssemblyLnItemInventoryRefListID != ''
+    ) AS tab2
+ON
+    tab1.ListID = tab2.ListID
+WHERE
+    tab2.ListID IS NULL
+    ) AS bigtable
+LEFT JOIN t_assembly_price_percentage ON bigtable.FullName = t_assembly_price_percentage.FullName AND t_assembly_price_percentage.ItemInventoryAssemblyLnItemInventoryRefFullName = bigtable.ItemInventoryAssemblyLnItemInventoryRefFullName
+ORDER BY
+    bigtable.ListID
+) AS newtable
+ON
+    sales_summary.SalesReceiptLineItemRefListID = newtable.ListID
+) total_ItemSales
+GROUP BY
+    total_ItemSales.itemListID
+ORDER BY
+    salesQuantity
+	
+	
+---------------------------
+SELECT DISTINCT
+    tab.NAME,
+    tab.Price_Percentage,
+    tab.comb_FullName,
+    tab.name2,
+    t_assembly_price_percentage.FullName,
+    t_assembly_price_percentage.Price_Percentage,
+    t_assembly_price_percentage.ItemInventoryAssemblyLnItemInventoryRefFullName
+FROM
+    (
+    SELECT DISTINCT
+        comb.`FullName` AS NAME,
+        comb.`Price_Percentage`,
+        comb.`ItemInventoryAssemblyLnItemInventoryRefFullName` AS comb_FullName,
+        group_table.FullName as name2,
+        group_table.Price_Percentage as name3,
+        group_table.ItemInventoryAssemblyLnItemInventoryRefFullName as name4
+    FROM
+        `t_assembly_price_percentage` AS comb
+    LEFT JOIN t_assembly_price_percentage AS group_table
+    ON
+        comb.`FullName` = group_table.ItemInventoryAssemblyLnItemInventoryRefFullName
+) AS tab
+LEFT JOIN t_assembly_price_percentage ON tab.comb_FullName = t_assembly_price_percentage.FullName
+WHERE NAME
+    = 'Z group items:HD22002-4KITS'

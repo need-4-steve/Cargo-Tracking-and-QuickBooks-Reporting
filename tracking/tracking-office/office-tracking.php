@@ -85,7 +85,7 @@ body {
 <body>
 <div class="logo"></div>
 <div class="login-block">
-  <h1>Add Barcodes - Warehouse</h1>
+  <h1>Add Barcodes - office</h1>
   <form method="post" action="" name="loginform" id="loginform">
     <!--<input type="text" placeholder="Username" id="username" name="username" />
     <input type="password" placeholder="Password" id="password" name="password" /> -->

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Aug 11, 2018 at 03:50 AM
+-- Generation Time: Sep 21, 2018 at 07:12 AM
 -- Server version: 10.1.34-MariaDB
 -- PHP Version: 7.2.7
 
@@ -152,6 +152,8 @@ INSERT INTO `archived_shipments` (`id`, `status`, `po`, `product_id`, `container
 (220, '2', 'WD', 2, 'TCNU9438088', '6183114230', 11, 'Prince Rupert', 'Memphis, Tennessee', '2018-08-15', NULL, NULL, NULL, 1, 'Release', NULL, 0, 1, 0, 0, 0, 0, 0, 'First Loaded on Rail Under I/B', NULL, 0, 0, NULL, '2018-08-06 14:38:05', 40, 1, NULL, 0, NULL),
 (221, '0', 'RR18078', 4, 'TCNU6459544', '6182118250', 3, 'Prince Rupert', 'Memphis, Tennessee', '2018-08-05', '2018-08-07', 281894, NULL, 1, 'Release', NULL, 0, 1, 1, 1, 0, 0, 0, 'Arrival at Last Intermodal Hub', NULL, 0, 0, NULL, '2018-08-06 14:38:05', 40, 1, NULL, 0, NULL),
 (222, '0', 'RR18078', 4, 'GLDU7478044', '6182118250', 3, 'Prince Rupert', 'Memphis, Tennessee', '2018-08-05', '2018-08-07', 281894, NULL, 1, 'Release', NULL, 1, 1, 1, 1, 0, 0, 0, 'Last Deramp Under I/B', NULL, 0, 0, NULL, '2018-08-06 14:38:05', 40, 1, NULL, 0, NULL),
+(223, '3', 'WD18-059', 2, 'TCNU6840544', '6183114200', 11, 'Prince Rupert', 'Memphis, TN', '2018-08-12', '2018-08-14', 737081, '2018-08-15 07:00:00', 2, 'Release', 1, 1, 1, 1, 1, 1, 1, 1, 'Empty Container Returned to Carrier at Destination', NULL, 0, 1, NULL, '2018-08-24 11:01:54', 40, 1, 'NA', 1, '/WD18-059 TCNU6840544/'),
+(224, '3', 'XY18048', 6, 'CXDU1244888', '6190982750', 5, 'Prince Rupert', 'Memphis, TN', '2018-08-10', '2018-08-13', 320818, '2018-08-13 14:00:00', 2, 'Release', 1, 1, 1, 1, 0, 1, 1, 1, 'Picked up at Final Destination for Delivery', NULL, 0, 0, NULL, '2018-08-27 11:01:53', 20, 1, 'NA', 1, '/XY18-XY18048 CXDU1244888/'),
 (225, '2', NULL, NULL, 'Unassigned [6191658290]', '6191658290', NULL, 'Prince Rupert (Intended)', 'Memphis, Tennessee', '2018-08-06', NULL, NULL, NULL, NULL, NULL, 0, 0, 1, 0, 0, 0, 0, 0, 'No event received', NULL, 0, 0, NULL, '2018-07-06 19:50:25', 40, 1, NULL, 0, NULL),
 (226, '2', NULL, 3, '[6185691600]', '6185691600', 2, 'Prince Rupert', 'Memphis, TN', '2018-07-30', NULL, NULL, NULL, 1, NULL, 0, 0, 1, 0, 0, 0, 0, 0, 'No event received', NULL, 0, 0, NULL, '2018-07-24 08:55:27', 20, 1, NULL, 0, NULL),
 (227, '2', NULL, NULL, '[6191658290]', '6191658290', NULL, 'Prince Rupert', 'Memphis, TN', '2018-08-13', NULL, NULL, NULL, NULL, 'Not Released', 0, 0, 1, 0, 0, 0, 0, 0, 'No event received', NULL, 0, 0, NULL, '2018-07-24 08:56:04', 40, 1, NULL, 0, NULL),
@@ -187,6 +189,7 @@ INSERT INTO `archived_shipments` (`id`, `status`, `po`, `product_id`, `container
 (257, '2', 'RR', 4, 'TCNU8455899', '6182124690', 3, 'Prince Rupert (Intended)', 'Memphis, Tennessee', '2018-08-27', NULL, NULL, NULL, NULL, 'Not Released', NULL, 0, 1, 0, 0, 0, 0, 0, 'Full Container Received by Carrier at Origin', NULL, 0, 0, NULL, '2018-08-06 14:38:05', 40, 1, NULL, 0, NULL),
 (258, '2', 'JT', 9, '', '6184594010', 12, 'Prince Rupert (Intended)', 'Memphis, Tennessee', '2018-09-05', NULL, NULL, NULL, 1, 'Not Released', NULL, 0, 1, 0, 0, 0, 0, 0, 'No event received', NULL, 0, 0, NULL, '2018-08-04 13:10:22', 20, 1, NULL, 0, NULL),
 (259, '2', 'WD', 2, 'TCNU6591366', '6183122130', 11, 'Long Beach (Intended)', 'Memphis, Tennessee', '2018-09-07', NULL, NULL, NULL, NULL, 'Not Released', NULL, 0, 0, 0, 0, 0, 0, 0, 'Container Arrival at First Port of Load', NULL, 0, 0, NULL, '2018-08-06 14:38:05', 40, 1, NULL, 0, NULL),
+(260, '2', 'WD', 2, '[6183129160]', '6183129160', 11, 'Los Angeles', 'Memphis, TN', '2018-09-27', NULL, NULL, NULL, NULL, 'Not Released', NULL, 0, 0, 0, 0, 0, 0, 0, 'No event received', NULL, 0, 0, NULL, '2018-09-08 11:01:53', 40, 1, NULL, 0, NULL),
 (261, '2', 'WD', 2, 'TCNU6693244', '6183127680', 11, 'Long Beach (Intended)', 'Memphis, Tennessee', '2018-09-07', NULL, NULL, NULL, NULL, 'Not Released', NULL, 0, 0, 0, 0, 0, 0, 0, 'Full Container Received by Carrier at Origin', NULL, 0, 0, NULL, '2018-08-06 14:38:05', 40, 1, NULL, 0, NULL),
 (262, '2', 'WD', 2, '[6183122100]', '6183122100', 11, 'Long Beach', 'Memphis, TN', '2018-09-14', NULL, NULL, NULL, NULL, 'Not Released', NULL, 0, 0, 0, 0, 0, 0, 0, 'No event received', NULL, 0, 0, NULL, '2018-08-08 11:01:53', 40, 1, NULL, 0, NULL),
 (263, '2', 'JT', 9, '[6184594010]', '6184594010', 12, 'Prince Rupert', 'Memphis, TN', '2018-09-05', NULL, NULL, NULL, NULL, 'Not Released', NULL, 0, 1, 0, 0, 0, 0, 0, 'No event received', NULL, 0, 0, NULL, '2018-08-08 11:01:53', 20, 1, NULL, 0, NULL),
@@ -194,7 +197,53 @@ INSERT INTO `archived_shipments` (`id`, `status`, `po`, `product_id`, `container
 (265, '3', 'WD18-055', 2, 'TCNU6181220', '6183114260', 11, 'Prince Rupert', 'Memphis, TN', '2018-07-26', '2018-07-28', 664408, NULL, NULL, 'Release', NULL, 0, 1, 0, 1, 0, 0, 0, 'Empty Container Returned to Carrier at Destination', NULL, 0, 0, NULL, '2018-08-08 11:01:53', 40, 1, NULL, 1, '/WD18-055 TCNU6181220/'),
 (266, '0', 'JX18035', 9, 'DFSU2335408', '6183511340', 12, 'Prince Rupert', 'Memphis, TN', '2018-07-28', '2018-07-30', 797899, NULL, NULL, 'Release', NULL, 0, 1, 0, 1, 0, 0, 0, 'Empty Container Returned to Carrier at Destination', NULL, 0, 0, NULL, '2018-08-07 11:01:56', 20, 1, NULL, 1, '/18-JX18035 DFSU2335408/'),
 (267, '0', 'JX18034', 9, 'TEMU2905945', '6183511340', 12, 'Prince Rupert', 'Memphis, TN', '2018-07-28', '2018-07-30', 797899, NULL, NULL, 'Release', NULL, 0, 1, 0, 1, 0, 0, 0, 'Empty Container Returned to Carrier at Destination', NULL, 0, 0, NULL, '2018-08-07 11:01:56', 20, 1, NULL, 1, '/18-JX18034 TEMU2905945/'),
-(298, '2', NULL, 5, 'UETU2381377', '\"', 4, 'Norfolk', 'Henderson, North Carolina', '2018-09-18', NULL, NULL, NULL, NULL, 'Not Released', NULL, 0, 0, 0, 0, 0, 0, 0, 'Discharged at Port of Transhipment', NULL, 0, 0, NULL, '2018-08-09 11:01:54', 20, 0, NULL, 0, NULL);
+(268, '3', 'WD18-056', 2, 'TCNU6437626', '6183114210', 11, 'Prince Rupert', 'Memphis, TN', '2018-08-01', '2018-08-03', 174203, NULL, 1, 'Release', 1, 0, 1, 0, 1, 1, 0, 0, 'Empty Container Returned to Carrier at Destination', NULL, 0, 0, NULL, '2018-08-16 11:01:54', 40, 1, NULL, 1, '/WD18-056 TCNU6437626/'),
+(269, '3', 'WB18001', 1, 'TEMU6023781', '6185693500', 14, 'Prince Rupert', 'Memphis, TN', '2018-08-01', '2018-08-03', 703508, NULL, 1, 'Release', 1, 1, 1, 1, 1, 1, 1, 1, 'Empty Container Returned to Carrier at Destination', NULL, 0, 1, NULL, '2018-08-11 11:01:53', 40, 1, NULL, 1, '/WB18-WB18001 TEMU6023781/'),
+(270, '3', 'RR18078', 4, 'TCNU6459543', '6182118250', 3, 'Prince Rupert', 'Memphis, TN', '2018-08-05', '2018-08-07', 281894, NULL, 1, 'Release', 1, 1, 1, 1, 1, 1, 0, 0, 'Empty Container Returned to Carrier at Destination', NULL, 0, 0, NULL, '2018-08-17 11:01:53', 40, 1, 'JT18LB581', 1, '/RR18-RR18078 TCNU6459543/'),
+(271, '3', 'RR18078', 4, 'GLDU7478040', '6182118250', 3, 'Prince Rupert', 'Memphis, TN', '2018-08-05', '2018-08-07', 281894, NULL, 1, 'Release', 1, 0, 1, 1, 1, 1, 0, 0, 'Empty Container Returned to Carrier at Destination', NULL, 0, 0, NULL, '2018-08-17 11:01:53', 40, 1, 'JT18LB581', 1, '/RR18-RR18078 GLDU7478040/'),
+(272, '0', 'QQ18002', 2, 'CSNU6735970', '6185677760', 9, 'Prince Rupert', 'Memphis, TN', '2018-09-12', '2018-08-13', 471805, '2018-08-13 08:00:00', 2, 'Release', 1, 1, 1, 1, 1, 1, 1, 1, 'Empty Container Returned to Carrier at Destination', NULL, 0, 1, NULL, '2018-09-12 11:01:53', 40, 1, NULL, 0, NULL),
+(273, '3', 'WD18-061', 2, 'TCNU6347287', '6183114390', 11, 'Prince Rupert', 'Memphis, TN', '2018-08-14', '2018-08-16', 713722, '2018-08-16 08:00:00', 2, 'Release', 1, 1, 1, 1, 1, 1, 1, 1, 'Empty Container Returned to Carrier at Destination', NULL, 0, 1, NULL, '2018-08-24 11:01:54', 40, 1, NULL, 0, NULL),
+(274, '3', 'WD18-057', 2, 'TCNU6263490', '6183114220', 11, 'Prince Rupert', 'Memphis, TN', '2018-08-12', '2018-08-14', 554879, '2018-08-14 10:00:00', 2, 'Release', 1, 1, 1, 1, 1, 1, 1, 1, 'Empty Container Returned to Carrier at Destination', NULL, 0, 1, NULL, '2018-08-22 11:01:53', 40, 1, 'NA', 1, '/WD18-057 TCNU6263490/'),
+(275, '3', 'WD18-058', 2, 'TCNU9438082', '6183114230', 11, 'Prince Rupert', 'Memphis, TN', '2018-08-12', '2018-08-14', 431550, '2018-08-14 07:00:00', 2, 'Release', 1, 1, 1, 1, 1, 1, 1, 1, 'Empty Container Returned to Carrier at Destination', NULL, 0, 1, NULL, '2018-08-23 11:01:53', 40, 1, 'NA', 1, '/WD18-058 TCNU9438082/'),
+(276, '3', 'WD18-060', 2, 'TCNU5220805', '6183114380', 11, 'Prince Rupert', 'Memphis, TN', '2018-08-16', '2018-08-18', 349667, '2018-08-17 08:00:00', 2, 'Release', 1, 1, 1, 1, 1, 1, 1, 1, 'Empty Container Returned to Carrier at Destination', NULL, 0, 1, NULL, '2018-08-28 11:01:54', 40, 1, 'NA', 1, '/WD18-060 TCNU5220805/'),
+(277, '3', 'WD18-062', 2, 'TCNU6692051', '6183120340', 11, 'Prince Rupert', 'Memphis, TN', '2018-08-16', '2018-08-18', 758408, '2018-08-17 07:00:00', 2, 'Release', 1, 1, 1, 1, 1, 1, 1, 1, 'Empty Container Returned to Carrier at Destination', NULL, 0, 1, NULL, '2018-08-25 11:01:54', 40, 1, 'NA', 1, '/WD18-062 TCNU6692051/'),
+(278, '3', 'XY18049', 6, 'TRHU2560148', '6191000250', 5, 'Prince Rupert', 'Memphis, TN', '2018-08-14', '2018-08-16', 149423, '2018-08-15 10:00:00', 2, 'Release', 1, 1, 1, 1, 1, 1, 1, 1, 'Empty Container Returned to Carrier at Destination', NULL, 0, 0, NULL, '2018-08-23 11:01:53', 20, 1, 'NA', 1, '/XY18-XY18049 TRHU2560148/'),
+(279, '3', 'NYJT18027', 5, 'FCIU6127923', '6008532450', 4, 'Charleston', 'Loris, SC', NULL, NULL, NULL, NULL, 1, 'Release', NULL, 0, 1, 1, 1, 0, 0, 0, 'Empty Container Returned to Carrier at Destination', NULL, 0, 0, NULL, '2018-08-31 11:01:53', 20, 1, NULL, 0, NULL),
+(280, '3', 'NY18038', 5, 'CSLU1668276', '6008532450', 4, 'Charleston', 'Loris, SC', NULL, NULL, NULL, NULL, 1, 'Release', NULL, 0, 1, 1, 1, 0, 0, 0, 'Empty Container Returned to Carrier at Destination', NULL, 0, 0, NULL, '2018-08-31 11:01:53', 20, 1, 'NA', 1, '/NY18-NY18027 CSLU1668276/'),
+(281, '3', 'NYJT170147', 5, 'CBHU3587146', '\"', 4, 'Los Angeles', 'Hewitt, TX', '2018-09-04', NULL, NULL, NULL, 1, 'Not Released', NULL, 0, 0, 1, 1, 0, 0, 0, 'Empty Container Returned to Carrier at Destination', NULL, 0, 0, NULL, '2018-09-13 11:01:52', 20, 1, NULL, 0, NULL),
+(282, '3', 'NYJT17200', 5, 'CSLU1690829', '\"', 4, 'Los Angeles', 'Hewitt, TX', '2018-09-04', NULL, NULL, NULL, 1, 'Not Released', NULL, 0, 0, 1, 1, 0, 0, 0, 'Empty Container Returned to Carrier at Destination', NULL, 0, 0, NULL, '2018-09-13 11:01:52', 20, 1, 'NA', 1, '/18-ST3081NY17147 CSLU1690829/'),
+(283, '3', 'RR', 4, 'TCNU8455892', '6182124690', 3, 'Prince Rupert', 'Memphis, TN', '2018-08-28', '2018-08-31', 932876, NULL, 1, 'Release', 1, 1, 1, 0, 1, 1, 1, 1, 'Empty Container Returned to Carrier at Destination', NULL, 0, 0, NULL, '2018-09-07 11:01:53', 40, 1, NULL, 0, NULL),
+(284, '3', 'WD18-063', 2, 'TCNU6338367', '6183122170', 11, 'Prince Rupert', 'Memphis, TN', '2018-08-26', '2018-08-28', 593756, '2018-08-28 10:00:00', 2, 'Release', 1, 1, 1, 1, 1, 1, 1, 1, 'Empty Container Returned to Carrier at Destination', NULL, 0, 1, NULL, '2018-09-06 11:01:53', 40, 1, 'NA', 1, '/WD18-063 TCNU6338367/'),
+(285, '3', 'WBBOTO18-2', NULL, 'TCNU8618840', '6191658290', 13, 'Prince Rupert', 'Memphis, TN', '2018-08-25', '2018-08-28', 287736, '2018-08-27 10:00:00', 2, 'Release', 1, 1, 1, 1, 1, 1, 1, 1, 'Empty Container Returned to Carrier at Destination', NULL, 0, 1, NULL, '2018-09-05 11:01:53', 40, 1, 'NA', 1, '/BOTO18-2 TCNU8618840/'),
+(286, '3', 'WBBOTO18-3', NULL, 'CXDU1049074', '6191658290', 13, 'Prince Rupert', 'Memphis, TN', '2018-08-26', '2018-08-28', 287736, '2018-08-28 08:00:00', 2, 'Release', 1, 1, 1, 1, 1, 1, 1, 1, 'Empty Container Returned to Carrier at Destination', NULL, 0, 1, NULL, '2018-09-05 11:01:53', 40, 1, 'NA', 1, '/BOTO18-3 CXDU1049074/'),
+(287, '3', 'YXXY18061B', 3, 'CBHU5698215', '6191695510', 2, 'Prince Rupert', 'Memphis, TN', '2018-08-25', '2018-08-27', 852845, '2018-08-27 14:00:00', 2, 'Release', NULL, 1, 1, 0, 1, 1, 1, 1, 'Empty Container Returned to Carrier at Destination', NULL, 0, 0, NULL, '2018-09-05 11:01:53', 20, 1, 'NA', 1, '/XY18-XY18061B CBHU5698215/'),
+(288, '3', 'NYJT17122', 5, 'RFCU2113110', '6008532880', 4, 'Charleston', 'Loris, SC', '2018-08-27', NULL, NULL, NULL, 1, 'Release', 1, 0, 0, 1, 1, 1, 1, 1, 'Empty Container Returned to Carrier at Destination', NULL, 0, 0, NULL, '2018-09-14 11:01:53', 20, 1, NULL, 0, NULL),
+(289, '3', 'NYJT17123', 5, 'CSNU1352496', '6008532880', 4, 'Charleston', 'Loris, SC', '2018-08-27', NULL, NULL, NULL, 1, 'Release', 1, 0, 0, 1, 1, 1, 1, 1, 'Empty Container Returned to Carrier at Destination', NULL, 0, 0, NULL, '2018-09-14 11:01:53', 20, 1, NULL, 0, NULL),
+(291, '3', 'WD18-064', 2, 'TCNU6177323', '6183122140', 11, 'Los Angeles', 'Memphis, TN', '2018-09-08', '2018-09-11', 5333921, '2018-09-10 12:00:00', 2, 'Release', 1, 1, 0, 1, 1, 1, 1, 1, 'Empty Container Returned to Carrier at Destination', NULL, 0, 1, NULL, '2018-09-18 11:01:54', 40, 1, 'NA', 1, '/WD18-064 TCNU6177323/'),
+(292, '3', 'WD18-065', 2, 'TCNU6172240', '6183122150', 11, 'Los Angeles', 'Memphis, TN', '2018-09-08', '2018-09-11', 5333920, '2018-09-11 08:00:00', 2, 'Release', 1, 1, 0, 1, 1, 1, 1, 1, 'Empty Container Returned to Carrier at Destination', NULL, 0, 1, NULL, '2018-09-20 11:01:53', 40, 1, 'NA', 1, '/WD18-065 TCNU6172240/'),
+(298, '2', NULL, 5, 'UETU2381377', '\"', 4, 'Norfolk', 'Henderson, North Carolina', '2018-09-18', NULL, NULL, NULL, NULL, 'Not Released', NULL, 0, 0, 0, 0, 0, 0, 0, 'Discharged at Port of Transhipment', NULL, 0, 0, NULL, '2018-08-09 11:01:54', 20, 0, NULL, 0, NULL),
+(301, '2', NULL, 9, '[6184596290]', '6184596290', 12, 'Prince Rupert', 'Memphis, TN', '2018-09-15', NULL, NULL, NULL, NULL, 'Not Released', NULL, 0, 1, 0, 0, 0, 0, 0, 'No event received', NULL, 0, 0, NULL, '2018-08-16 11:01:54', 20, 1, NULL, 0, NULL),
+(305, '2', NULL, 2, '[6183129140]', '6183129140', 11, 'Los Angeles', 'Memphis, TN', '2018-09-20', NULL, NULL, NULL, NULL, 'Not Released', NULL, 0, 0, 0, 0, 0, 0, 0, 'No event received', NULL, 0, 0, NULL, '2018-08-14 11:01:54', 40, 1, NULL, 0, NULL),
+(306, '2', NULL, 2, '[6183129150]', '6183129150', 11, 'Los Angeles', 'Memphis, TN', '2018-09-20', NULL, NULL, NULL, NULL, 'Not Released', NULL, 0, 0, 0, 0, 0, 0, 0, 'No event received', NULL, 0, 0, NULL, '2018-08-14 11:01:54', 40, 1, NULL, 0, NULL),
+(307, '2', NULL, 5, '[6008538410]', '6008538410', 4, 'Long Beach (Intended)', 'Memphis, Tennessee', '2018-10-10', NULL, NULL, NULL, NULL, 'Not Released', NULL, 0, 0, 0, 0, 0, 0, 0, 'No event received', NULL, 0, 0, NULL, '2018-09-03 11:01:55', 20, 1, NULL, 0, NULL),
+(308, '2', NULL, 9, '[6184599460]', '6184599460', 12, 'Prince Rupert', 'Memphis, TN', '2018-09-19', NULL, NULL, NULL, NULL, 'Not Released', NULL, 0, 1, 0, 0, 0, 0, 0, 'No event received', NULL, 0, 0, NULL, '2018-08-24 11:01:54', 20, 1, NULL, 0, NULL),
+(313, '2', NULL, 2, '[6183129130]', '6183129130', 11, 'Los Angeles', 'Memphis, TN', '2018-09-27', NULL, NULL, NULL, NULL, 'Not Released', NULL, 0, 0, 0, 0, 0, 0, 0, 'No event received', NULL, 0, 0, NULL, '2018-08-18 11:01:53', 40, 1, NULL, 0, NULL),
+(315, '2', NULL, 5, '[6190636290]', '6190636290', 4, 'Long Beach', 'Memphis, TN', '2018-09-26', NULL, NULL, NULL, NULL, 'Not Released', NULL, 0, 0, 0, 0, 0, 0, 0, 'No event received', NULL, 0, 0, NULL, '2018-08-29 11:01:53', 20, 1, NULL, 0, NULL),
+(317, '2', NULL, 2, '[6183129100]', '6183129100', 11, 'Long Beach', 'Memphis, TN', '2018-10-06', NULL, NULL, NULL, NULL, 'Not Released', NULL, 0, 0, 0, 0, 0, 0, 0, 'No event received', NULL, 0, 0, NULL, '2018-08-31 11:01:53', 40, 1, NULL, 0, NULL),
+(318, '2', NULL, 2, '[6183129880]', '6183129880', 11, 'Long Beach', 'Memphis, TN', '2018-10-06', NULL, NULL, NULL, NULL, 'Not Released', NULL, 0, 0, 0, 0, 0, 0, 0, 'No event received', NULL, 0, 0, NULL, '2018-08-31 11:01:53', 40, 1, NULL, 0, NULL),
+(319, '2', NULL, 2, '[6183129890]', '6183129890', 11, 'Long Beach', 'Memphis, TN', '2018-10-06', NULL, NULL, NULL, NULL, 'Not Released', NULL, 0, 0, 0, 0, 0, 0, 0, 'No event received', NULL, 0, 0, NULL, '2018-08-31 11:01:53', 40, 1, NULL, 0, NULL),
+(320, '2', NULL, 6, '[6194216700]', '6194216700', 5, 'Long Beach', 'Memphis, TN', '2018-10-06', NULL, NULL, NULL, NULL, 'Not Released', NULL, 0, 0, 0, 0, 0, 0, 0, 'No event received', NULL, 0, 0, NULL, '2018-08-29 11:01:53', 20, 1, NULL, 0, NULL),
+(328, '2', NULL, 2, '[6194283900]', '6194283900', 11, 'Los Angeles', 'Memphis, TN', '2018-10-18', NULL, NULL, NULL, NULL, 'Not Released', NULL, 0, 0, 0, 0, 0, 0, 0, 'No event received', NULL, 0, 0, NULL, '2018-09-07 11:01:53', 40, 1, NULL, 0, NULL),
+(329, '2', NULL, 2, '[6194283910]', '6194283910', 11, 'Los Angeles', 'Memphis, TN', '2018-10-18', NULL, NULL, NULL, NULL, 'Not Released', NULL, 0, 0, 0, 0, 0, 0, 0, 'No event received', NULL, 0, 0, NULL, '2018-09-07 11:01:53', 40, 1, NULL, 0, NULL),
+(330, '2', NULL, 2, '[6194283920]', '6194283920', 11, 'Los Angeles', 'Memphis, TN', '2018-10-18', NULL, NULL, NULL, NULL, 'Not Released', NULL, 0, 0, 0, 0, 0, 0, 0, 'No event received', NULL, 0, 0, NULL, '2018-09-07 11:01:53', 40, 1, NULL, 0, NULL),
+(332, '2', NULL, 5, '[6008538910]', '6008538910', 4, 'Long Beach', 'Memphis, TN', '2018-10-24', NULL, NULL, NULL, 1, 'Not Released', NULL, 0, 0, 0, 0, 0, 0, 0, 'No event received', NULL, 0, 0, NULL, '2018-09-14 11:01:53', 20, 1, NULL, 0, NULL),
+(336, '2', NULL, 2, '[6194298600]', '6194298600', 11, 'Los Angeles', 'Memphis, TN', '2018-10-31', NULL, NULL, NULL, NULL, 'Not Released', NULL, 0, 0, 0, 0, 0, 0, 0, 'No event received', NULL, 0, 0, NULL, '2018-09-12 11:01:53', 40, 1, NULL, 0, NULL),
+(337, '2', NULL, 2, '[6194298610]', '6194298610', 11, 'Los Angeles', 'Memphis, TN', '2018-10-31', NULL, NULL, NULL, NULL, 'Not Released', NULL, 0, 0, 0, 0, 0, 0, 0, 'No event received', NULL, 0, 0, NULL, '2018-09-12 11:01:53', 40, 1, NULL, 0, NULL),
+(338, '2', NULL, 2, '[6194298620]', '6194298620', 11, 'Los Angeles', 'Memphis, TN', '2018-10-31', NULL, NULL, NULL, NULL, 'Not Released', NULL, 0, 0, 0, 0, 0, 0, 0, 'No event received', NULL, 0, 0, NULL, '2018-09-12 11:01:53', 40, 1, NULL, 0, NULL),
+(343, '2', NULL, 2, '[6183135200]', '6183135200', 11, 'Los Angeles', 'Memphis, TN', '2018-10-25', NULL, NULL, NULL, 1, 'Not Released', NULL, 0, 0, 0, 0, 0, 0, 0, 'No event received', NULL, 0, 0, NULL, '2018-09-17 11:01:54', 40, 1, NULL, 0, NULL),
+(344, '2', NULL, 2, '[6183135210]', '6183135210', 11, 'Los Angeles', 'Memphis, TN', '2018-10-25', NULL, NULL, NULL, NULL, 'Not Released', NULL, 0, 0, 0, 0, 0, 0, 0, 'No event received', NULL, 0, 0, NULL, '2018-09-17 11:01:54', 40, 1, NULL, 0, NULL),
+(345, '2', NULL, 2, '[6183138590]', '6183138590', 11, 'Los Angeles', 'Memphis, TN', '2018-10-25', NULL, NULL, NULL, NULL, 'Not Released', NULL, 0, 0, 0, 0, 0, 0, 0, 'No event received', NULL, 0, 0, NULL, '2018-09-17 11:01:54', 40, 1, NULL, 0, NULL),
+(347, '2', NULL, 6, '[6194279170]', '6194279170', 5, 'Los Angeles', 'Memphis, TN', '2018-10-25', NULL, NULL, NULL, NULL, 'Not Released', NULL, 0, 0, 0, 0, 0, 0, 0, 'No event received', NULL, 0, 0, NULL, '2018-09-18 11:01:54', 20, 1, NULL, 0, NULL);
 
 -- --------------------------------------------------------
 
@@ -419,7 +468,78 @@ INSERT INTO `calendar_events` (`ID`, `title`, `event_type`, `start`, `end`, `des
 (267, 'TCNU6028891', 'ETA', '2018-09-14 23:59:00', '2018-09-14 23:59:00', 'Estimated Time of Arrival for Container #: TCNU6028891. Times/Dates Subject to Change...', 302, '1e2d67f1fc63bf546c6eb1d14ebae3d0'),
 (268, 'TCNU6578434', 'ETA', '2018-09-14 23:59:00', '2018-09-14 23:59:00', 'Estimated Time of Arrival for Container #: TCNU6578434. Times/Dates Subject to Change...', 303, 'b383d5db52a6037bda0920b64c9fe8ef'),
 (269, '[6183129140]', 'ETA', '2018-09-20 23:59:00', '2018-09-20 23:59:00', 'Estimated Time of Arrival for Container #: [6183129140]. Times/Dates Subject to Change...', 305, '74d8d8d9107d463f5ca573733783de3a'),
-(270, '[6183129150]', 'ETA', '2018-09-20 23:59:00', '2018-09-20 23:59:00', 'Estimated Time of Arrival for Container #: [6183129150]. Times/Dates Subject to Change...', 306, '999a8d782b28a416a2b9aa7a3f4971fc');
+(270, '[6183129150]', 'ETA', '2018-09-20 23:59:00', '2018-09-20 23:59:00', 'Estimated Time of Arrival for Container #: [6183129150]. Times/Dates Subject to Change...', 306, '999a8d782b28a416a2b9aa7a3f4971fc'),
+(271, 'CSNU6735970', 'LFD', '2018-08-13 00:00:00', '2018-08-13 23:59:00', 'Last Free Day for Container #: CSNU6735970. Times/Dates Subject to Change...', 272, '67494a899aa8d4a434efebd0961ee188'),
+(272, 'CXDU1244888', 'LFD', '2018-08-13 00:00:00', '2018-08-13 23:59:00', 'Last Free Day for Container #: CXDU1244888. Times/Dates Subject to Change...', 224, '79d1a4c821202ca3162890b0a11b3718'),
+(273, 'TCNU6840544', 'LFD', '2018-08-14 00:00:00', '2018-08-14 23:59:00', 'Last Free Day for Container #: TCNU6840544. Times/Dates Subject to Change...', 223, 'b955da0b0b8bcc4b057822c8fb128005'),
+(274, 'TCNU6263490', 'LFD', '2018-08-14 00:00:00', '2018-08-14 23:59:00', 'Last Free Day for Container #: TCNU6263490. Times/Dates Subject to Change...', 274, 'f8ae6f4a4d7f39dc8487a736a98da126'),
+(275, 'TCNU9438082', 'LFD', '2018-08-14 00:00:00', '2018-08-14 23:59:00', 'Last Free Day for Container #: TCNU9438082. Times/Dates Subject to Change...', 275, '9c46a5df85e3f82dc808939903d9dc98'),
+(276, '[6184599460]', 'ETA', '2018-09-19 23:59:00', '2018-09-19 23:59:00', 'Estimated Time of Arrival for Container #: [6184599460]. Times/Dates Subject to Change...', 308, 'd81be7d3a5a69aa775cbe6c4ee6cad31'),
+(277, 'SEGU6469268', 'ETA', '2018-09-20 23:59:00', '2018-09-20 23:59:00', 'Estimated Time of Arrival for Container #: SEGU6469268. Times/Dates Subject to Change...', 309, '4a12e456218eb12270712238e9f8f762'),
+(278, 'TCNU8455402', 'ETA', '2018-09-20 23:59:00', '2018-09-20 23:59:00', 'Estimated Time of Arrival for Container #: TCNU8455402. Times/Dates Subject to Change...', 310, '142ffb86f618fe913a650eaf84d5f302'),
+(279, 'TCNU6347287', 'LFD', '2018-08-16 00:00:00', '2018-08-16 23:59:00', 'Last Free Day for Container #: TCNU6347287. Times/Dates Subject to Change...', 273, '9116582093e4b900e91203a8ab326cc8'),
+(280, 'TRHU2560148', 'LFD', '2018-08-16 00:00:00', '2018-08-16 23:59:00', 'Last Free Day for Container #: TRHU2560148. Times/Dates Subject to Change...', 278, '7cd51959e6926f134ab26f73ec604863'),
+(281, 'UETU2304513', 'ETA', '2018-09-15 23:59:00', '2018-09-15 23:59:00', 'Estimated Time of Arrival for Container #: UETU2304513. Times/Dates Subject to Change...', 311, 'd0e2028430f3132f2f389aa70e8a0b6e'),
+(282, 'TEMU4695560', 'ETA', '2018-09-15 23:59:00', '2018-09-15 23:59:00', 'Estimated Time of Arrival for Container #: TEMU4695560. Times/Dates Subject to Change...', 312, 'd3e1b89a6ad089987485a0db36129208'),
+(283, '[6183129130]', 'ETA', '2018-09-27 23:59:00', '2018-09-27 23:59:00', 'Estimated Time of Arrival for Container #: [6183129130]. Times/Dates Subject to Change...', 313, '832b2c9e932ac92656f8cde822daf1bf'),
+(284, 'TCNU5220805', 'LFD', '2018-08-18 00:00:00', '2018-08-18 23:59:00', 'Last Free Day for Container #: TCNU5220805. Times/Dates Subject to Change...', 276, '57b547ee4667e084be74fa86aede9454'),
+(285, 'TCNU6692051', 'LFD', '2018-08-18 00:00:00', '2018-08-18 23:59:00', 'Last Free Day for Container #: TCNU6692051. Times/Dates Subject to Change...', 277, 'cbcd31a4394d3600f42f68182e5aa4a1'),
+(286, 'TCNU3649046', 'ETA', '2018-09-27 23:59:00', '2018-09-27 23:59:00', 'Estimated Time of Arrival for Container #: TCNU3649046. Times/Dates Subject to Change...', 314, '2acf00612cab5487ee6b07bdf7aca703'),
+(287, '[6190636290]', 'ETA', '2018-09-26 23:59:00', '2018-09-26 23:59:00', 'Estimated Time of Arrival for Container #: [6190636290]. Times/Dates Subject to Change...', 315, '923ee11251aebf681b73c7dbccb94f71'),
+(288, '[6182132570]', 'ETA', '2018-09-26 23:59:00', '2018-09-26 23:59:00', 'Estimated Time of Arrival for Container #: [6182132570]. Times/Dates Subject to Change...', 316, 'ed126959c37f3d803da9abaaf19dc409'),
+(289, '[6183129100]', 'ETA', '2018-10-06 23:59:00', '2018-10-06 23:59:00', 'Estimated Time of Arrival for Container #: [6183129100]. Times/Dates Subject to Change...', 317, 'bc4e7edca7112f6056d30f19df6a345a'),
+(290, '[6183129880]', 'ETA', '2018-10-06 23:59:00', '2018-10-06 23:59:00', 'Estimated Time of Arrival for Container #: [6183129880]. Times/Dates Subject to Change...', 318, '0d4630225f3e1352e4124fed548dc72e'),
+(291, '[6183129890]', 'ETA', '2018-10-06 23:59:00', '2018-10-06 23:59:00', 'Estimated Time of Arrival for Container #: [6183129890]. Times/Dates Subject to Change...', 319, 'd06b0f0264682d1cae4ae2b07939ab61'),
+(292, '[6194216700]', 'ETA', '2018-10-06 23:59:00', '2018-10-06 23:59:00', 'Estimated Time of Arrival for Container #: [6194216700]. Times/Dates Subject to Change...', 320, '86f9c0768cc34fd3f00c59b4aaf13008'),
+(293, 'TEMU3574158', 'ETA', '2018-09-19 23:59:00', '2018-09-19 23:59:00', 'Estimated Time of Arrival for Container #: TEMU3574158. Times/Dates Subject to Change...', 321, '7ddc647b8931c9325c84eed206411032'),
+(294, 'TCNU8618840', 'LFD', '2018-08-28 00:00:00', '2018-08-28 23:59:00', 'Last Free Day for Container #: TCNU8618840. Times/Dates Subject to Change...', 285, 'c07eb05a4541ecc8fbf909e33a82b241'),
+(295, 'CXDU1049074', 'LFD', '2018-08-28 00:00:00', '2018-08-28 23:59:00', 'Last Free Day for Container #: CXDU1049074. Times/Dates Subject to Change...', 286, '83709cee6260b57ec671f23924f77b6d'),
+(296, 'CBHU5698215', 'LFD', '2018-08-27 00:00:00', '2018-08-27 23:59:00', 'Last Free Day for Container #: CBHU5698215. Times/Dates Subject to Change...', 287, 'b3b7920d3fb370783bc2ac7cc85dad20'),
+(297, 'TCNU6338367', 'LFD', '2018-08-28 00:00:00', '2018-08-28 23:59:00', 'Last Free Day for Container #: TCNU6338367. Times/Dates Subject to Change...', 284, 'ab0c97ada0ec96ec8e8ce4974ded0424'),
+(298, 'CBHU3991986', 'ETA', '2018-09-26 23:59:00', '2018-09-26 23:59:00', 'Estimated Time of Arrival for Container #: CBHU3991986. Times/Dates Subject to Change...', 322, 'ec33af7d5f35a94203739eb8b1f4893f'),
+(299, 'TCKU3501964', 'ETA', '2018-10-06 23:59:00', '2018-10-06 23:59:00', 'Estimated Time of Arrival for Container #: TCKU3501964. Times/Dates Subject to Change...', 323, 'd705fdc4ee40ac4c7b0c94781bd7c20c'),
+(300, 'TCNU8455892', 'LFD', '2018-08-31 00:00:00', '2018-08-31 23:59:00', 'Last Free Day for Container #: TCNU8455892. Times/Dates Subject to Change...', 283, 'a2127f63245fc466e0915f1498f9c522'),
+(301, 'BMOU4541279', 'ETA', '2018-10-06 23:59:00', '2018-10-06 23:59:00', 'Estimated Time of Arrival for Container #: BMOU4541279. Times/Dates Subject to Change...', 324, '1158de18e8ebc3527075fe7bf7fb6a3b'),
+(302, 'CCLU7885529', 'ETA', '2018-10-06 23:59:00', '2018-10-06 23:59:00', 'Estimated Time of Arrival for Container #: CCLU7885529. Times/Dates Subject to Change...', 325, 'a700ba2ca23d4bdcda35b5892b1c5afa'),
+(303, 'CCLU7462316', 'ETA', '2018-10-06 23:59:00', '2018-10-06 23:59:00', 'Estimated Time of Arrival for Container #: CCLU7462316. Times/Dates Subject to Change...', 326, '8041e88c99ea4f438fd05fcab1e0fd89'),
+(304, 'FCIU4818227', 'ETA', '2018-10-10 23:59:00', '2018-10-10 23:59:00', 'Estimated Time of Arrival for Container #: FCIU4818227. Times/Dates Subject to Change...', 327, '54af6db991e73f801afdfcb6623eaea2'),
+(305, '[6194283900]', 'ETA', '2018-10-18 23:59:00', '2018-10-18 23:59:00', 'Estimated Time of Arrival for Container #: [6194283900]. Times/Dates Subject to Change...', 328, '83fa532e5b932d66063dd65012832d17'),
+(306, '[6194283910]', 'ETA', '2018-10-18 23:59:00', '2018-10-18 23:59:00', 'Estimated Time of Arrival for Container #: [6194283910]. Times/Dates Subject to Change...', 329, 'e402e96aa350e9ccf7a19ccd06bb4218'),
+(307, '[6194283920]', 'ETA', '2018-10-18 23:59:00', '2018-10-18 23:59:00', 'Estimated Time of Arrival for Container #: [6194283920]. Times/Dates Subject to Change...', 330, 'b6283bf2b5fd39411bbc252f60589a91'),
+(308, '[6008539010]', 'ETA', '2018-10-23 23:59:00', '2018-10-23 23:59:00', 'Estimated Time of Arrival for Container #: [6008539010]. Times/Dates Subject to Change...', 331, '1ea1ac24057817dc915e2ed7867a4fd9'),
+(309, '[6008538910]', 'ETA', '2018-10-24 23:59:00', '2018-10-24 23:59:00', 'Estimated Time of Arrival for Container #: [6008538910]. Times/Dates Subject to Change...', 332, '233b775d066b723029a705158c334994'),
+(310, 'OOCU7804070', 'ETA', '2018-10-18 23:59:00', '2018-10-18 23:59:00', 'Estimated Time of Arrival for Container #: OOCU7804070. Times/Dates Subject to Change...', 333, 'eced63e1e5d18a37b4e9c22280faf237'),
+(311, 'OOCU7803860', 'ETA', '2018-10-18 23:59:00', '2018-10-18 23:59:00', 'Estimated Time of Arrival for Container #: OOCU7803860. Times/Dates Subject to Change...', 334, 'ddaa8c3566a80d1d4669c1ef98766f9d'),
+(312, 'OOCU7807063', 'ETA', '2018-10-18 23:59:00', '2018-10-18 23:59:00', 'Estimated Time of Arrival for Container #: OOCU7807063. Times/Dates Subject to Change...', 335, 'bf426621cb04540b0592949158e1f5cf');
+INSERT INTO `calendar_events` (`ID`, `title`, `event_type`, `start`, `end`, `description`, `shipment_id`, `md5_container_number_and_date`) VALUES
+(313, 'TCNU6177323', 'LFD', '2018-09-11 00:00:00', '2018-09-11 23:59:00', 'Last Free Day for Container #: TCNU6177323. Times/Dates Subject to Change...', 291, '3a1e9a8e1607340ea19f37883ce61933'),
+(314, 'TCNU6172240', 'LFD', '2018-09-11 00:00:00', '2018-09-11 23:59:00', 'Last Free Day for Container #: TCNU6172240. Times/Dates Subject to Change...', 292, '7eed8cc788f976158d45e793aa9a7fef'),
+(315, 'TCNU5019914', 'LFD', '2018-09-11 00:00:00', '2018-09-11 23:59:00', 'Last Free Day for Container #: TCNU5019914. Times/Dates Subject to Change...', 293, '945ad0584350cf184e7d98b9b551e117'),
+(316, '[6194298600]', 'ETA', '2018-10-31 23:59:00', '2018-10-31 23:59:00', 'Estimated Time of Arrival for Container #: [6194298600]. Times/Dates Subject to Change...', 336, '62ca47ccfc611b7c0e7f92ff8c2cfaf6'),
+(317, '[6194298610]', 'ETA', '2018-10-31 23:59:00', '2018-10-31 23:59:00', 'Estimated Time of Arrival for Container #: [6194298610]. Times/Dates Subject to Change...', 337, '5ba799daf29a7dbc23a382ed3f3fc6a6'),
+(318, '[6194298620]', 'ETA', '2018-10-31 23:59:00', '2018-10-31 23:59:00', 'Estimated Time of Arrival for Container #: [6194298620]. Times/Dates Subject to Change...', 338, 'c94b17bb60fe91fd0ceaa80c05519406'),
+(319, 'CSNU6486899', 'ETA', '2018-10-31 23:59:00', '2018-10-31 23:59:00', 'Estimated Time of Arrival for Container #: CSNU6486899. Times/Dates Subject to Change...', 339, 'adfc76eb0782aeef60da49ea065b8c2c'),
+(320, 'UETU5313416', 'ETA', '2018-10-31 23:59:00', '2018-10-31 23:59:00', 'Estimated Time of Arrival for Container #: UETU5313416. Times/Dates Subject to Change...', 340, '8a1696bca1ff69662f5a012040f05dce'),
+(321, 'FCIU9704546', 'ETA', '2018-10-31 23:59:00', '2018-10-31 23:59:00', 'Estimated Time of Arrival for Container #: FCIU9704546. Times/Dates Subject to Change...', 341, 'cc8fdc69b3094493499585eed7659691'),
+(322, 'CSLU2032458', 'ETA', '2018-10-24 23:59:00', '2018-10-24 23:59:00', 'Estimated Time of Arrival for Container #: CSLU2032458. Times/Dates Subject to Change...', 342, '77e95294e934ccee0a757c97a5214803'),
+(323, '[6183135200]', 'ETA', '2018-10-25 23:59:00', '2018-10-25 23:59:00', 'Estimated Time of Arrival for Container #: [6183135200]. Times/Dates Subject to Change...', 343, '644325dc190317e0f84d559f36a32e90'),
+(324, '[6183135210]', 'ETA', '2018-10-25 23:59:00', '2018-10-25 23:59:00', 'Estimated Time of Arrival for Container #: [6183135210]. Times/Dates Subject to Change...', 344, '9254119fd5ca68f37e7640a3168f2558'),
+(325, '[6183138590]', 'ETA', '2018-10-25 23:59:00', '2018-10-25 23:59:00', 'Estimated Time of Arrival for Container #: [6183138590]. Times/Dates Subject to Change...', 345, 'e708bfd8796ac53d30c4bbeb60591763'),
+(326, 'CBHU5513712', 'ETA', '2018-10-24 23:59:00', '2018-10-24 23:59:00', 'Estimated Time of Arrival for Container #: CBHU5513712. Times/Dates Subject to Change...', 346, 'e032214a1910f17c3e2de3d0909eb12b'),
+(327, '[6194279170]', 'ETA', '2018-10-25 23:59:00', '2018-10-25 23:59:00', 'Estimated Time of Arrival for Container #: [6194279170]. Times/Dates Subject to Change...', 347, '2ba64f1b55331063f7b95784a590f61b'),
+(328, 'DFSU2893328', 'LFD', '2018-09-17 00:00:00', '2018-09-17 23:59:00', 'Last Free Day for Container #: DFSU2893328. Times/Dates Subject to Change...', 299, '93e4ef02ae69a71ee7b2ecdeb0697139'),
+(329, 'CSLU1249773', 'LFD', '2018-09-17 00:00:00', '2018-09-17 23:59:00', 'Last Free Day for Container #: CSLU1249773. Times/Dates Subject to Change...', 300, 'e1d74ae1726fbd42298500c6528a2509'),
+(330, 'TCNU6269203', 'LFD', '2018-09-18 00:00:00', '2018-09-18 23:59:00', 'Last Free Day for Container #: TCNU6269203. Times/Dates Subject to Change...', 294, '5242d8bcedca315b28ff401752609a53'),
+(331, 'TCNU6591360', 'LFD', '2018-09-18 00:00:00', '2018-09-18 23:59:00', 'Last Free Day for Container #: TCNU6591360. Times/Dates Subject to Change...', 295, 'b386f37db11ecf1dbc9cc810a4173d7c'),
+(332, 'TCNU6693248', 'LFD', '2018-09-18 00:00:00', '2018-09-18 23:59:00', 'Last Free Day for Container #: TCNU6693248. Times/Dates Subject to Change...', 296, 'd2f44e5069e7517ef41654bf14d29d0d'),
+(333, 'CBHU8195425', 'ETA', '2018-10-25 23:59:00', '2018-10-25 23:59:00', 'Estimated Time of Arrival for Container #: CBHU8195425. Times/Dates Subject to Change...', 348, '82ca5161c404bbeb8dd12124dc3c462c'),
+(334, 'GESU6912345', 'ETA', '2018-10-25 23:59:00', '2018-10-25 23:59:00', 'Estimated Time of Arrival for Container #: GESU6912345. Times/Dates Subject to Change...', 349, '26a94a70c02ddcfc6096e32ac77be544'),
+(335, 'TGHU6870685', 'ETA', '2018-10-25 23:59:00', '2018-10-25 23:59:00', 'Estimated Time of Arrival for Container #: TGHU6870685. Times/Dates Subject to Change...', 350, '90d402923a5818af8c90f548413774c1'),
+(336, 'TEMU2871953', 'ETA', '2018-10-25 23:59:00', '2018-10-25 23:59:00', 'Estimated Time of Arrival for Container #: TEMU2871953. Times/Dates Subject to Change...', 351, 'dd77bc6dff54cdac3331a89dbbd8cdcd'),
+(337, 'TRHU2729074', 'ETA', '2018-10-25 23:59:00', '2018-10-25 23:59:00', 'Estimated Time of Arrival for Container #: TRHU2729074. Times/Dates Subject to Change...', 352, 'cfe1d963252d3720def2b517c9ada087'),
+(338, 'UETU2304513', 'LFD', '2018-09-19 00:00:00', '2018-09-19 23:59:00', 'Last Free Day for Container #: UETU2304513. Times/Dates Subject to Change...', 311, '9d492611059dab8e9fae91e99bbee001'),
+(339, 'TEMU4695560', 'LFD', '2018-09-19 00:00:00', '2018-09-19 23:59:00', 'Last Free Day for Container #: TEMU4695560. Times/Dates Subject to Change...', 312, 'f2f8ea13efc4cf4f71538e143c22a79a'),
+(340, 'CBHU7002326', 'LFD', '2018-09-21 00:00:00', '2018-09-21 23:59:00', 'Last Free Day for Container #: CBHU7002326. Times/Dates Subject to Change...', 290, '5cf186026d595e7ada1ccbd4a030bde2');
 
 -- --------------------------------------------------------
 
@@ -535,47 +655,44 @@ CREATE TABLE `shipments` (
 --
 
 INSERT INTO `shipments` (`id`, `status`, `po`, `product_id`, `container_number`, `bill_of_lading`, `vendor_id`, `discharge_port`, `final_destination`, `eta`, `lfd`, `pickup_number`, `truck_date`, `trucker_id`, `bl_status`, `rcvd`, `freight`, `isf_required`, `customs`, `is_complete`, `po_boolean`, `qb_rt`, `qb_ws`, `latest_event`, `latest_event_time_and_date`, `is_active`, `requires_payment`, `container_notes`, `last_update`, `container_size`, `do`, `vendor_identifier`, `has_documents`, `file_directory`) VALUES
-(223, 0, 'WD18-059', 2, 'TCNU6840544', '6183114200', 11, 'Prince Rupert', 'Memphis, TN', '2018-08-12', NULL, NULL, NULL, 1, 'Release', NULL, 1, 1, 1, 0, 0, 0, 0, 'First Loaded on Rail Under I/B', NULL, 1, 1, NULL, '2018-08-10 14:05:31', 40, 1, NULL, 0, NULL),
-(224, 0, 'JT18048', 6, 'CXDU1244888', '6190982750', 5, 'Prince Rupert', 'Memphis, TN', '2018-08-10', NULL, NULL, NULL, 1, 'Release', NULL, 1, 1, 1, 0, 0, 0, 0, 'First Loaded on Rail Under I/B', NULL, 1, 0, NULL, '2018-08-10 20:25:32', 20, 1, NULL, 0, NULL),
-(260, 2, 'WD', 2, '[6183129160]', '6183129160', 11, 'Los Angeles', 'Memphis, TN', '2018-09-20', NULL, NULL, NULL, NULL, 'Not Released', NULL, 0, 0, 0, 0, 0, 0, 0, 'No event received', NULL, 1, 0, NULL, '2018-08-10 14:05:22', 40, 1, NULL, 0, NULL),
-(268, 3, 'WD18-056', 2, 'TCNU6437626', '6183114210', 11, 'Prince Rupert', 'Memphis, TN', '2018-08-01', '2018-08-03', 174203, NULL, 1, 'Release', 1, 0, 1, 0, 1, 0, 0, 0, 'Empty Container Returned to Carrier at Destination', NULL, 1, 0, NULL, '2018-08-10 14:05:22', 40, 1, NULL, 1, '/WD18-056 TCNU6437626/'),
-(269, 3, 'WB18001', 1, 'TEMU6023781', '6185693500', 14, 'Prince Rupert', 'Memphis, TN', '2018-08-01', '2018-08-03', 703508, NULL, 1, 'Release', 1, 1, 1, 1, 1, 1, 1, 1, 'Empty Container Returned to Carrier at Destination', NULL, 1, 1, NULL, '2018-08-10 20:26:25', 40, 1, NULL, 1, '/WB18-WB18001 TEMU6023781/'),
-(270, 3, 'RR18078', 4, 'TCNU6459543', '6182118250', 3, 'Prince Rupert', 'Memphis, TN', '2018-08-05', '2018-08-07', 281894, NULL, 1, 'Release', 1, 1, 1, 1, 1, 0, 0, 0, 'Empty Container Returned to Carrier at Destination', NULL, 1, 0, NULL, '2018-08-10 14:05:22', 40, 1, NULL, 1, '/RR18-RR18078 TCNU6459543/'),
-(271, 3, 'RR18078', 4, 'GLDU7478040', '6182118250', 3, 'Prince Rupert', 'Memphis, TN', '2018-08-05', '2018-08-07', 281894, NULL, 1, 'Release', 1, 0, 1, 1, 1, 0, 0, 0, 'Empty Container Returned to Carrier at Destination', NULL, 1, 0, NULL, '2018-08-10 14:05:22', 40, 1, NULL, 1, '/RR18-RR18078 GLDU7478040/'),
-(272, 0, 'QQ18002', 2, 'CSNU6735970', '6185677760', 9, 'Prince Rupert', 'Memphis, TN', '2018-08-10', NULL, NULL, NULL, 1, 'Release', NULL, 1, 1, 1, 0, 0, 0, 0, 'First Loaded on Rail Under I/B', NULL, 1, 1, NULL, '2018-08-10 14:05:31', 40, 1, NULL, 0, NULL),
-(273, 0, 'WD18-061', 2, 'TCNU6347287', '6183114390', 11, 'Prince Rupert', 'Memphis, TN', '2018-08-13', NULL, NULL, NULL, 1, 'Hold', NULL, 1, 1, 1, 0, 0, 0, 0, 'First Loaded on Rail Under I/B', NULL, 1, 1, NULL, '2018-08-10 14:05:31', 40, 1, NULL, 0, NULL),
-(274, 0, 'WD18-057', 2, 'TCNU6263490', '6183114220', 11, 'Prince Rupert', 'Memphis, TN', '2018-08-12', NULL, NULL, NULL, 1, 'Release', NULL, 1, 1, 1, 0, 0, 0, 0, 'First Loaded on Rail Under I/B', NULL, 1, 1, NULL, '2018-08-10 14:05:31', 40, 1, NULL, 0, NULL),
-(275, 0, 'WD18-058', 2, 'TCNU9438082', '6183114230', 11, 'Prince Rupert', 'Memphis, TN', '2018-08-12', NULL, NULL, NULL, 1, 'Release', NULL, 1, 1, 1, 0, 0, 0, 0, 'First Loaded on Rail Under I/B', NULL, 1, 1, NULL, '2018-08-10 14:05:31', 40, 1, NULL, 0, NULL),
-(276, 1, 'WD18-060', 2, 'TCNU5220805', '6183114380', 11, 'Prince Rupert', 'Memphis, TN', '2018-08-14', NULL, NULL, NULL, 1, 'Hold', NULL, 1, 1, 1, 0, 0, 0, 0, 'First Loaded on Rail Under I/B', NULL, 1, 1, NULL, '2018-08-10 14:05:31', 40, 1, NULL, 0, NULL),
-(277, 1, 'WD18-062', 2, 'TCNU6692051', '6183120340', 11, 'Prince Rupert', 'Memphis, TN', '2018-08-14', NULL, NULL, NULL, 1, 'Hold', NULL, 1, 1, 1, 0, 0, 0, 0, 'First Loaded on Rail Under I/B', NULL, 1, 1, NULL, '2018-08-10 14:05:31', 40, 1, NULL, 0, NULL),
-(278, 0, 'XYJT18049', 6, 'TRHU2560148', '6191000250', 5, 'Prince Rupert', 'Memphis, TN', '2018-08-13', NULL, NULL, NULL, 1, 'Release', NULL, 1, 1, 1, 0, 0, 0, 0, 'First Loaded on Rail Under I/B', NULL, 1, 0, NULL, '2018-08-10 20:23:22', 20, 1, NULL, 0, NULL),
-(279, 2, 'NY', 5, 'FCIU6127923', '6008532450', 4, 'Charleston', 'Loris, SC', '2018-08-20', NULL, NULL, NULL, 1, 'Release', NULL, 0, 0, 0, 0, 0, 0, 0, 'Vessel Departure at Transshipment Port', NULL, 1, 0, NULL, '2018-08-10 14:05:22', 20, 0, NULL, 0, NULL),
-(280, 2, 'NY', 5, 'CSLU1668276', '6008532450', 4, 'Charleston', 'Loris, SC', '2018-08-20', NULL, NULL, NULL, NULL, 'Release', NULL, 0, 0, 0, 0, 0, 0, 0, 'Vessel Departure at Transshipment Port', NULL, 1, 0, NULL, '2018-08-10 14:05:22', 20, 0, NULL, 0, NULL),
-(281, 2, 'NY', 5, 'CBHU3587146', '\"', 4, 'Los Angeles', 'Hewitt, TX', '2018-08-26', NULL, NULL, NULL, NULL, 'Not Released', NULL, 0, 0, 0, 0, 0, 0, 0, 'Loaded at Port of Transhipment', NULL, 1, 0, NULL, '2018-08-10 14:05:22', 20, 0, NULL, 0, NULL),
-(282, 2, 'NY', 5, 'CSLU1690829', '\"', 4, 'Los Angeles', 'Hewitt, TX', '2018-08-26', NULL, NULL, NULL, NULL, 'Not Released', NULL, 0, 0, 0, 0, 0, 0, 0, 'Loaded at Port of Transhipment', NULL, 1, 0, NULL, '2018-08-10 14:05:22', 20, 0, NULL, 0, NULL),
-(283, 2, 'RR', 4, 'TCNU8455892', '6182124690', 3, 'Prince Rupert', 'Memphis, TN', '2018-08-27', NULL, NULL, NULL, NULL, 'Release', NULL, 0, 1, 0, 0, 0, 0, 0, 'Vessel Departure at First POL', NULL, 1, 0, NULL, '2018-08-10 14:05:22', 40, 1, NULL, 0, NULL),
-(284, 2, 'WD', 2, 'TCNU6338367', '6183122170', 11, 'Prince Rupert', 'Memphis, TN', '2018-08-24', NULL, NULL, NULL, 1, 'Hold', NULL, 0, 1, 0, 0, 0, 0, 0, 'Vessel Departure at First POL', NULL, 1, 0, NULL, '2018-08-10 14:05:22', 40, 1, NULL, 0, NULL),
-(285, 2, 'WB', 1, 'TCNU8618840', '6191658290', 13, 'Prince Rupert', 'Memphis, TN', '2018-08-24', NULL, NULL, NULL, 1, 'Hold', NULL, 0, 1, 0, 0, 0, 0, 0, 'Vessel Departure at First POL', NULL, 1, 0, NULL, '2018-08-10 20:19:41', 40, 1, NULL, 0, NULL),
-(286, 2, 'WB', NULL, 'CXDU1049074', '6191658290', 13, 'Prince Rupert', 'Memphis, TN', '2018-08-24', NULL, NULL, NULL, NULL, 'Hold', NULL, 0, 1, 0, 0, 0, 0, 0, 'Vessel Departure at First POL', NULL, 1, 0, NULL, '2018-08-10 14:05:22', 40, 1, NULL, 0, NULL),
-(287, 2, 'YX', 3, 'CBHU5698215', '6191695510', 2, 'Prince Rupert', 'Memphis, TN', '2018-08-24', NULL, NULL, NULL, 1, 'Hold', NULL, 0, 1, 0, 0, 0, 0, 0, 'Vessel Departure at First POL', NULL, 1, 0, NULL, '2018-08-10 20:19:46', 20, 1, NULL, 0, NULL),
-(288, 2, 'NY', 5, 'RFCU2113110', '6008532880', 4, 'Charleston', 'Loris, SC', '2018-08-28', NULL, NULL, NULL, NULL, 'Release', NULL, 0, 0, 0, 0, 0, 0, 0, 'Loaded at Port of Transhipment', NULL, 1, 0, NULL, '2018-08-10 14:05:22', 20, 0, NULL, 0, NULL),
-(289, 2, 'NY', 5, 'CSNU1352496', '6008532880', 4, 'Charleston', 'Loris, SC', '2018-08-28', NULL, NULL, NULL, NULL, 'Release', NULL, 0, 0, 0, 0, 0, 0, 0, 'Loaded at Port of Transhipment', NULL, 1, 0, NULL, '2018-08-10 14:05:22', 20, 0, NULL, 0, NULL),
-(290, 2, 'QQ', 2, 'CBHU7002326', '6191729550', 9, 'Los Angeles', 'Memphis, TN', '2018-08-29', NULL, NULL, NULL, NULL, 'Hold', NULL, 0, 0, 0, 0, 0, 0, 0, 'Vessel Departure at First POL', NULL, 1, 0, NULL, '2018-08-10 14:05:22', 40, 1, NULL, 0, NULL),
-(291, 2, 'WD', 2, 'TCNU6177323', '6183122140', 11, 'Los Angeles', 'Memphis, TN', '2018-09-01', NULL, NULL, NULL, NULL, 'Hold', NULL, 0, 0, 0, 0, 0, 0, 0, 'Vessel Departure at First POL', NULL, 1, 0, NULL, '2018-08-10 14:05:22', 40, 1, NULL, 0, NULL),
-(292, 2, 'WD', 2, 'TCNU6172240', '6183122150', 11, 'Los Angeles', 'Memphis, TN', '2018-09-01', NULL, NULL, NULL, NULL, 'Hold', NULL, 0, 0, 0, 0, 0, 0, 0, 'Vessel Departure at First POL', NULL, 1, 0, NULL, '2018-08-10 14:05:22', 40, 1, NULL, 0, NULL),
-(293, 2, 'WD', 2, 'TCNU5019914', '6183122160', 11, 'Los Angeles', 'Memphis, TN', '2018-09-01', NULL, NULL, NULL, NULL, 'Hold', NULL, 0, 0, 0, 0, 0, 0, 0, 'Vessel Departure at First POL', NULL, 1, 0, NULL, '2018-08-10 14:05:22', 40, 1, NULL, 0, NULL),
-(294, 2, 'WD', 2, 'TCNU6269203', '6183122120', 11, 'Long Beach', 'Memphis, TN', '2018-09-07', NULL, NULL, NULL, NULL, 'Hold', NULL, 0, 0, 0, 0, 0, 0, 0, 'Vessel Departure at First POL', NULL, 1, 0, NULL, '2018-08-10 14:05:22', 40, 1, NULL, 0, NULL),
-(295, 2, 'WD', 2, 'TCNU6591360', '6183122130', 11, 'Long Beach', 'Memphis, TN', '2018-09-07', NULL, NULL, NULL, NULL, 'Hold', NULL, 0, 0, 0, 0, 0, 0, 0, 'Vessel Departure at First POL', NULL, 1, 0, NULL, '2018-08-10 14:05:22', 40, 1, NULL, 0, NULL),
-(296, 2, 'WD', 2, 'TCNU6693248', '6183127680', 11, 'Long Beach', 'Memphis, TN', '2018-09-07', NULL, NULL, NULL, NULL, 'Hold', NULL, 0, 0, 0, 0, 0, 0, 0, 'Vessel Departure at First POL', NULL, 1, 0, NULL, '2018-08-10 14:05:22', 40, 1, NULL, 0, NULL),
-(297, 2, NULL, 5, 'TGBU2363084', '\"', 4, 'Prince Rupert', 'Memphis, TN', '2018-09-05', NULL, NULL, NULL, NULL, 'Not Released', NULL, 0, 1, 0, 0, 0, 0, 0, 'Discharged at Port of Transhipment', NULL, 1, 0, NULL, '2018-08-10 14:05:22', 20, 1, NULL, 0, NULL),
-(299, 2, NULL, 9, 'DFSU2893328', '6184594010', 12, 'Prince Rupert', 'Memphis, TN', '2018-09-05', NULL, NULL, NULL, NULL, 'Not Released', NULL, 0, 1, 0, 0, 0, 0, 0, 'Container Arrival at First Port of Load', NULL, 1, 0, NULL, '2018-08-10 14:05:22', 20, 1, NULL, 0, NULL),
-(300, 2, NULL, 9, 'CSLU1249773', '6184594010', 12, 'Prince Rupert', 'Memphis, TN', '2018-09-05', NULL, NULL, NULL, NULL, 'Not Released', NULL, 0, 1, 0, 0, 0, 0, 0, 'Container Arrival at First Port of Load', NULL, 1, 0, NULL, '2018-08-10 14:05:22', 20, 1, NULL, 0, NULL),
-(301, 2, NULL, 9, '[6184596290]', '6184596290', 12, 'Prince Rupert', 'Memphis, TN', '2018-09-15', NULL, NULL, NULL, NULL, 'Not Released', NULL, 0, 1, 0, 0, 0, 0, 0, 'No event received', NULL, 1, 0, NULL, '2018-08-10 14:05:22', 20, 1, NULL, 0, NULL),
-(302, 2, NULL, 2, 'TCNU6028891', '6183122100', 11, 'Long Beach', 'Memphis, TN', '2018-09-14', NULL, NULL, NULL, NULL, 'Not Released', NULL, 0, 0, 0, 0, 0, 0, 0, 'Container Arrival at First Port of Load', NULL, 1, 0, NULL, '2018-08-10 14:05:22', 40, 1, NULL, 0, NULL),
-(303, 2, NULL, 2, 'TCNU6578434', '6183122110', 11, 'Long Beach', 'Memphis, TN', '2018-09-14', NULL, NULL, NULL, NULL, 'Not Released', NULL, 0, 0, 0, 0, 0, 0, 0, 'Full Container Received by Carrier at Origin', NULL, 1, 0, NULL, '2018-08-10 14:05:22', 40, 1, NULL, 0, NULL),
-(304, 3, NULL, 5, 'UETU2381377', '\"', 4, 'Norfolk', 'Henderson, NC', NULL, NULL, NULL, NULL, NULL, 'Not Released', NULL, 0, 0, 0, 0, 0, 0, 0, 'Discharged at Port of Transhipment', '2018-08-07 19:00:00', 1, 0, NULL, '2018-08-10 14:05:22', 20, 0, NULL, 0, NULL),
-(305, 2, NULL, 2, '[6183129140]', '6183129140', 11, 'Los Angeles', 'Memphis, TN', '2018-09-20', NULL, NULL, NULL, NULL, 'Not Released', NULL, 0, 0, 0, 0, 0, 0, 0, 'No event received', NULL, 1, 0, NULL, '2018-08-10 14:05:22', 40, 1, NULL, 0, NULL),
-(306, 2, NULL, 2, '[6183129150]', '6183129150', 11, 'Los Angeles', 'Memphis, TN', '2018-09-20', NULL, NULL, NULL, NULL, 'Not Released', NULL, 0, 0, 0, 0, 0, 0, 0, 'No event received', NULL, 1, 0, NULL, '2018-08-10 14:05:22', 40, 1, NULL, 0, NULL);
+(290, 0, 'QQ', 2, 'CBHU7002326', '6191729550', 9, 'Los Angeles', 'Memphis, TN', '2018-08-29', '2018-09-21', NULL, NULL, 1, 'Hold', NULL, 0, 0, 1, 0, 0, 0, 0, 'Intermodal Departure from Last Port of Discharge', NULL, 1, 0, NULL, '2018-09-20 13:15:01', 40, 1, NULL, 0, NULL),
+(293, 3, 'WD18-066', 2, 'TCNU5019914', '6183122160', 11, 'Los Angeles', 'Memphis, TN', '2018-09-08', '2018-09-11', 5333916, '2018-09-11 11:00:00', 2, 'Release', 1, 1, 0, 1, 1, 1, 1, 1, 'Empty Container Returned to Carrier at Destination', NULL, 1, 1, NULL, '2018-09-20 13:15:01', 40, 1, 'NA', 1, '/WD18-066 TCNU5019914/'),
+(294, 3, 'WD18-067', 2, 'TCNU6269203', '6183122120', 11, 'Long Beach', 'Memphis, TN', '2018-09-15', '2018-09-18', 6190509, '2018-09-17 11:06:00', 2, 'Release', 1, 1, 1, 1, 1, 1, 1, 1, 'Empty Container Returned to Carrier at Destination', NULL, 1, 1, NULL, '2018-09-20 13:15:01', 40, 1, 'NA', 1, '/WD18-067 TCNU6269203/'),
+(295, 3, 'WD18-068', 2, 'TCNU6591360', '6183122130', 11, 'Long Beach', 'Memphis, TN', '2018-09-15', '2018-09-18', 6190483, '2018-09-18 07:00:00', 2, 'Release', 1, 1, 1, 1, 0, 1, 1, 1, 'Picked up at Final Destination for Delivery', NULL, 1, 1, NULL, '2018-09-20 13:15:01', 40, 1, 'NA', 1, '/WD18-068 TCNU6591360/'),
+(296, 3, 'WD18-069', 2, 'TCNU6693248', '6183127680', 11, 'Long Beach', 'Memphis, TN', '2018-09-15', '2018-09-18', 6190482, '2018-09-18 10:00:00', 2, 'Release', 1, 1, 1, 1, 0, 1, 1, 1, 'Picked up at Final Destination for Delivery', NULL, 1, 1, NULL, '2018-09-20 13:15:01', 40, 1, 'NA', 1, '/WD18-069 TCNU6693248/'),
+(297, 3, 'NY17158', 5, 'TGBU2363084', '\"', 4, 'Prince Rupert', 'Memphis, TN', '2018-09-09', NULL, NULL, '2018-09-14 12:00:00', 2, 'Not Released', 1, 1, 1, 1, 1, 1, 1, 1, 'Empty Container Returned to Carrier at Destination', NULL, 1, 0, NULL, '2018-09-20 13:15:01', 20, 1, 'JT18LB590', 1, '/NY18-NY17158 TGBU2363084/'),
+(299, 3, 'JTJX18049', 9, 'DFSU2893328', '6184594010', 12, 'Prince Rupert', 'Memphis, TN', '2018-09-14', '2018-09-17', 473255, '2018-09-17 12:00:00', 2, 'Release', 1, 1, 1, 1, 1, 1, 1, 1, 'Empty Container Returned to Carrier at Destination', NULL, 1, 0, NULL, '2018-09-20 13:15:01', 20, 1, 'NA', 1, '/18-JX18049 DFSU2893328/'),
+(300, 3, 'JTJX18049', 9, 'CSLU1249773', '6184594010', 12, 'Prince Rupert', 'Memphis, TN', '2018-09-14', '2018-09-17', 473255, '2018-09-17 12:00:00', 2, 'Release', 1, 1, 1, 1, 1, 1, 1, 1, 'Empty Container Returned to Carrier at Destination', NULL, 1, 0, NULL, '2018-09-20 13:15:01', 20, 1, 'NA', 1, '/18-JX18049 CSLU1249773/'),
+(302, 3, 'WD18-70', 2, 'TCNU6028891', '6183122100', 11, 'Long Beach', 'Memphis, TN', '2018-09-19', NULL, 6841665, '2018-09-21 07:00:00', 2, 'Release', NULL, 1, 1, 1, 0, 1, 0, 1, 'Arrival at Last Intermodal Hub', NULL, 1, 1, NULL, '2018-09-20 15:49:28', 40, 1, 'NA', 1, '/WD18-70 TCNU6028891/'),
+(303, 0, 'WD18-71', 2, 'TCNU6578434', '6183122110', 11, 'Long Beach', 'Memphis, TN', '2018-09-19', NULL, 6841660, '2018-09-21 07:00:00', 2, 'Release', NULL, 1, 1, 1, 0, 1, 0, 1, 'Arrival at Last Intermodal Hub', NULL, 1, 1, NULL, '2018-09-20 13:15:01', 40, 1, 'NA', 1, '/WD18-71 TCNU6578434/'),
+(304, 1, NULL, 5, 'UETU2381377', '\"', 4, 'Norfolk', 'Henderson, NC', '2018-09-27', NULL, NULL, NULL, 1, 'Not Released', NULL, 0, 1, 0, 0, 1, 0, 0, 'Vessel Departure at Transshipment Port', NULL, 1, 0, NULL, '2018-09-20 13:15:01', 20, 0, NULL, 0, NULL),
+(309, 1, 'WD18-72', 2, 'SEGU6469268', '6183129140', 11, 'Los Angeles', 'Memphis, TN', '2018-09-24', NULL, NULL, NULL, 1, 'Hold', NULL, 0, 0, 0, 0, 0, 0, 0, 'Discharged from Vessel at Last Port of Discharge', NULL, 1, 0, NULL, '2018-09-20 13:15:01', 40, 1, 'NA', 1, '/WD18-72 SEGU6469268/'),
+(310, 1, 'WD18-73', 2, 'TCNU8455402', '6183129150', 11, 'Los Angeles', 'Memphis, TN', '2018-09-24', NULL, NULL, NULL, 1, 'Hold', NULL, 0, 0, 0, 0, 0, 0, 0, 'Intermodal Departure from Last Port of Discharge', NULL, 1, 0, NULL, '2018-09-20 13:15:01', 40, 1, 'NA', 1, '/WD18-73 TCNU8455402/'),
+(311, 3, 'JTJX18057', 9, 'UETU2304513', '6184596290', 12, 'Prince Rupert', 'Memphis, TN', '2018-09-17', '2018-09-19', 821458, '2018-09-19 13:00:00', 2, 'Release', 1, 1, 1, 0, 0, 1, 1, 1, 'Picked up at Final Destination for Delivery', NULL, 1, 0, NULL, '2018-09-20 13:15:01', 20, 1, 'NA', 1, '/18-JX18057 UETU2304513/'),
+(312, 3, 'JTJX18057', 9, 'TEMU4695560', '6184596290', 12, 'Prince Rupert', 'Memphis, TN', '2018-09-17', '2018-09-19', 821458, '2018-09-19 14:00:00', 2, 'Release', 1, 1, 1, 0, 0, 1, 1, 1, 'Picked up at Final Destination for Delivery', NULL, 1, 0, NULL, '2018-09-20 13:15:01', 20, 1, 'NA', 1, '/18-JX18057 TEMU4695560/'),
+(314, 2, 'WD18-074', 2, 'TCNU3649046', '6183129130', 11, 'Los Angeles', 'Memphis, TN', '2018-09-29', NULL, NULL, NULL, 1, 'Hold', NULL, 0, 0, 0, 0, 0, 0, 0, 'Vessel Departure at First POL', NULL, 1, 0, NULL, '2018-09-20 13:15:01', 40, 1, 'NA', 1, '/WD18-074 TCNU3649046/'),
+(316, 2, NULL, 4, '[6182132570]', '6182132570', 3, 'Prince Rupert', 'Memphis, TN', '2018-09-28', NULL, NULL, NULL, 1, 'Not Released', NULL, 0, 1, 0, 0, 0, 0, 0, 'No event received', NULL, 1, 0, NULL, '2018-09-20 13:15:01', 40, 1, NULL, 0, NULL),
+(321, 0, 'JTJX18059', 9, 'TEMU3574158', '6184599460', 12, 'Prince Rupert', 'Memphis, TN', '2018-09-21', NULL, NULL, NULL, 1, 'Release', NULL, 1, 1, 1, 0, 0, 0, 0, 'First Loaded on Rail Under I/B', NULL, 1, 0, NULL, '2018-09-20 13:15:07', 20, 1, NULL, 0, NULL),
+(322, 2, NULL, 5, 'CBHU3991986', '6190636290', 4, 'Long Beach', 'Memphis, TN', '2018-10-01', NULL, NULL, NULL, 1, 'Release', NULL, 0, 0, 0, 0, 0, 0, 0, 'Vessel Departure at First POL', NULL, 1, 0, NULL, '2018-09-20 13:15:01', 20, 1, NULL, 0, NULL),
+(323, 2, NULL, 6, 'TCKU3501964', '6194216700', 5, 'Los Angeles', 'Memphis, TN', '2018-10-05', NULL, NULL, NULL, 1, 'Hold', NULL, 0, 0, 0, 0, 0, 0, 0, 'Vessel Departure at Transshipment Port', NULL, 1, 0, NULL, '2018-09-20 13:15:01', 20, 1, NULL, 0, NULL),
+(324, 2, NULL, 2, 'BMOU4541279', '6183129100', 11, 'Los Angeles', 'Memphis, TN', '2018-10-05', NULL, NULL, NULL, NULL, 'Hold', NULL, 0, 0, 0, 0, 0, 0, 0, 'Vessel Departure at Transshipment Port', NULL, 1, 0, NULL, '2018-09-20 13:15:01', 40, 1, NULL, 0, NULL),
+(325, 2, NULL, 2, 'CCLU7885529', '6183129880', 11, 'Los Angeles', 'Memphis, TN', '2018-10-05', NULL, NULL, NULL, NULL, 'Hold', NULL, 0, 0, 0, 0, 0, 0, 0, 'Vessel Departure at Transshipment Port', NULL, 1, 0, NULL, '2018-09-20 13:15:01', 40, 1, NULL, 0, NULL),
+(326, 2, NULL, 2, 'CCLU7462316', '6183129890', 11, 'Los Angeles', 'Memphis, TN', '2018-10-05', NULL, NULL, NULL, 1, 'Hold', NULL, 0, 0, 0, 0, 0, 0, 0, 'Vessel Departure at Transshipment Port', NULL, 1, 0, NULL, '2018-09-20 13:15:01', 40, 1, NULL, 0, NULL),
+(327, 0, NULL, 5, 'FCIU4818227', '6008538410', 4, 'Long Beach', 'Memphis, TN', NULL, NULL, NULL, NULL, NULL, 'Release', NULL, 0, 0, 0, 0, 0, 0, 0, 'Discharged at Port of Transhipment', NULL, 1, 0, NULL, '2018-09-20 13:15:01', 20, 1, NULL, 0, NULL),
+(331, 2, NULL, 5, '[6008539010]', '6008539010', 4, 'Charleston', 'Loris, SC', '2018-10-23', NULL, NULL, NULL, 1, 'Not Released', NULL, 0, 0, 0, 0, 0, 0, 0, 'No event received', NULL, 1, 0, NULL, '2018-09-20 13:15:01', 20, 0, NULL, 0, NULL),
+(333, 2, NULL, 2, 'OOCU7804070', '6194283900', 11, 'Los Angeles', 'Memphis, TN', '2018-10-19', NULL, NULL, NULL, NULL, 'Hold', NULL, 0, 0, 0, 0, 0, 0, 0, 'Discharged at Port of Transhipment', NULL, 1, 0, NULL, '2018-09-20 13:15:01', 40, 1, NULL, 0, NULL),
+(334, 2, NULL, 2, 'OOCU7803860', '6194283910', 11, 'Los Angeles', 'Memphis, TN', '2018-10-19', NULL, NULL, NULL, NULL, 'Hold', NULL, 0, 0, 0, 0, 0, 0, 0, 'Discharged at Port of Transhipment', NULL, 1, 0, NULL, '2018-09-20 13:15:01', 40, 1, NULL, 0, NULL),
+(335, 2, NULL, 2, 'OOCU7807063', '6194283920', 11, 'Los Angeles', 'Memphis, TN', '2018-10-19', NULL, NULL, NULL, NULL, 'Hold', NULL, 0, 0, 0, 0, 0, 0, 0, 'Discharged at Port of Transhipment', NULL, 1, 0, NULL, '2018-09-20 13:15:01', 40, 1, NULL, 0, NULL),
+(339, 2, NULL, 2, 'CSNU6486899', '6194298600', 11, 'Los Angeles', 'Memphis, TN', '2018-10-31', NULL, NULL, NULL, 1, 'Hold', NULL, 0, 0, 0, 0, 0, 0, 0, 'Loaded on Board at First Port of Load', NULL, 1, 0, NULL, '2018-09-20 13:15:01', 40, 1, NULL, 0, NULL),
+(340, 2, NULL, 2, 'UETU5313416', '6194298610', 11, 'Los Angeles', 'Memphis, TN', '2018-10-31', NULL, NULL, NULL, NULL, 'Hold', NULL, 0, 0, 0, 0, 0, 0, 0, 'Loaded on Board at First Port of Load', NULL, 1, 0, NULL, '2018-09-20 13:15:01', 40, 1, NULL, 0, NULL),
+(341, 2, NULL, 2, 'FCIU9704546', '6194298620', 11, 'Los Angeles', 'Memphis, TN', '2018-10-31', NULL, NULL, NULL, NULL, 'Hold', NULL, 0, 0, 0, 0, 0, 0, 0, 'Loaded on Board at First Port of Load', NULL, 1, 0, NULL, '2018-09-20 13:15:01', 40, 1, NULL, 0, NULL),
+(342, 2, NULL, 5, 'CSLU2032458', '6008538910', 4, 'Long Beach', 'Memphis, TN', '2018-10-24', NULL, NULL, NULL, NULL, 'Not Released', NULL, 0, 0, 0, 0, 0, 0, 0, 'Loaded on Board at First Port of Load', NULL, 1, 0, NULL, '2018-09-20 13:15:01', 20, 1, NULL, 0, NULL),
+(346, 2, NULL, 5, 'CBHU5513712', '6008538910', 4, 'Long Beach', 'Memphis, TN', '2018-10-24', NULL, NULL, NULL, NULL, 'Not Released', NULL, 0, 0, 0, 0, 0, 0, 0, 'Loaded on Board at First Port of Load', NULL, 1, 0, NULL, '2018-09-20 13:15:01', 20, 1, NULL, 0, NULL),
+(348, 2, NULL, 2, 'CBHU8195425', '6183135200', 11, 'Los Angeles', 'Memphis, TN', '2018-10-25', NULL, NULL, NULL, NULL, 'Not Released', NULL, 0, 0, 0, 0, 0, 0, 0, 'Empty Container Picked Up', NULL, 1, 0, NULL, '2018-09-20 13:15:01', 40, 1, NULL, 0, NULL),
+(349, 2, NULL, 2, 'GESU6912345', '6183135210', 11, 'Los Angeles', 'Memphis, TN', '2018-10-25', NULL, NULL, NULL, NULL, 'Not Released', NULL, 0, 0, 0, 0, 0, 0, 0, 'Empty Container Picked Up', NULL, 1, 0, NULL, '2018-09-20 13:15:01', 40, 1, NULL, 0, NULL),
+(350, 2, NULL, 2, 'TGHU6870685', '6183138590', 11, 'Los Angeles', 'Memphis, TN', '2018-10-25', NULL, NULL, NULL, NULL, 'Not Released', NULL, 0, 0, 0, 0, 0, 0, 0, 'Empty Container Picked Up', NULL, 1, 0, NULL, '2018-09-20 13:15:01', 40, 1, NULL, 0, NULL),
+(351, 2, NULL, 6, 'TEMU2871953', '6194279170', 5, 'Los Angeles', 'Memphis, TN', '2018-10-25', NULL, NULL, NULL, NULL, 'Not Released', NULL, 0, 0, 0, 0, 0, 0, 0, 'Empty Container Picked Up', NULL, 1, 0, NULL, '2018-09-20 13:15:01', 20, 1, NULL, 0, NULL),
+(352, 2, NULL, 6, 'TRHU2729074', '6194279170', 5, 'Los Angeles', 'Memphis, TN', '2018-10-25', NULL, NULL, NULL, NULL, 'Not Released', NULL, 0, 0, 0, 0, 0, 0, 0, 'Empty Container Picked Up', NULL, 1, 0, NULL, '2018-09-20 13:15:01', 20, 1, NULL, 0, NULL);
 
 -- --------------------------------------------------------
 
@@ -659,15 +776,14 @@ INSERT INTO `vendors` (`id`, `name`, `abbreviation`, `document_initials`, `email
 (3, 'Guangdong Foreign Trade Import & Export Company Limited', 'Rodrock', 'RR', NULL),
 (4, 'Hangzhou Skye Vehicle Parts. Co., Ltd', 'Skye', 'NY', NULL),
 (5, 'Hebei Xingyue Braking Element Company Limited', 'Xingyue', 'XY', NULL),
-(6, 'Intradin Huzhou Hardware Co., Ltd', 'ITI', 'LB-TK', NULL),
-(7, 'Iti Company Limited', 'ITI', 'LB', NULL),
+(6, 'Intradin Huzhou Hardware Co., Ltd', 'ITI', 'TK', ''),
+(7, 'Iti Company Limited', 'ITI', 'TKI', ''),
 (8, 'Qingdao Crowntyre Industrial Company Limited', 'Crown', 'CR', NULL),
 (9, 'Qingdao Qihang Tyre Company Limited', 'Qihang', 'QQ', NULL),
 (10, 'Shandong Guofeng Rubber Plastics Company Limited', 'Guofeng', 'GF', NULL),
 (11, 'Tianjin Wanda Tyre Group Company Limited', 'Wanda', 'WD', 'tjwanda.com|'),
 (12, 'Ruian Jianxin Machinery Manufacturing Company Limited', 'Jianxin', 'JT', '163.com|'),
-(13, 'Shandong Wanda Boto Tyre Company Limited', 'Shandong', 'WB', NULL),
-(14, 'Shandong Wanda Boto Tyre Company Limited', 'BOTO', 'WB', '');
+(13, 'Shandong Wanda Boto Tyre Company Limited', 'BOTO', 'WB', '');
 
 -- --------------------------------------------------------
 
@@ -825,7 +941,139 @@ INSERT INTO `vendor_documents` (`id`, `document_type`, `po_number`, `vendor_id`,
 (236, 'Document', 'RR18078', 3, 'RR18078 Entry Invoice 5964.pdf', 'C:/xampp/htdocs/vendor_documents/RR18-RR18078 TCNU6459543/', 'pdf', 270, '4215d16e1ded7c7b75871c8dc6ff169a', 'TCNU6459543', '2018-08-04 03:08:59'),
 (237, 'Document', 'RR18078', 3, 'RR18078 Entry Invoice 5964-1.pdf', 'C:/xampp/htdocs/vendor_documents/RR18-RR18078 GLDU7478040/', 'pdf', 271, '4215d16e1ded7c7b75871c8dc6ff169a-1', 'GLDU7478040', '2018-08-04 03:08:59'),
 (238, 'Document', 'RR18078', 3, 'RR18078 ESP 5964-5965.PDF', 'C:/xampp/htdocs/vendor_documents/RR18-RR18078 TCNU6459543/', 'PDF', 270, '412ebb89910c0bd1665983c4df68f647', 'TCNU6459543', '2018-08-04 03:08:59'),
-(239, 'Document', 'RR18078', 3, 'RR18078 ESP 5964-5965-1.PDF', 'C:/xampp/htdocs/vendor_documents/RR18-RR18078 GLDU7478040/', 'PDF', 271, '412ebb89910c0bd1665983c4df68f647-1', 'GLDU7478040', '2018-08-04 03:08:59');
+(239, 'Document', 'RR18078', 3, 'RR18078 ESP 5964-5965-1.PDF', 'C:/xampp/htdocs/vendor_documents/RR18-RR18078 GLDU7478040/', 'PDF', 271, '412ebb89910c0bd1665983c4df68f647-1', 'GLDU7478040', '2018-08-04 03:08:59'),
+(240, 'Parts_List', 'XY18049', 5, 'doc-583-pl-brake-18049.pdf', 'C:/xampp/htdocs/vendor_documents/XY-XY18049 NO_CN/', 'PDF', NULL, '8a86d8904c9f215be87c992a10a2f5df', 'NO_CN', '2018-08-11 21:03:30'),
+(241, 'Invoice', 'XY18049', 5, 'doc-583-in-brake-18049.pdf', 'C:/xampp/htdocs/vendor_documents/XY-XY18049 NO_CN/', 'PDF', NULL, 'aeb9f93c3b2a11c9dc80d6e81979effd', 'NO_CN', '2018-08-11 21:03:31'),
+(242, 'Parts_List', 'XY18048', 5, 'doc-582-pl-brake-18048.pdf', 'C:/xampp/htdocs/vendor_documents/XY-XY18048 NO_CN/', 'PDF', NULL, 'b12b3be47c42cebe13a211ae4bb4c464', 'NO_CN', '2018-08-11 21:03:32'),
+(243, 'Invoice', 'XY18048', 5, 'doc-582-in-brake-18048.pdf', 'C:/xampp/htdocs/vendor_documents/XY-XY18048 NO_CN/', 'PDF', NULL, '90a90c546600078b88262e018275fc10', 'NO_CN', '2018-08-11 21:03:34'),
+(244, 'Parts_List', 'RR18078', 3, 'doc-581-pl-JACK-18078.pdf', 'C:/xampp/htdocs/vendor_documents/RR18-RR18078 TCNU6459543/', 'PDF', 270, '19ceef8274f2b0584c45274e92cee092', 'TCNU6459543', '2018-08-11 21:03:37'),
+(245, 'Invoice', 'RR18078', 3, 'doc-581-in-JACK-18078.pdf', 'C:/xampp/htdocs/vendor_documents/RR18-RR18078 TCNU6459543/', 'PDF', 270, 'da7d1fed378293a30acfeba579d14fd0', 'TCNU6459543', '2018-08-11 21:03:38'),
+(246, 'pdf', 'WD18-069', 1, 'DRAFT BOL 6183127680 for LB18-069.pdf', 'C:/xampp/htdocs/vendor_documents/118-WD18-069 NO_CN/', 'pdf', NULL, '1360f7252272b0c9a7e81cf30f6e40a5', 'NO_CN', '2018-08-13 20:43:54'),
+(247, 'xls', 'WD18-067', 1, 'LB18-067.xls', 'C:/xampp/htdocs/vendor_documents/118-WD18-067 NO_CN/', 'xls', NULL, '0eb75b0e2f9a889b4c04b2fb2cb91e4c', 'NO_CN', '2018-08-13 20:43:54'),
+(248, 'xls', 'WD18-068', 1, 'LB18-068.xls', 'C:/xampp/htdocs/vendor_documents/118-WD18-068 NO_CN/', 'xls', NULL, 'f7467662e9415df62ea6690c10545ac0', 'NO_CN', '2018-08-13 20:43:54'),
+(249, 'xls', 'WD18-069', 1, 'LB18-069.xls', 'C:/xampp/htdocs/vendor_documents/118-WD18-069 NO_CN/', 'xls', NULL, '09dc10ef490fa169b1351405bda44db3', 'NO_CN', '2018-08-13 20:43:54'),
+(250, 'pdf', 'WD18-067', 1, 'DRAFT BOL 6183122120 FOR LB18-067.pdf', 'C:/xampp/htdocs/vendor_documents/118-WD18-067 NO_CN/', 'pdf', NULL, '12173cadf55bb505b9b34873e16f7f3d', 'NO_CN', '2018-08-13 20:43:54'),
+(251, 'pdf', 'WD18-068', 1, 'DRAFT BOL 6183122130 for LB18-068.pdf', 'C:/xampp/htdocs/vendor_documents/118-WD18-068 NO_CN/', 'pdf', NULL, '3e607827049ab341fa3c008192296400', 'NO_CN', '2018-08-13 20:43:54'),
+(252, 'xls', 'WD18-071', 1, 'LB18-071.xls', 'C:/xampp/htdocs/vendor_documents/118-WD18-071 NO_CN/', 'xls', NULL, '8fd721303d5a45aad666c4a144d4b119', 'NO_CN', '2018-08-13 20:43:55'),
+(253, 'Document', 'WD18-058', 11, '7501 5877 9 081018.pdf', 'C:/xampp/htdocs/vendor_documents/WD18-058 TCNU9438082/', 'pdf', 275, 'cc3f3b8c1293f726ca65401cdd882336', 'TCNU9438082', '2018-08-14 04:03:45'),
+(254, 'Document', 'WD18-058', 11, 'WD18-058 Entry Inv 5877.pdf', 'C:/xampp/htdocs/vendor_documents/WD18-058 TCNU9438082/', 'pdf', 275, '8e5f941a440fdcfde4fcfafb5e522b5b', 'TCNU9438082', '2018-08-14 04:03:45'),
+(255, 'Document', 'WD18-058', 11, 'WD18-058 ESP 5877.PDF', 'C:/xampp/htdocs/vendor_documents/WD18-058 TCNU9438082/', 'PDF', 275, '6909e695a18a609f284569622afab2b9', 'TCNU9438082', '2018-08-14 04:03:45'),
+(256, 'Document', 'WD18-059', 11, '7501 5875 3 081018.pdf', 'C:/xampp/htdocs/vendor_documents/WD18-059 TCNU6840544/', 'pdf', 223, '57177bcbce09af77885b93c25a1a4913', 'TCNU6840544', '2018-08-14 04:03:47'),
+(257, 'Document', 'WD18-059', 11, 'WD18-058 Entry Inv 5875.pdf', 'C:/xampp/htdocs/vendor_documents/WD18-059 TCNU6840544/', 'pdf', 223, '478449d1d449d2b0e408ed79f4c93427', 'TCNU6840544', '2018-08-14 04:03:47'),
+(258, 'Document', 'WD18-059', 11, 'WD18-059 ESP 5875.PDF', 'C:/xampp/htdocs/vendor_documents/WD18-059 TCNU6840544/', 'PDF', 223, '1675f974926964736691b4c2adda841f', 'TCNU6840544', '2018-08-14 04:03:47'),
+(259, 'Document', 'WD18-057', 11, '7501 5876 1 081018.pdf', 'C:/xampp/htdocs/vendor_documents/WD18-057 TCNU6263490/', 'pdf', 274, '0f78b94015c55e9c2afbf1a085e8ddf9', 'TCNU6263490', '2018-08-14 04:03:47'),
+(260, 'Document', 'WD18-057', 11, 'WD18-057 ESP 5876.PDF', 'C:/xampp/htdocs/vendor_documents/WD18-057 TCNU6263490/', 'PDF', 274, 'c949642ec9a093ed883760ba7fa7581b', 'TCNU6263490', '2018-08-14 04:03:48'),
+(261, 'Document', 'WD18-057', 11, 'WD18-058 Entry Inv 5876.pdf', 'C:/xampp/htdocs/vendor_documents/WD18-057 TCNU6263490/', 'pdf', 274, '81eb5abeb505bb72001c4c6af8f2d0f1', 'TCNU6263490', '2018-08-14 04:03:48'),
+(262, 'Document', 'XY18048', 5, '7501 5978 5 080918.pdf', 'C:/xampp/htdocs/vendor_documents/XY18-XY18048 CXDU1244888/', 'pdf', 224, 'b63e9e0d6dbb1720c2517c3ca2146953', 'CXDU1244888', '2018-08-14 04:03:50'),
+(263, 'Document', 'XY18048', 5, 'XY18048 Entry Inv. 5978.pdf', 'C:/xampp/htdocs/vendor_documents/XY18-XY18048 CXDU1244888/', 'pdf', 224, 'cff280ace4b76bcd8ebe55f8c46cf164', 'CXDU1244888', '2018-08-14 04:03:50'),
+(264, 'Document', 'XY18048', 5, 'XY18048 ESP 5978.PDF', 'C:/xampp/htdocs/vendor_documents/XY18-XY18048 CXDU1244888/', 'PDF', 224, '88d6746a2095a9dfdb9ea1c051128eb4', 'CXDU1244888', '2018-08-14 04:03:50'),
+(265, 'Document', 'WD18-060', 11, '7501 5878 7 081318.pdf', 'C:/xampp/htdocs/vendor_documents/WD18-060 TCNU5220805/', 'pdf', 276, '19169547faabcdc9605f0b349a942be1', 'TCNU5220805', '2018-08-15 01:45:32'),
+(266, 'Document', 'WD18-060', 11, 'WD18-060 Entry Inv. 5878.pdf', 'C:/xampp/htdocs/vendor_documents/WD18-060 TCNU5220805/', 'pdf', 276, '631ba0572865dae065dd92b406893f12', 'TCNU5220805', '2018-08-15 01:45:32'),
+(267, 'Document', 'WD18-060', 11, 'WD18-060 ESP 5878.PDF', 'C:/xampp/htdocs/vendor_documents/WD18-060 TCNU5220805/', 'PDF', 276, 'd0cd7c0a58a63803c869b9d8e3e2ae99', 'TCNU5220805', '2018-08-15 01:45:32'),
+(268, 'Document', 'XY18049', 5, '7501 6044 5 081318.pdf', 'C:/xampp/htdocs/vendor_documents/XY18-XY18049 TRHU2560148/', 'pdf', 278, 'c734ba2758ee7d88c65f75db3f3b466b', 'TRHU2560148', '2018-08-15 01:45:34'),
+(269, 'Document', 'XY18049', 5, 'XY18049 Entry Inv. 6044.pdf', 'C:/xampp/htdocs/vendor_documents/XY18-XY18049 TRHU2560148/', 'pdf', 278, 'b4fd75a7f3bf1db8f5c7461022bf6a59', 'TRHU2560148', '2018-08-15 01:45:34'),
+(270, 'Document', 'XY18049', 5, 'XY18049 ESP 6044.PDF', 'C:/xampp/htdocs/vendor_documents/XY18-XY18049 TRHU2560148/', 'PDF', 278, 'f321cff2d4353f0cc1a0a59ad4d28dba', 'TRHU2560148', '2018-08-15 01:45:34'),
+(271, 'Document', 'WD18-062', 11, '7501 6063 5 081418.pdf', 'C:/xampp/htdocs/vendor_documents/WD18-062 TCNU6692051/', 'pdf', 277, '48fe9c18a8f379c96682a695b8b34638', 'TCNU6692051', '2018-08-16 02:49:09'),
+(272, 'Document', 'WD18-062', 11, 'WD18-062 - ESP 6063.PDF', 'C:/xampp/htdocs/vendor_documents/WD18-062 TCNU6692051/', 'PDF', 277, 'd4484a54f8c1dc007605dd26f4b6be8e', 'TCNU6692051', '2018-08-16 02:49:09'),
+(273, 'Document', 'WD18-062', 11, 'WD18-062-Entry Inv. 6063.pdf', 'C:/xampp/htdocs/vendor_documents/WD18-062 TCNU6692051/', 'pdf', 277, '3e7dc35b48ddfa5f0c1ffd935291869a', 'TCNU6692051', '2018-08-16 02:49:09'),
+(274, 'Document', 'NY18027', 4, '7501 6084 1 081718.pdf', 'C:/xampp/htdocs/vendor_documents/NY18-NY18027 CSLU1668276/', 'pdf', 280, '15c556f69e674b1663d3a32a8095fc04', 'CSLU1668276', '2018-08-20 19:24:35'),
+(275, 'Document', 'NY18027', 4, 'NY18027- ESP 6084.PDF', 'C:/xampp/htdocs/vendor_documents/NY18-NY18027 CSLU1668276/', 'PDF', 280, 'de1fc4a5b21a6c1d3e0e908a09997e92', 'CSLU1668276', '2018-08-20 19:24:35'),
+(276, 'Document', 'NY18027', 4, 'NY18027-Entry Inv. 6084.pdf', 'C:/xampp/htdocs/vendor_documents/NY18-NY18027 CSLU1668276/', 'pdf', 280, '03288b7591149eb03f2a226043562d78', 'CSLU1668276', '2018-08-20 19:24:35'),
+(277, 'Document', 'ST3081NY17147', 1, '7501 6095 7 081718.pdf', 'C:/xampp/htdocs/vendor_documents/18-ST3081NY17147 CSLU1690829/', 'pdf', 282, 'db42fefcea4fd146e9fe01443a5fdc37', 'CSLU1690829', '2018-08-22 01:16:30'),
+(278, 'Document', 'ST3081NY17147', 1, 'NY17147- ESP 6095.PDF', 'C:/xampp/htdocs/vendor_documents/18-ST3081NY17147 CSLU1690829/', 'PDF', 282, '80350cbaa674d6d41430483a16f19eed', 'CSLU1690829', '2018-08-22 01:16:30'),
+(279, 'Document', 'ST3081NY17147', 1, 'NY17147-Entry Inv. 6095.pdf', 'C:/xampp/htdocs/vendor_documents/18-ST3081NY17147 CSLU1690829/', 'pdf', 282, '44f135dd7802499828abc480ace43d66', 'CSLU1690829', '2018-08-22 01:16:30'),
+(280, 'Document', 'BOTO18-3', 1, '7501 6154 2 082418.pdf', 'C:/xampp/htdocs/vendor_documents/BOTO18-3 CXDU1049074/', 'pdf', 286, '6606423bb0c274af6c689d9e9972580c', 'CXDU1049074', '2018-08-26 22:08:03'),
+(281, 'Document', 'BOTO18-3', 1, 'BOTO18-3 Entry Inv. 6154.pdf', 'C:/xampp/htdocs/vendor_documents/BOTO18-3 CXDU1049074/', 'pdf', 286, '903983a0b8743bbdb4ac6d8cbb575fe5', 'CXDU1049074', '2018-08-26 22:08:03'),
+(282, 'Document', 'BOTO18-3', 1, 'BOTO18-13 ESP 6152-6154.PDF', 'C:/xampp/htdocs/vendor_documents/BOTO18-3 CXDU1049074/', 'PDF', 286, '7b302f08bd99bdb220ae3a1c36b033b7', 'CXDU1049074', '2018-08-26 22:08:03'),
+(283, 'Document', 'WD18-064', 11, '7501 6155 9 082418.pdf', 'C:/xampp/htdocs/vendor_documents/WD18-064 TCNU6177323/', 'pdf', 291, '28ae1996bf98fc31568be1b640abfbf9', 'TCNU6177323', '2018-08-26 22:08:05'),
+(284, 'Document', 'WD18-064', 11, 'WD18-064 Entry Inv. 6155.pdf', 'C:/xampp/htdocs/vendor_documents/WD18-064 TCNU6177323/', 'pdf', 291, 'a29fc847f5dc6879cece32f903c7ecec', 'TCNU6177323', '2018-08-26 22:08:05'),
+(285, 'Document', 'WD18-064', 11, 'WD18-064 ESP 6155.PDF', 'C:/xampp/htdocs/vendor_documents/WD18-064 TCNU6177323/', 'PDF', 291, '6a6604d149b2dc9832afcda422a5d1ce', 'TCNU6177323', '2018-08-26 22:08:05'),
+(286, 'Document', 'WD18-065', 11, '7501 6156 7 082418.pdf', 'C:/xampp/htdocs/vendor_documents/WD18-065 TCNU6172240/', 'pdf', 292, '327f95b04db58caa6c208b1a4c5ff98b', 'TCNU6172240', '2018-08-28 20:59:35'),
+(287, 'Document', 'WD18-065', 11, 'WD18-065  ESP 6156.PDF', 'C:/xampp/htdocs/vendor_documents/WD18-065 TCNU6172240/', 'PDF', 292, 'bbb3692055aa69410bc4590d2da5b4d6', 'TCNU6172240', '2018-08-28 20:59:36'),
+(288, 'Document', 'WD18-065', 11, 'WD18-065 Entry Inv. 6156.pdf', 'C:/xampp/htdocs/vendor_documents/WD18-065 TCNU6172240/', 'pdf', 292, '345688abefda8c72e69dae9aed436127', 'TCNU6172240', '2018-08-28 20:59:36'),
+(289, 'Document', 'WD18-066', 11, '7501 6157 5 082418.pdf', 'C:/xampp/htdocs/vendor_documents/WD18-066 TCNU5019914/', 'pdf', 293, '053b20e2a77d1ab5d7ed225aee267996', 'TCNU5019914', '2018-08-28 20:59:37'),
+(290, 'Document', 'WD18-066', 11, 'WD18-066  ESP 6157.PDF', 'C:/xampp/htdocs/vendor_documents/WD18-066 TCNU5019914/', 'PDF', 293, '21200d0927f964b632b2d531eb90f3a8', 'TCNU5019914', '2018-08-28 20:59:37'),
+(291, 'Document', 'WD18-066', 11, 'WD18-066 Entry Inv. 6157.pdf', 'C:/xampp/htdocs/vendor_documents/WD18-066 TCNU5019914/', 'pdf', 293, '8195bc6060b3b51e3a32d20da5d529a6', 'TCNU5019914', '2018-08-28 20:59:37'),
+(292, 'Document', 'XY18061B', 5, '7501 6151 8 082318.pdf', 'C:/xampp/htdocs/vendor_documents/XY18-XY18061B CBHU5698215/', 'pdf', 287, '6127de4a65aa2f09f78cd1b686e57e94', 'CBHU5698215', '2018-08-28 20:59:39'),
+(293, 'Document', 'XY18061B', 5, 'XY18061B ESP 6151.PDF', 'C:/xampp/htdocs/vendor_documents/XY18-XY18061B CBHU5698215/', 'PDF', 287, '3241f363932d163f35c81968445ac900', 'CBHU5698215', '2018-08-28 20:59:39'),
+(294, 'Document', 'XY18061B', 5, 'XY18061B-Entry Inv. 6151.pdf', 'C:/xampp/htdocs/vendor_documents/XY18-XY18061B CBHU5698215/', 'pdf', 287, '3654f638c9d22df7a5d196fdd51f6872', 'CBHU5698215', '2018-08-28 20:59:39'),
+(295, 'Document', 'BOTO18-2', 1, '7501 6152 6 082318.pdf', 'C:/xampp/htdocs/vendor_documents/BOTO18-2 TCNU8618840/', 'pdf', 285, 'e3394907152d686c412151714c89a7a6', 'TCNU8618840', '2018-08-28 20:59:40'),
+(296, 'Document', 'BOTO18-2', 1, 'BOTO18-2 Entry Inv. 6152.pdf', 'C:/xampp/htdocs/vendor_documents/BOTO18-2 TCNU8618840/', 'pdf', 285, '73cee93a65ca2b1e9e22ecf0efe8b8ca', 'TCNU8618840', '2018-08-28 20:59:40'),
+(297, 'Document', 'WD18-063', 11, '7501 6160 9 082418.pdf', 'C:/xampp/htdocs/vendor_documents/WD18-063 TCNU6338367/', 'pdf', 284, '41838b60b1e7558fb59701e56f73424b', 'TCNU6338367', '2018-08-28 20:59:41'),
+(298, 'Document', 'WD18-063', 11, 'WD18-063  ESP 6160.PDF', 'C:/xampp/htdocs/vendor_documents/WD18-063 TCNU6338367/', 'PDF', 284, '431c1754f64ca5b00da3a9987ea18260', 'TCNU6338367', '2018-08-28 20:59:41'),
+(299, 'Document', 'WD18-063', 11, 'WD18-063-Entry Inv. 6160.pdf', 'C:/xampp/htdocs/vendor_documents/WD18-063 TCNU6338367/', 'pdf', 284, '6ea7e39446b714dabe51589d2fc872f1', 'TCNU6338367', '2018-08-28 20:59:41'),
+(300, 'Document', 'WD18-069', 11, '7501 6227 6 083018.pdf', 'C:/xampp/htdocs/vendor_documents/WD18-069 TCNU6693248/', 'pdf', 296, '4e8e171ab7ff8aacccc390b71ff691e9', 'TCNU6693248', '2018-08-31 20:05:53'),
+(301, 'Document', 'WD18-069', 11, 'WD18-069 Entry Inv. 6227.pdf', 'C:/xampp/htdocs/vendor_documents/WD18-069 TCNU6693248/', 'pdf', 296, '6b5c05694300889369da0d34b05c7a5c', 'TCNU6693248', '2018-08-31 20:05:53'),
+(302, 'Document', 'WD18-069', 11, 'WD18-069 ESP 6227.PDF', 'C:/xampp/htdocs/vendor_documents/WD18-069 TCNU6693248/', 'PDF', 296, '6314dd938e8ae5450dd4bf0e00665a1e', 'TCNU6693248', '2018-08-31 20:05:53'),
+(303, 'Document', 'WD18-068', 11, '7501 6224 3 083018.pdf', 'C:/xampp/htdocs/vendor_documents/WD18-068 TCNU6591360/', 'pdf', 295, '91a417b543cdde3f9a8b87ef0c289f41', 'TCNU6591360', '2018-08-31 20:05:54'),
+(304, 'Document', 'WD18-068', 11, 'WD18-068 Entry Inv. 6224.pdf', 'C:/xampp/htdocs/vendor_documents/WD18-068 TCNU6591360/', 'pdf', 295, '5ccf0078b3c3a7b27b1a5d5b449b96da', 'TCNU6591360', '2018-08-31 20:05:54'),
+(305, 'Document', 'WD18-068', 11, 'WD18-068 ESP 6224.PDF', 'C:/xampp/htdocs/vendor_documents/WD18-068 TCNU6591360/', 'PDF', 295, 'b6d0e8062e5276a338990a0a5a7a4636', 'TCNU6591360', '2018-08-31 20:05:54'),
+(306, 'Document', 'WD18-067', 11, '7501 6223 5 082918.pdf', 'C:/xampp/htdocs/vendor_documents/WD18-067 TCNU6269203/', 'pdf', 294, 'd305de6c85314623942a9802153b651a', 'TCNU6269203', '2018-08-31 20:05:55'),
+(307, 'Document', 'WD18-067', 11, 'WD18-067 Entry Inv. 6223.pdf', 'C:/xampp/htdocs/vendor_documents/WD18-067 TCNU6269203/', 'pdf', 294, '529e9b5a4f73d2429185f55921fa37e7', 'TCNU6269203', '2018-08-31 20:05:55'),
+(308, 'Document', 'WD18-067', 11, 'WD18-067 ESP 6223.PDF', 'C:/xampp/htdocs/vendor_documents/WD18-067 TCNU6269203/', 'PDF', 294, 'db3ea0a04713a904c4199bcd8669c5dc', 'TCNU6269203', '2018-08-31 20:05:55'),
+(309, 'Document', 'WD18-70', 11, '7501 6319 1 090718.pdf', 'C:/xampp/htdocs/vendor_documents/WD18-70 TCNU6028891/', 'pdf', 302, 'ca02c8a02435c4d43c4ee1b824fec809', 'TCNU6028891', '2018-09-08 03:37:58'),
+(310, 'Document', 'WD18-70', 11, 'WD18-70 Entry Inv. 6319.pdf', 'C:/xampp/htdocs/vendor_documents/WD18-70 TCNU6028891/', 'pdf', 302, 'fdb30f61882da1fd296d6691d908540a', 'TCNU6028891', '2018-09-08 03:37:58'),
+(311, 'Document', 'WD18-70', 11, 'WD18-70 ESP 6319.PDF', 'C:/xampp/htdocs/vendor_documents/WD18-70 TCNU6028891/', 'PDF', 302, 'd08dd739e4a1d13caf995c599c9010f3', 'TCNU6028891', '2018-09-08 03:37:58'),
+(312, 'Document', 'WD18-71', 11, '7501 6338 1 090718.pdf', 'C:/xampp/htdocs/vendor_documents/WD18-71 TCNU6578434/', 'pdf', 303, 'de7ff889700fcc6dec492f7ba3ceefd2', 'TCNU6578434', '2018-09-08 03:37:59'),
+(313, 'Document', 'WD18-71', 11, 'WD18-71 Entry Inv. 6338.pdf', 'C:/xampp/htdocs/vendor_documents/WD18-71 TCNU6578434/', 'pdf', 303, 'cf99b8b55733dfff6e1aae65e20ff263', 'TCNU6578434', '2018-09-08 03:37:59'),
+(314, 'Document', 'WD18-71', 11, 'WD18-71 ESP 6338.PDF', 'C:/xampp/htdocs/vendor_documents/WD18-71 TCNU6578434/', 'PDF', 303, '8fcab69774702b9ec925302b3524adb5', 'TCNU6578434', '2018-09-08 03:37:59'),
+(315, 'Document', 'JX18049', 1, '7501 6373 8 091018.pdf', 'C:/xampp/htdocs/vendor_documents/18-JX18049 DFSU2893328/', 'pdf', 299, '60aa977d1f2a54dfe398d55a60b3256d', 'DFSU2893328', '2018-09-13 04:11:33'),
+(316, 'Document', 'JX18049', 1, '7501 6373 8 091018-1.pdf', 'C:/xampp/htdocs/vendor_documents/18-JX18049 CSLU1249773/', 'pdf', 300, '60aa977d1f2a54dfe398d55a60b3256d-1', 'CSLU1249773', '2018-09-13 04:11:33'),
+(317, 'Document', 'JX18049', 1, '7501 6374 6 091018.pdf', 'C:/xampp/htdocs/vendor_documents/18-JX18049 DFSU2893328/', 'pdf', 299, '2e883b4c8a8dfc439989e0f11d539ac2', 'DFSU2893328', '2018-09-13 04:11:33'),
+(318, 'Document', 'JX18049', 1, '7501 6374 6 091018-1.pdf', 'C:/xampp/htdocs/vendor_documents/18-JX18049 CSLU1249773/', 'pdf', 300, '2e883b4c8a8dfc439989e0f11d539ac2-1', 'CSLU1249773', '2018-09-13 04:11:33'),
+(319, 'Document', 'JX18049', 1, 'JX18049 -50 ESP 6373 -6374.PDF', 'C:/xampp/htdocs/vendor_documents/18-JX18049 DFSU2893328/', 'PDF', 299, '27c825d6dea29f879d162fc529c80f98', 'DFSU2893328', '2018-09-13 04:11:33'),
+(320, 'Document', 'JX18049', 1, 'JX18049 -50 ESP 6373 -6374-1.PDF', 'C:/xampp/htdocs/vendor_documents/18-JX18049 CSLU1249773/', 'PDF', 300, '27c825d6dea29f879d162fc529c80f98-1', 'CSLU1249773', '2018-09-13 04:11:33'),
+(321, 'Document', 'JX18049', 1, 'JX18049 Entry Inv. 6373.pdf', 'C:/xampp/htdocs/vendor_documents/18-JX18049 DFSU2893328/', 'pdf', 299, 'da4d0713cb6adda796f395e46df4ec59', 'DFSU2893328', '2018-09-13 04:11:33'),
+(322, 'Document', 'JX18049', 1, 'JX18049 Entry Inv-1. 6373-1.pdf', 'C:/xampp/htdocs/vendor_documents/18-JX18049 CSLU1249773/', 'pdf', 300, 'da4d0713cb6adda796f395e46df4ec59-1', 'CSLU1249773', '2018-09-13 04:11:33'),
+(323, 'Document', 'JX18049', 1, 'JX18050 Entry Inv.6374.pdf', 'C:/xampp/htdocs/vendor_documents/18-JX18049 DFSU2893328/', 'pdf', 299, '2c726ed08d779fe4afac475fd65403a6', 'DFSU2893328', '2018-09-13 04:11:33'),
+(324, 'Document', 'JX18049', 1, 'JX18050 Entry Inv-1.6374-1.pdf', 'C:/xampp/htdocs/vendor_documents/18-JX18049 CSLU1249773/', 'pdf', 300, '2c726ed08d779fe4afac475fd65403a6-1', 'CSLU1249773', '2018-09-13 04:11:33'),
+(325, 'Document', 'GD8080', 1, '7501 6375 3 091018.pdf', 'C:/xampp/htdocs/vendor_documents/18-GD8080 FSCU6960538/', 'pdf', NULL, '5eab41a576d290534e4e1ea230d0823e', 'FSCU6960538', '2018-09-13 04:11:34'),
+(326, 'Document', 'GD8080', 1, 'LB8080 Entry Inv. 6375.PDF', 'C:/xampp/htdocs/vendor_documents/18-GD8080 FSCU6960538/', 'PDF', NULL, 'caaaa2ec1ba1368d1fe75dbc63639a2e', 'FSCU6960538', '2018-09-13 04:11:34'),
+(327, 'Document', 'GD8080', 1, 'LB8080 ESP 6375.PDF', 'C:/xampp/htdocs/vendor_documents/18-GD8080 FSCU6960538/', 'PDF', NULL, '74378ece0a32f4a8484a3a365d453685', 'FSCU6960538', '2018-09-13 04:11:34'),
+(328, 'Parts_List', '00000', 2, 'doc-594-PL-drum-18089B.pdf', 'C:/xampp/htdocs/vendor_documents/YX18-00000 NO_CN/', 'PDF', NULL, '9c872931f9ba2c50026a783be508a9f2', 'NO_CN', '2018-09-13 20:29:25'),
+(329, 'Invoice', '00000', 2, 'doc-594-in-drum-18089B.pdf', 'C:/xampp/htdocs/vendor_documents/YX18-00000 NO_CN/', 'PDF', NULL, 'c676039695e43de4e45c1056340bb4b7', 'NO_CN', '2018-09-13 20:29:25'),
+(330, 'Parts_List', 'NY18013', 4, 'doc-593-pl-spring-18013.pdf', 'C:/xampp/htdocs/vendor_documents/NY18-NY18013 NO_CN/', 'PDF', NULL, 'd42145a1797180b3ba63801547d8367f', 'NO_CN', '2018-09-13 20:29:26'),
+(331, 'Invoice', 'NY18013', 4, 'doc-593-in-spring-18013.pdf', 'C:/xampp/htdocs/vendor_documents/NY18-NY18013 NO_CN/', 'PDF', NULL, 'b8538c6f4103eeb736355d2afe1ab6bc', 'NO_CN', '2018-09-13 20:29:26'),
+(332, 'Parts_List', '00000', 4, 'doc-592-pl-ap kits-18060.pdf', 'C:/xampp/htdocs/vendor_documents/NY18-00000 NO_CN/', 'PDF', NULL, '12177b62c74323c1cdfb40e491c1507e', 'NO_CN', '2018-09-13 20:29:27'),
+(333, 'Invoice', '00000', 4, 'doc-592-iv-ap kits-18060.pdf', 'C:/xampp/htdocs/vendor_documents/NY18-00000 NO_CN/', 'PDF', NULL, 'e7a1b726e417d2a8554b3e807d3fec02', 'NO_CN', '2018-09-13 20:29:27'),
+(334, 'Parts_List', '00000', 12, 'doc-591-pl-spindle-18049 18050.pdf', 'C:/xampp/htdocs/vendor_documents/JT18-00000 NO_CN/', 'PDF', NULL, '603689dabd6537578517483ab01c8988', 'NO_CN', '2018-09-13 20:29:30'),
+(335, 'Invoice', '00000', 12, 'doc-591-iv-spindle-18049 18050.pdf', 'C:/xampp/htdocs/vendor_documents/JT18-00000 NO_CN/', 'PDF', NULL, '71c3592a4fa5b3491968345440a4f382', 'NO_CN', '2018-09-13 20:29:30'),
+(336, 'Parts_List', 'NY17158', 4, 'doc-590-pl-spring-17158.pdf', 'C:/xampp/htdocs/vendor_documents/NY18-NY17158 TGBU2363084/', 'PDF', 297, 'a7e8a2bdb6c0f3d791a493b734e0eab4', 'TGBU2363084', '2018-09-13 20:29:31'),
+(337, 'Invoice', 'NY17158', 4, 'doc-590-in-spring-17158.pdf', 'C:/xampp/htdocs/vendor_documents/NY18-NY17158 TGBU2363084/', 'PDF', 297, '576557957c0e05038c903185f1775f55', 'TGBU2363084', '2018-09-13 20:29:31'),
+(338, 'Invoice', '00000', 3, 'doc-589-in-JACK-18080.pdf', 'C:/xampp/htdocs/vendor_documents/RR18-00000 NO_CN/', 'PDF', NULL, 'd70e82e3eb6f7e6e8d65c58869fc33e2', 'NO_CN', '2018-09-13 20:29:32'),
+(339, 'Parts_List', '00000', 3, 'doc-589-pl-JACK-18080.pdf', 'C:/xampp/htdocs/vendor_documents/RR18-00000 NO_CN/', 'PDF', NULL, '6224c078542ff2ad32fa69b82948f8a5', 'NO_CN', '2018-09-13 20:29:32'),
+(340, 'Document', 'WD18-73', 11, '7501 6404 1 091218.pdf', 'C:/xampp/htdocs/vendor_documents/WD18-73 TCNU8455402/', 'pdf', 310, 'ecb74bfcce4afd633ec8c068d3256344', 'TCNU8455402', '2018-09-16 22:39:25'),
+(341, 'Document', 'WD18-73', 11, 'WD18-073-Entry Inv. 6404.pdf', 'C:/xampp/htdocs/vendor_documents/WD18-73 TCNU8455402/', 'pdf', 310, '92fb5df7b5f03c43ba2ac38aebee887c', 'TCNU8455402', '2018-09-16 22:39:25'),
+(342, 'Document', 'WD18-73', 11, 'WD18-73 ESP 6404.PDF', 'C:/xampp/htdocs/vendor_documents/WD18-73 TCNU8455402/', 'PDF', 310, 'ac24a1ac714a6d30b1bed0754e25f5b4', 'TCNU8455402', '2018-09-16 22:39:25'),
+(343, 'Document', 'WD18-72', 11, '7501 6402 5 091218.pdf', 'C:/xampp/htdocs/vendor_documents/WD18-72 SEGU6469268/', 'pdf', 309, '8a690091879dbd3fa28c97519ca542e1', 'SEGU6469268', '2018-09-16 22:39:26'),
+(344, 'Document', 'WD18-72', 11, 'WD18-072 Entry Inv. 6402.pdf', 'C:/xampp/htdocs/vendor_documents/WD18-72 SEGU6469268/', 'pdf', 309, '05863324ab35929d36e949e58179bb54', 'SEGU6469268', '2018-09-16 22:39:26'),
+(345, 'Document', 'WD18-72', 11, 'WD18-72 ESP 6402.PDF', 'C:/xampp/htdocs/vendor_documents/WD18-72 SEGU6469268/', 'PDF', 309, 'd34d83f29c2b2748eac4fc1ce98e4b17', 'SEGU6469268', '2018-09-16 22:39:26'),
+(346, 'Document', 'WD18-074', 11, '7501 6441 3 091618.pdf', 'C:/xampp/htdocs/vendor_documents/WD18-074 TCNU3649046/', 'pdf', 314, '03bfec5bc840b0b3d2b5604dc71d783e', 'TCNU3649046', '2018-09-18 20:28:46'),
+(347, 'Document', 'WD18-074', 11, 'WD18-074 ESP 6441.PDF', 'C:/xampp/htdocs/vendor_documents/WD18-074 TCNU3649046/', 'PDF', 314, 'c1a8d5bd95add690370b509b7b3e2869', 'TCNU3649046', '2018-09-18 20:28:46'),
+(348, 'Document', 'WD18-074', 11, 'WD18-074-Entry Inv.6441.pdf', 'C:/xampp/htdocs/vendor_documents/WD18-074 TCNU3649046/', 'pdf', 314, '69afc33ba2e0b694ad8ec024e5ab5414', 'TCNU3649046', '2018-09-18 20:28:46'),
+(349, 'Document', 'XY18089B', 5, '7501 6428 0 091518.pdf', 'C:/xampp/htdocs/vendor_documents/XY18-XY18089B CMAU0483270/', 'pdf', NULL, '67dd4b722e020d27bb7e5671d043689c', 'CMAU0483270', '2018-09-18 20:28:47'),
+(350, 'Document', 'XY18089B', 5, 'XY18089B ESP 6428.PDF', 'C:/xampp/htdocs/vendor_documents/XY18-XY18089B CMAU0483270/', 'PDF', NULL, '9efc1c1f5b85e8a920b92975b4f24c87', 'CMAU0483270', '2018-09-18 20:28:47'),
+(351, 'Document', 'XY18089B', 5, 'XY18089B-Entry Inv. 6428.pdf', 'C:/xampp/htdocs/vendor_documents/XY18-XY18089B CMAU0483270/', 'pdf', NULL, 'd7b77bd0fedc922359a8074fb1230051', 'CMAU0483270', '2018-09-18 20:28:47'),
+(352, 'Document', 'FP18060', 1, '7501 6427 2 091418.pdf', 'C:/xampp/htdocs/vendor_documents/18-FP18060 FXLU1693159/', 'pdf', NULL, 'bd7985d5299b4c2050f926c9a9d2197c', 'FXLU1693159', '2018-09-18 20:28:48'),
+(353, 'Document', 'FP18060', 1, 'FP18060 Entry Inv. 6427.pdf', 'C:/xampp/htdocs/vendor_documents/18-FP18060 FXLU1693159/', 'pdf', NULL, '3b28297445efcbaaaa35fa1bc1e598e2', 'FXLU1693159', '2018-09-18 20:28:48'),
+(354, 'Document', 'FP18060', 1, 'FP18060 ESP 6427.PDF', 'C:/xampp/htdocs/vendor_documents/18-FP18060 FXLU1693159/', 'PDF', NULL, '208dbad9fa25d27e03f42dc8f08c02db', 'FXLU1693159', '2018-09-18 20:28:49'),
+(355, 'Document', 'JX18057', 1, '7501 6425 6 091618.pdf', 'C:/xampp/htdocs/vendor_documents/18-JX18057 TEMU4695560/', 'pdf', 312, '3fab3439a4dd6a55c2c4fadba8a2f189', 'TEMU4695560', '2018-09-18 20:28:50'),
+(356, 'Document', 'JX18057', 1, '7501 6425 6 091618-1.pdf', 'C:/xampp/htdocs/vendor_documents/18-JX18057 UETU2304513/', 'pdf', 311, '3fab3439a4dd6a55c2c4fadba8a2f189-1', 'UETU2304513', '2018-09-18 20:28:50'),
+(357, 'Document', 'JX18057', 1, '7501 6426 4 091618.pdf', 'C:/xampp/htdocs/vendor_documents/18-JX18057 TEMU4695560/', 'pdf', 312, 'c5029e1a234ae1d9ee942498ff9652b0', 'TEMU4695560', '2018-09-18 20:28:50'),
+(358, 'Document', 'JX18057', 1, '7501 6426 4 091618-1.pdf', 'C:/xampp/htdocs/vendor_documents/18-JX18057 UETU2304513/', 'pdf', 311, 'c5029e1a234ae1d9ee942498ff9652b0-1', 'UETU2304513', '2018-09-18 20:28:50');
+INSERT INTO `vendor_documents` (`id`, `document_type`, `po_number`, `vendor_id`, `filename`, `filepath`, `file_extension`, `shipment_id`, `md5_hash`, `identifying_label`, `creation_timestamp`) VALUES
+(359, 'Document', 'JX18057', 1, 'JX18057 Entry Inv.6425.pdf', 'C:/xampp/htdocs/vendor_documents/18-JX18057 TEMU4695560/', 'pdf', 312, 'b17eac9c4537b289537953a99dfac0c3', 'TEMU4695560', '2018-09-18 20:28:50'),
+(360, 'Document', 'JX18057', 1, 'JX18057 Entry Inv-1.6425-1.pdf', 'C:/xampp/htdocs/vendor_documents/18-JX18057 UETU2304513/', 'pdf', 311, 'b17eac9c4537b289537953a99dfac0c3-1', 'UETU2304513', '2018-09-18 20:28:50'),
+(361, 'Document', 'JX18057', 1, 'JX18057- JX18058 ESP 6425-6426.PDF', 'C:/xampp/htdocs/vendor_documents/18-JX18057 TEMU4695560/', 'PDF', 312, '925cb22e2e11927aec1a0f7924e26d4c', 'TEMU4695560', '2018-09-18 20:28:50'),
+(362, 'Document', 'JX18057', 1, 'JX18057- JX18058 ESP 6425-6426-1.PDF', 'C:/xampp/htdocs/vendor_documents/18-JX18057 UETU2304513/', 'PDF', 311, '925cb22e2e11927aec1a0f7924e26d4c-1', 'UETU2304513', '2018-09-18 20:28:50'),
+(363, 'Document', 'JX18057', 1, 'JX18058 Entry Inv.6426.pdf', 'C:/xampp/htdocs/vendor_documents/18-JX18057 TEMU4695560/', 'pdf', 312, '6760a5db805d1b4f679c0b4a0384f562', 'TEMU4695560', '2018-09-18 20:28:50'),
+(364, 'Document', 'JX18057', 1, 'JX18058 Entry Inv-1.6426-1.pdf', 'C:/xampp/htdocs/vendor_documents/18-JX18057 UETU2304513/', 'pdf', 311, '6760a5db805d1b4f679c0b4a0384f562-1', 'UETU2304513', '2018-09-18 20:28:50'),
+(365, 'Parts_List', 'NY18010', 4, 'doc-598-pl-spring-18010.pdf', 'C:/xampp/htdocs/vendor_documents/NY18-NY18010 NO_CN/', 'PDF', NULL, 'ea9cd87188ba4a66f0121bac97ff7de8', 'NO_CN', '2018-09-20 20:15:11'),
+(366, 'Invoice', 'NY18010', 4, 'doc-598-iv-spring-18010.pdf', 'C:/xampp/htdocs/vendor_documents/NY18-NY18010 NO_CN/', 'PDF', NULL, 'd614cd1c83bdb108c86f65d7eefc51ee', 'NO_CN', '2018-09-20 20:15:11'),
+(367, 'Invoice', 'NY18065', 4, 'doc-597-iv-spring-18065.pdf', 'C:/xampp/htdocs/vendor_documents/NY18-NY18065 NO_CN/', 'PDF', NULL, '10646090afbc7ab83da43476153bc4e5', 'NO_CN', '2018-09-20 20:15:11'),
+(368, 'Parts_List', 'NY18065', 4, 'doc-597-pl-spring-18065.pdf', 'C:/xampp/htdocs/vendor_documents/NY18-NY18065 NO_CN/', 'PDF', NULL, 'afc878b7a3625092e456dfc4923443f8', 'NO_CN', '2018-09-20 20:15:12'),
+(369, 'Parts_List', '00000', 12, 'doc-596-pl-spindle-18059.pdf', 'C:/xampp/htdocs/vendor_documents/JT18-00000 NO_CN/', 'PDF', NULL, '22cdd7cbdac0252ee005830e419c8782', 'NO_CN', '2018-09-20 20:15:12'),
+(370, 'Invoice', '00000', 12, 'doc-596-iv-spindle-18059.pdf', 'C:/xampp/htdocs/vendor_documents/JT18-00000 NO_CN/', 'PDF', NULL, 'c0546285f5501ac4d1bd81885a9aa6ef', 'NO_CN', '2018-09-20 20:15:13');
 
 -- --------------------------------------------------------
 
@@ -855,7 +1103,7 @@ INSERT INTO `vendor_products` (`id`, `vendor_id`, `product_id`) VALUES
 (9, 10, 8),
 (10, 11, 2),
 (11, 12, 9),
-(12, 14, 8);
+(12, 15, 8);
 
 --
 -- Indexes for dumped tables
@@ -959,13 +1207,13 @@ ALTER TABLE `vendor_products`
 -- AUTO_INCREMENT for table `archived_shipments`
 --
 ALTER TABLE `archived_shipments`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=299;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=348;
 
 --
 -- AUTO_INCREMENT for table `calendar_events`
 --
 ALTER TABLE `calendar_events`
-  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=271;
+  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=341;
 
 --
 -- AUTO_INCREMENT for table `datatables_states`
@@ -983,7 +1231,7 @@ ALTER TABLE `settings`
 -- AUTO_INCREMENT for table `shipments`
 --
 ALTER TABLE `shipments`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=307;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=353;
 
 --
 -- AUTO_INCREMENT for table `truckers`
@@ -1001,13 +1249,13 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `vendors`
 --
 ALTER TABLE `vendors`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT for table `vendor_documents`
 --
 ALTER TABLE `vendor_documents`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=240;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=371;
 
 --
 -- AUTO_INCREMENT for table `vendor_products`

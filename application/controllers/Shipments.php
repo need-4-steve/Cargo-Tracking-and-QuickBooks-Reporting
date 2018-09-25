@@ -1,4 +1,5 @@
 <?php
+// phpcs:disable
 
 defined('BASEPATH') or exit('No direct script access allowed');
 use PHPHtmlParser\Dom;
@@ -170,7 +171,13 @@ class Shipments extends CI_Controller
                 if (strpos($dataRows[0][0], 'sep=') !== false) {
                     $start = 2;
                 }
-
+				foreach($dataRows as $row){
+					if (is_cli()){
+						//get list for debugging
+						echo $row[1].',';
+					}
+				}
+				if (is_cli()) echo PHP_EOL;
                 /*  foreach ($dataRows as $key=>$value){
                 if (is_cli()) echo $key.'=>';
                 if (is_cli()) print_r($value);
@@ -323,14 +330,23 @@ class Shipments extends CI_Controller
                             if (is_cli()) echo "\t[IS_COMPLETE CONDITION#1(rcvd===true?)] =>".$updateValues['is_complete']." \n\t\t=> updateValues[status] => ". $updateValues['status'] . PHP_EOL;
                         } else {
                             if (is_cli()) echo "\t[IS_COMPLETE CONDITION#1(rcvd===true?)] =>".$updateValues['is_complete']." \n\t\t=> updateValues[status] => ". $updateValues['status'] . PHP_EOL;
-                        }
-                        if (!is_null($updateValues['qb-rt']) && $updateValues['qb-rt'] === true && !is_null($updateValues['qb-ws']) && $updateValues['qb-ws'] === true ) {
-                            $updateValues['status'] = 3;
-                            $updateValues['is_complete']=true;
-                            if (is_cli()) echo "\t[IS_COMPLETE CONDITION#2(qb-rt+qb-ws===true?)] =>".$updateValues['is_complete']." \n\t\t=> updateValues[status] => ". $updateValues['status'] . PHP_EOL;                            
-                        } else {
-                            if (is_cli()) echo "\t[IS_COMPLETE CONDITION#2(qb-rt+qb-ws===true?)] =>".$updateValues['is_complete']." \n\t\t=> updateValues[status] => ". $updateValues['status'] . PHP_EOL;                            
-                        }
+						}
+						if (array_key_exists('qb-rt',$updateValues) && array_key_exists('qb-ws',$updateValues)){
+							if ((!is_null($updateValues['qb-rt']) && !is_null($updateValues['qb-ws'])) && ($updateValues['qb-rt'] === true  && $updateValues['qb-ws'] === true )) {
+								$updateValues['status'] = 3;
+								$updateValues['is_complete']=true;
+								if (is_cli()) echo "\t[IS_COMPLETE CONDITION#2(qb-rt+qb-ws===true?)] =>".$updateValues['is_complete']." \n\t\t=> updateValues[status] => ". $updateValues['status'] . PHP_EOL;                            
+							} else {
+								if (is_cli()) echo "\t[IS_COMPLETE CONDITION#2(qb-rt+qb-ws===true?)] =>".$updateValues['is_complete']." \n\t\t=> updateValues[status] => ". $updateValues['status'] . PHP_EOL;                            
+							}
+						} else {
+							if (!array_key_exists('qb-rt',$updateValues)) {
+								if (is_cli()) echo "NO QB-RT DATA" . PHP_EOL;
+							}
+							if (!array_key_exists('qb-ws',$updateValues)) {
+								if (is_cli()) echo "NO QB-WS DATA" . PHP_EOL;
+							}
+						}
                         if (!is_null($updateValues['truck_date'])){
                             $truckDate = new DateTime($updateValues['truck_date']);
                             $nowTime = new DateTime('now'); //now
@@ -350,7 +366,7 @@ class Shipments extends CI_Controller
                         $updateValues['latest_event']=$reportContainerData['latest_event'];
                         $updateValues['bl_status']=$reportContainerData['bl_status'];
                         if (is_cli()) print_r($updateValues);
-                        if (!$updateValues['is_complete'] && strpos($dataRow_CN,'[')===false) $allContainersString.=$dataRow_CN.'+';
+                        if (!$updateValues['is_complete'] && strpos($dataRow_CN,'[')===false) $allContainersString.=substr($dataRow_CN,0,-1).'+';
                         $this->ShipmentsModel->update_record(array('container_number' => $updateValues['container_number']),
                             array('latest_event_time_and_date' => (is_null($updateValues['latest_event_time_and_date']) || empty($updateValues['latest_event_time_and_date'])) ? null : $updateValues['latest_event_time_and_date'],
                                 'eta' => $updateValues['eta'],
@@ -373,7 +389,7 @@ class Shipments extends CI_Controller
                         //load associative array with data
                         $data['newContainers'][$c - 1]['container_number'] = $dataRow_CN;
                         $data['newContainers'][$c - 1]['bill_of_lading'] = $dataRow_bol;
-                        if (strpos($dataRow_CN,'[')===false) $allContainersString.=$dataRow_CN.'+';
+                        if (strpos($dataRow_CN,'[')===false) $allContainersString.=substr($dataRow_CN,0,-1).'+';
                         if (is_cli()) echo "[NOPE DONT EXIST]->" . $dataRows[$c][1] . PHP_EOL;
                         for ($d = 2; $d < count($columnNames); $d++) {
                             $key = $columnNames[$d];
@@ -471,7 +487,7 @@ class Shipments extends CI_Controller
                             'do' => $data['newContainers'][$c - 1]['do']);
                         $newId = $this->ShipmentsModel->add_record($updateData);
                         if (is_cli()) echo "[NEW ENTRY ADDED newId]-> " . $newId . PHP_EOL;
-                        if (!is_null($data['newContainers'][$c - 1]['eta']) && !is_null($etaStrToTime) && !empty($data['newContainers'][$c - 1]['eta'])) {
+                        if (!is_null($data['newContainers'][$c - 1]['eta']) && !is_null($etaStrToTime) && !empty($data['newContainers'][$c - 1]['eta']) && strpos($data['newContainers'][$c-1]['container_number'],'Unassigned')===false) {
                             $etaStartDate = $etaStrToTime;
                             if (is_cli()) echo "[eta]" . $data['newContainers'][$c - 1]['eta']->format("Y-m-d") . PHP_EOL;
                             if (is_cli()) echo "[etaStart]" . $etaStartDate->format('Y-m-d') . PHP_EOL;
@@ -521,7 +537,7 @@ class Shipments extends CI_Controller
                             ->update_record(array('container_number' => $container['container_number']),
                                 array('lfd' => (empty($curlData['lfd']) ? null : date("Y-m-d", strtotime($curlData['lfd']))),
                                     'pickup_number' => (empty($curlData['pickup_number']) ? null : $curlData['pickup_number']),
-                                    'bl_status' => (is_null($curlData['bl_status']) || empty($curlData['bl_status']) ? (is_null($container['bl_status']) || empty($container['bl_status']) ? "Not Released" : $container['bl_status'] ) : $curlData['bl_status'])));
+                                    'bl_status' => (is_null($curlData['bl_status']) || empty($curlData['bl_status']) ? (is_null($container['bl_status']) || empty($container['bl_status']) ? "N/A" : $container['bl_status'] ) : $curlData['bl_status'])));
                         if (!is_null($curlData['lfd']) && !empty($curlData['lfd'])) {
                             $lfdStartDate = new DateTime($curlData['lfd']);
                             date_time_set($lfdStartDate, 00, 0);
@@ -1480,14 +1496,18 @@ class Shipments extends CI_Controller
         } else {
             $return = array('lfd' => null, 'pickup_number' => null, 'bl_status' => $jsonData['data']['content']['blRealStatus']);
         }
-		if (is_cli()) "[RETURN VALUE]". PHP_EOL;
+		if (is_cli()) echo "[RETURN VALUE]". PHP_EOL;
 		if (is_cli()) print_r($return);
 		return $return;
     }
 
 
     public function get_cn_data($container_numbers=''){
-        /*  http://automate.cn.ca/ecomsrvc/velocity/Tracing/english/TracingDirect_DirectAccess?&UserID=libra38654&Password=Eddi1009&Function=STI&Format=HH&EquipmentID=CBHU411055  */
+		/*  http://automate.cn.ca/ecomsrvc/velocity/Tracing/english/TracingDirect_DirectAccess?&UserID=libra38654&Password=Eddi1009&Function=STI&Format=HH&EquipmentID=CBHU411055  */
+		/*
+			UPDATE (9/22/2018):
+				https://automate.cn.ca/ECquery?&Function=STI&UserID=libra38654&Password=Eddi1009&Format=HH&EquipmentID=XXXX123456+YYYY123456
+		*/
         /*Host: automate.cn.ca
         Connection: keep-alive
         Upgrade-Insecure-Requests: 1
@@ -1512,12 +1532,13 @@ class Shipments extends CI_Controller
         } else {
             $allContainers=explode("+", $container_numbers);
         }
-        if (is_cli()){
-            echo "[START]->get_cn_data". PHP_EOL;
-        }
-        $ch = curl_init();
         $requestTime = microtime(true);
         $requestUrl = "http://automate.cn.ca/ecomsrvc/velocity/Tracing/english/TracingDirect_DirectAccess?&UserID=libra38654&Password=Eddi1009&Function=STI&Format=H&EquipmentID=$container_numbers";
+        if (is_cli()){
+			echo "[START]->get_cn_data". PHP_EOL;
+			echo "\t[url]-> " . $requestUrl;
+        }
+        $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $requestUrl);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
     	curl_setopt($ch, CURLOPT_HTTPHEADER, array(
